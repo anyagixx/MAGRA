@@ -1,4 +1,4 @@
-<V-M-SNARC-LOOP-ADAPTER MODULE="M-SNARC-LOOP-ADAPTER" PRIORITY="high" STATUS="pending">
+<V-M-SNARC-LOOP-ADAPTER MODULE="M-SNARC-LOOP-ADAPTER" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/snarc-loop-adapter.test.ts</file-1>
   </test-files>

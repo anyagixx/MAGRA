@@ -1,7 +1,7 @@
-<M-SNARC-MEMORY NAME="SnarcMemory" TYPE="DATA_LAYER" STATUS="pending">
+<M-SNARC-MEMORY NAME="SnarcMemory" TYPE="DATA_LAYER" STATUS="done">
   <contract>
     <purpose>Store and retrieve project-scoped salience-gated memory for MAGRA sessions.</purpose>
-    <scope>Implement SQLite schema, SNARC scoring, capture, search, context, patterns, identity facts, confidence decay, and stats.</scope>
+    <scope>Implement SNARC-compatible local schema, scoring, capture, search, context, patterns, identity facts, confidence decay, and stats.</scope>
     <source-path>src/snarc/memory.ts</source-path>
     <test-path>tests/snarc-memory.test.ts</test-path>
     <verification-ref>V-M-SNARC-MEMORY</verification-ref>
@@ -14,6 +14,7 @@
     <interface-2>searchMemory(query, options): MemorySearchResult[]</interface-2>
     <interface-3>getSessionBriefing(root, options): string</interface-3>
     <interface-4>runConsolidation(sessionId, options): ConsolidationResult</interface-4>
+    <interface-5>readSnarcStats(root): SnarcStats</interface-5>
   </interfaces>
   <invariants>
     <invariant-1>Memory is local-first and project-scoped.</invariant-1>

@@ -56,6 +56,7 @@ import {
   sessionPath,
 } from "./memory/session.js";
 import { type RepairReport, ToolCallRepair } from "./repair/index.js";
+import type { SnarcLoopAdapter, StopResult } from "./snarc/loop-adapter.js";
 import { SessionStats, type TurnStats } from "./telemetry/stats.js";
 import { ToolRegistry } from "./tools.js";
 import { ReadTracker } from "./tools/read-tracker.js";
@@ -104,6 +105,8 @@ export interface CacheFirstLoopOptions {
   confirmationGate?: PauseGate;
   /** Re-runs the prompt builder (applyMemoryStack / codeSystemPrompt) on /new so REASONIX.md edits take effect without a restart. Accepting a cache miss is the price. */
   rebuildSystem?: () => string;
+  /** Optional MAGRA SNARC adapter for prompt injection, tool capture, compaction capture, and stop consolidation. */
+  snarc?: SnarcLoopAdapter;
 }
 
 export interface ReconfigurableOptions {
@@ -157,6 +160,7 @@ export class CacheFirstLoop {
 
   /** PauseGate bridge — defaults to singleton, injectable for tests. */
   readonly confirmationGate: PauseGate;
+  readonly snarc: SnarcLoopAdapter | null;
 
   /** Number of messages that were pre-loaded from the session file. */
   readonly resumedMessageCount: number;
@@ -222,6 +226,7 @@ export class CacheFirstLoop {
     this.hooks = opts.hooks ?? [];
     this.hookCwd = opts.hookCwd ?? process.cwd();
     this.confirmationGate = opts.confirmationGate ?? defaultPauseGate;
+    this.snarc = opts.snarc ?? null;
     this._rebuildSystem = opts.rebuildSystem ?? null;
     this.maxIterPerTurn = opts.maxIterPerTurn ?? CacheFirstLoop.DEFAULT_MAX_ITER_PER_TURN;
 
@@ -309,7 +314,28 @@ export class CacheFirstLoop {
     afterMessages: number;
     summaryChars: number;
   }> {
+    await this.snarc?.onPreCompact({
+      rootDir: this.hookCwd,
+      sessionId: this.sessionName ?? undefined,
+      cwd: this.hookCwd,
+      turn: this._turn,
+      reason: "compactHistory",
+      messages: this.log.entries,
+    });
     return this.context.fold(this.model, opts);
+  }
+
+  /** Natural turn boundary hook for hosts that already own Stop event timing. */
+  async notifyStop(lastAssistantText?: string): Promise<StopResult | null> {
+    return (
+      (await this.snarc?.onStop({
+        rootDir: this.hookCwd,
+        sessionId: this.sessionName ?? undefined,
+        cwd: this.hookCwd,
+        turn: this._turn,
+        lastAssistantText,
+      })) ?? null
+    );
   }
 
   /** Real-time token count of the current log — forwarded to Desktop for meter refresh. */
@@ -495,6 +521,16 @@ export class CacheFirstLoop {
         rootDir: this.hookCwd,
       });
 
+      await this.snarc?.onPostToolUse({
+        rootDir: this.hookCwd,
+        sessionId: this.sessionName ?? undefined,
+        cwd: this.hookCwd,
+        turn: this._turn,
+        toolName: name,
+        toolArgs: parsedArgs,
+        toolResult: result,
+      });
+
       const postReport = await runHooks({
         hooks: this.hooks,
         payload: {
@@ -671,6 +707,16 @@ export class CacheFirstLoop {
         };
       }
     }
+    const snarcContext = await this.snarc?.onUserPromptSubmit({
+      rootDir: this.hookCwd,
+      sessionId: this.sessionName ?? undefined,
+      cwd: this.hookCwd,
+      turn: this._turn + 1,
+      prompt: userInput,
+    });
+    const modelUserInput = snarcContext?.context
+      ? `${userInput}\n\n${snarcContext.context}`
+      : userInput;
     this._turn++;
     this.scratch.reset();
     // A fresh user turn is a new intent — don't let StormBreaker's
@@ -704,7 +750,7 @@ export class CacheFirstLoop {
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
     const turnStartLogIndex = this.log.length;
-    this.appendAndPersist({ role: "user", content: userInput });
+    this.appendAndPersist({ role: "user", content: modelUserInput });
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 

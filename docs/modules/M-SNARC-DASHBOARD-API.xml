@@ -1,0 +1,21 @@
+<M-SNARC-DASHBOARD-API NAME="SnarcDashboardApi" TYPE="INTEGRATION" STATUS="done">
+  <contract>
+    <purpose>Expose SNARC memory visibility to the MAGRA web dashboard.</purpose>
+    <scope>Provide read-only dashboard endpoints for stats, search, context, inferred patterns, and identity facts.</scope>
+    <source-path>src/server/api/snarc.ts</source-path>
+    <test-path>tests/dashboard-snarc-server.test.ts</test-path>
+    <verification-ref>V-M-SNARC-DASHBOARD-API</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-SNARC-MEMORY</dependency-1>
+  </dependencies>
+  <interfaces>
+    <interface-1>handleSnarc(method, rest, body, ctx, query): Promise&lt;ApiResult&gt;</interface-1>
+  </interfaces>
+  <invariants>
+    <invariant-1>Dashboard SNARC endpoints are read-only.</invariant-1>
+    <invariant-2>Search results preserve observed, inferred, and identity provenance labels.</invariant-2>
+    <invariant-3>Missing or corrupt SNARC memory returns bounded API responses.</invariant-3>
+  </invariants>
+  <CrossLink from="M-SNARC-DASHBOARD-API" to="M-SNARC-MEMORY" relation="reads" />
+</M-SNARC-DASHBOARD-API>

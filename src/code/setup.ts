@@ -13,6 +13,7 @@ import {
   searchEnabled,
 } from "../config.js";
 import { bootstrapSemanticSearchInCodeMode } from "../index/semantic/tool.js";
+import { registerMagraTools } from "../mcp/magra-tools.js";
 import { ToolRegistry } from "../tools.js";
 import { registerChoiceTool } from "../tools/choice.js";
 import { registerCodeQueryTools } from "../tools/code-query.js";
@@ -77,6 +78,7 @@ export async function buildCodeToolset(opts: CodeToolsetOpts): Promise<CodeTools
     });
     registerMemoryTools(tools, { projectRoot: root });
     registerCodeQueryTools(tools, { rootDir: root });
+    registerMagraTools(tools, { rootDir: root });
   };
 
   const reBootstrapSemantic = async (root: string): Promise<{ enabled: boolean }> => {

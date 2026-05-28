@@ -1,4 +1,4 @@
-<M-MCP-UNIFIED-BRIDGE NAME="McpUnifiedBridge" TYPE="INTEGRATION" STATUS="pending">
+<M-MCP-UNIFIED-BRIDGE NAME="McpUnifiedBridge" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Expose MyGRACE and SNARC operations through the existing Reasonix MCP and native tool surfaces.</purpose>
     <scope>Register MyGRACE navigation/lint tools and SNARC search/context/pattern/stats tools without breaking existing MCP transports.</scope>

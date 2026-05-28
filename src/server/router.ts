@@ -28,6 +28,7 @@ import { handleSessions } from "./api/sessions.js";
 import { handleSettings } from "./api/settings.js";
 import { handleSkills } from "./api/skills.js";
 import { handleSlash } from "./api/slash.js";
+import { handleSnarc } from "./api/snarc.js";
 import { handleSubmit } from "./api/submit.js";
 import { handleTools } from "./api/tools.js";
 import { handleUsage } from "./api/usage.js";
@@ -91,6 +92,8 @@ export async function handleApi(
         return await handleIndexConfig(method, rest, body, ctx);
       case "slash":
         return await handleSlash(method, rest, body, ctx);
+      case "snarc":
+        return await handleSnarc(method, rest, body, ctx, query);
       case "files":
         return await handleFiles(method, rest, body, ctx);
       case "browse":

@@ -90,6 +90,7 @@ import {
   shouldAutoNameSession,
 } from "../../session-title.js";
 import { loadSlashUsage, recordSlashUse } from "../../slash-usage.js";
+import { createSnarcLoopAdapter } from "../../snarc/loop-adapter.js";
 import { type SessionSummary, resolveContextTokens } from "../../telemetry/stats.js";
 import { defaultUsageLogPath } from "../../telemetry/usage.js";
 import { warmupTokenizer } from "../../tokenizer.js";
@@ -1027,6 +1028,7 @@ function AppInner({
       reasoningEffort: initialReasoningEffort ?? loadReasoningEffort(),
       maxIterPerTurn: loadMaxIterPerTurn(),
       rebuildSystem,
+      snarc: codeMode ? createSnarcLoopAdapter() : undefined,
     });
     loopRef.current = l;
     return l;
@@ -3465,6 +3467,10 @@ function AppInner({
             if (o.decision === "pass") continue;
             log.pushWarning(t("app.hookStop"), formatHookOutcomeMessage(o));
           }
+        }
+        const snarcStop = await loop.notifyStop(lastAssistantText);
+        for (const warning of snarcStop?.warnings ?? []) {
+          log.pushWarning("SNARC stop warning", warning);
         }
         qq.maybeSendFinalReply(lastAssistantText);
       } finally {

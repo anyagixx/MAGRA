@@ -126,6 +126,7 @@ import {
   importExternalSessions,
 } from "../../session-import.js";
 import { SkillStore } from "../../skills.js";
+import { createSnarcLoopAdapter } from "../../snarc/loop-adapter.js";
 import { countTokensBounded } from "../../tokenizer.js";
 import type { ChoiceOption } from "../../tools/choice.js";
 import type { ChatMessage } from "../../types.js";
@@ -1065,6 +1066,7 @@ function buildRuntimeFor(tab: Tab): RuntimeState {
     maxIterPerTurn: loadMaxIterPerTurn(),
     hooks: tab.hooks,
     hookCwd: tab.rootDir,
+    snarc: createSnarcLoopAdapter(),
   });
   const eventizer = new Eventizer();
   const ctx = { model: tab.currentModel, prefixHash: prefix.fingerprint, reasoningEffort };
@@ -1973,6 +1975,10 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
               if (o.decision === "pass") continue;
               emit({ type: "$error", message: formatHookOutcomeMessage(o) }, tab.id);
             }
+          }
+          const snarcStop = await rt.loop.notifyStop(lastAssistantText);
+          for (const warning of snarcStop?.warnings ?? []) {
+            emit({ type: "$error", message: `SNARC stop warning: ${warning}` }, tab.id);
           }
         }
         if (fromQQ) markQQTurnFinished(qqRuntime.routing, tab.id);

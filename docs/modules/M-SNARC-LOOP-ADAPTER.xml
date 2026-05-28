@@ -1,4 +1,4 @@
-<M-SNARC-LOOP-ADAPTER NAME="SnarcLoopAdapter" TYPE="INTEGRATION" STATUS="pending">
+<M-SNARC-LOOP-ADAPTER NAME="SnarcLoopAdapter" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Connect Reasonix prompt, tool, compaction, and stop events to SNARC memory capture and injection.</purpose>
     <scope>Adapt UserPromptSubmit, PostToolUse, compaction, and Stop events into SNARC capture, search, briefing, and consolidation calls.</scope>

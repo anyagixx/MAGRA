@@ -64,12 +64,13 @@ const DEFAULT_COMPONENT_HEALTH: Record<MagraComponentName, MagraComponentHealth>
     detail: "RTK shell policy is integrated for eligible MAGRA shell commands.",
   },
   snarc: {
-    status: "degraded",
-    detail: "SNARC source is analyzed; runtime memory integration starts in Phase-5.",
+    status: "ok",
+    detail: "SNARC memory, loop adapter, native tools, and dashboard API are integrated.",
   },
   mcp: {
-    status: "degraded",
-    detail: "Reasonix MCP remains available; unified MAGRA tools start in Phase-5.",
+    status: "ok",
+    detail:
+      "Unified MAGRA MyGRACE and SNARC tools are registered through the Reasonix tool surface.",
   },
   verification: {
     status: "ok",
@@ -112,6 +113,36 @@ const VERIFICATION_COMMANDS: readonly VerificationCommand[] = Object.freeze([
     scope: "module",
     command: "rtk npm test -- tests/rtk-shell-policy.test.ts",
     focus: "RTK command classification, raw bypass, health probing, and savings parsing.",
+  },
+  {
+    id: "V-SNARC-MEMORY",
+    moduleId: "M-SNARC-MEMORY",
+    scope: "module",
+    command: "rtk npm test -- tests/snarc-memory.test.ts",
+    focus:
+      "SNARC capture, search, briefing, consolidation, redaction, and bounded storage failure behavior.",
+  },
+  {
+    id: "V-SNARC-LOOP-ADAPTER",
+    moduleId: "M-SNARC-LOOP-ADAPTER",
+    scope: "module",
+    command: "rtk npm test -- tests/snarc-loop-adapter.test.ts",
+    focus:
+      "SNARC prompt injection, tool capture, compaction capture, stop consolidation, and failure isolation.",
+  },
+  {
+    id: "V-MCP-UNIFIED-BRIDGE",
+    moduleId: "M-MCP-UNIFIED-BRIDGE",
+    scope: "module",
+    command: "rtk npm test -- tests/mcp-unified-bridge.test.ts",
+    focus: "MAGRA MyGRACE and SNARC native tool registration, invocation, and error isolation.",
+  },
+  {
+    id: "V-SNARC-DASHBOARD-API",
+    moduleId: "M-SNARC-DASHBOARD-API",
+    scope: "module",
+    command: "rtk npm test -- tests/dashboard-snarc-server.test.ts",
+    focus: "Dashboard SNARC stats and provenance-labeled memory search.",
   },
 ]);
 

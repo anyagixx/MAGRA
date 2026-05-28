@@ -66,6 +66,10 @@ describe("MAGRA observability", () => {
     expect(moduleCommands.map((command) => command.moduleId)).toEqual([
       "M-OBSERVABILITY-VERIFICATION",
       "M-RTK-SHELL-POLICY",
+      "M-SNARC-MEMORY",
+      "M-SNARC-LOOP-ADAPTER",
+      "M-MCP-UNIFIED-BRIDGE",
+      "M-SNARC-DASHBOARD-API",
     ]);
     const observability = moduleCommands.find(
       (command) => command.moduleId === "M-OBSERVABILITY-VERIFICATION",

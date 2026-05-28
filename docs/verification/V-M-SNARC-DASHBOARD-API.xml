@@ -1,0 +1,16 @@
+<V-M-SNARC-DASHBOARD-API MODULE="M-SNARC-DASHBOARD-API" PRIORITY="medium" STATUS="done">
+  <test-files>
+    <file-1>tests/dashboard-snarc-server.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/dashboard-snarc-server.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Dashboard SNARC stats returns project-scoped memory counts.</scenario-1>
+    <scenario-2 kind="success">Dashboard SNARC search returns provenance-labeled results.</scenario-2>
+    <scenario-3 kind="failure">Missing query returns a bounded 400 response.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[SnarcMemory][searchMemory][BLOCK_QUERY_MEMORY]</marker-1>
+  </required-log-markers>
+</V-M-SNARC-DASHBOARD-API>
