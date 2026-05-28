@@ -1,0 +1,18 @@
+<Phase-3 NAME="WebMyGraceInterface" STATUS="pending">
+  <purpose>Expose full MyGRACE invocation in the MAGRA web chat interface.</purpose>
+  <modules>
+    <module-1>M-WEB-MYGRACE-COMMANDS</module-1>
+    <module-2>M-MYGRACE-SKILLS</module-2>
+    <module-3>M-MYGRACE-CLI-ADAPTER</module-3>
+  </modules>
+  <steps>
+    <step-1>Extend `/api/slash` output with all `/mygrace:*` commands.</step-1>
+    <step-2>Update Composer slash suggestion filtering and display for the MyGRACE namespace.</step-2>
+    <step-3>Add command palette actions for MyGRACE status, lint, docs navigation, and skill list.</step-3>
+    <step-4>Route web chat submissions into the same MyGRACE resolver used by CLI slash handling.</step-4>
+    <step-5>Verify responsive desktop and mobile command discovery without text overflow.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-WEB-MYGRACE-COMMANDS</verification-1>
+  </verification-refs>
+</Phase-3>

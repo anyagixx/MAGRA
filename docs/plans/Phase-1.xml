@@ -1,0 +1,18 @@
+<Phase-1 NAME="ReasonixBaseImport" STATUS="pending">
+  <purpose>Move DeepSeek-Reasonix from source reference into the managed MAGRA runtime baseline.</purpose>
+  <modules>
+    <module-1>M-REASONIX-BASE</module-1>
+    <module-2>M-OBSERVABILITY-VERIFICATION</module-2>
+  </modules>
+  <steps>
+    <step-1>Copy the Reasonix source tree into the managed root while preserving package scripts and workspace layout.</step-1>
+    <step-2>Add initial MAGRA attribution and top-level naming without breaking `reasonix` runtime assumptions.</step-2>
+    <step-3>Run baseline build, typecheck, lint, and tests using RTK-prefixed commands.</step-3>
+    <step-4>Record baseline failures, if any, as verification evidence before integration changes.</step-4>
+    <step-5>Update M-REASONIX-BASE contract paths if import layout differs from this plan.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-REASONIX-BASE</verification-1>
+    <verification-2>V-M-OBSERVABILITY-VERIFICATION</verification-2>
+  </verification-refs>
+</Phase-1>

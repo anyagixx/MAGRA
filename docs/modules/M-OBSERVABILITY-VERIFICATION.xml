@@ -1,0 +1,27 @@
+<M-OBSERVABILITY-VERIFICATION NAME="ObservabilityVerification" TYPE="UTILITY" STATUS="pending">
+  <contract>
+    <purpose>Define shared observability, diagnostics, and verification gates for the MAGRA integration.</purpose>
+    <scope>Provide log marker conventions, dashboard health checks, verification command registry, RTK/SNARC/MyGRACE diagnostics, and release gates.</scope>
+    <source-path>src/magra/observability.ts</source-path>
+    <test-path>tests/magra-observability.test.ts</test-path>
+    <verification-ref>V-M-OBSERVABILITY-VERIFICATION</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-DOCS</dependency-1>
+    <dependency-2>M-RTK-SHELL-POLICY</dependency-2>
+    <dependency-3>M-SNARC-MEMORY</dependency-3>
+    <dependency-4>M-MCP-UNIFIED-BRIDGE</dependency-4>
+  </dependencies>
+  <interfaces>
+    <interface-1>getMagraHealth(context): MagraHealthReport</interface-1>
+    <interface-2>listVerificationCommands(scope): VerificationCommand[]</interface-2>
+    <interface-3>formatLogMarker(module, functionName, block): string</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Every critical branch has a stable `[Module][function][BLOCK]` marker.</invariant-1>
+    <invariant-2>Verification commands use RTK where shell output can be large.</invariant-2>
+    <invariant-3>Health output reports missing dependencies without crashing the web UI.</invariant-3>
+  </invariants>
+  <CrossLink from="M-OBSERVABILITY-VERIFICATION" to="M-RTK-SHELL-POLICY" relation="observes" />
+  <CrossLink from="M-OBSERVABILITY-VERIFICATION" to="M-SNARC-MEMORY" relation="observes" />
+</M-OBSERVABILITY-VERIFICATION>

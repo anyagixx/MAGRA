@@ -1,0 +1,24 @@
+<M-SNARC-LOOP-ADAPTER NAME="SnarcLoopAdapter" TYPE="INTEGRATION" STATUS="pending">
+  <contract>
+    <purpose>Connect Reasonix prompt, tool, compaction, and stop events to SNARC memory capture and injection.</purpose>
+    <scope>Adapt UserPromptSubmit, PostToolUse, compaction, and Stop events into SNARC capture, search, briefing, and consolidation calls.</scope>
+    <source-path>src/snarc/loop-adapter.ts</source-path>
+    <test-path>tests/snarc-loop-adapter.test.ts</test-path>
+    <verification-ref>V-M-SNARC-LOOP-ADAPTER</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-SNARC-MEMORY</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>onUserPromptSubmit(payload): Promise&lt;AdditionalContext&gt;</interface-1>
+    <interface-2>onPostToolUse(payload): Promise&lt;CaptureResult&gt;</interface-2>
+    <interface-3>onPreCompact(transcript): Promise&lt;CaptureSummary&gt;</interface-3>
+    <interface-4>onStop(session): Promise&lt;ConsolidationResult&gt;</interface-4>
+  </interfaces>
+  <invariants>
+    <invariant-1>SNARC failures never block the Reasonix loop unless explicitly configured.</invariant-1>
+    <invariant-2>Compaction capture must happen before valuable conversation turns are lost.</invariant-2>
+  </invariants>
+  <CrossLink from="M-SNARC-LOOP-ADAPTER" to="M-SNARC-MEMORY" relation="uses" />
+</M-SNARC-LOOP-ADAPTER>

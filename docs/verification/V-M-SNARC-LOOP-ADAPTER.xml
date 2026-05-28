@@ -1,0 +1,17 @@
+<V-M-SNARC-LOOP-ADAPTER MODULE="M-SNARC-LOOP-ADAPTER" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/snarc-loop-adapter.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/snarc-loop-adapter.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Post-tool event captures an observation without blocking the Reasonix loop.</scenario-1>
+    <scenario-2 kind="success">Prompt event injects relevant memory only when search returns useful results.</scenario-2>
+    <scenario-3 kind="failure">SNARC adapter timeout yields a warning and continues the model turn.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[SnarcLoopAdapter][onPostToolUse][BLOCK_CAPTURE_TOOL]</marker-1>
+    <marker-2>[SnarcLoopAdapter][onPreCompact][BLOCK_CAPTURE_CONVERSATION]</marker-2>
+  </required-log-markers>
+</V-M-SNARC-LOOP-ADAPTER>

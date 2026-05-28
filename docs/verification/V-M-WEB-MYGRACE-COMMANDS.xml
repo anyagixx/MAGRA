@@ -1,0 +1,18 @@
+<V-M-WEB-MYGRACE-COMMANDS MODULE="M-WEB-MYGRACE-COMMANDS" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/dashboard-mygrace-commands.test.tsx</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/dashboard-mygrace-commands.test.tsx</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Typing `/mygrace` in the composer shows all MyGRACE commands.</scenario-1>
+    <scenario-2 kind="success">`/api/slash` includes MyGRACE metadata in code mode.</scenario-2>
+    <scenario-3 kind="failure">Long command labels do not overflow compact dashboard controls.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[WebMyGraceCommands][getMyGraceSlashCommands][BLOCK_BUILD_COMMANDS]</marker-1>
+    <marker-2>[WebMyGraceCommands][submitMyGraceSlash][BLOCK_ROUTE_SUBMISSION]</marker-2>
+  </required-log-markers>
+</V-M-WEB-MYGRACE-COMMANDS>

@@ -1,0 +1,18 @@
+<V-M-RTK-SHELL-POLICY MODULE="M-RTK-SHELL-POLICY" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/rtk-shell-policy.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/rtk-shell-policy.test.ts</check-1>
+    <check-2>rtk --version</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Eligible command rewrites to RTK after Reasonix approval gates.</scenario-1>
+    <scenario-2 kind="success">Raw bypass keeps the original command and exit code.</scenario-2>
+    <scenario-3 kind="failure">Missing RTK reports a doctor warning and falls back safely.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[RtkShellPolicy][resolveRtkPolicy][BLOCK_CLASSIFY_COMMAND]</marker-1>
+    <marker-2>[RtkShellPolicy][buildRtkCommand][BLOCK_REWRITE_COMMAND]</marker-2>
+  </required-log-markers>
+</V-M-RTK-SHELL-POLICY>

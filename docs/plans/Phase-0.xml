@@ -1,0 +1,17 @@
+<Phase-0 NAME="PlanningApproval" STATUS="done">
+  <purpose>Convert the analyzed four-source architecture into approved MyGRACE planning artifacts.</purpose>
+  <entry-criteria>
+    <criterion-1>MyGRACE init artifacts exist.</criterion-1>
+    <criterion-2>Source analysis exists for DeepSeek-Reasonix, MyGrace, RTK, and SNARC.</criterion-2>
+  </entry-criteria>
+  <steps>
+    <step-1 STATUS="done">Analyze requirements and technology constraints.</step-1>
+    <step-2 STATUS="done">Create MAGRA integration proposal.</step-2>
+    <step-3 STATUS="done">Receive user approval on 2026-05-28.</step-3>
+    <step-4 STATUS="done">Generate official graph, phase, and verification per-entity files.</step-4>
+  </steps>
+  <exit-criteria>
+    <criterion-1>MyGRACE lint passes with no index drift.</criterion-1>
+    <criterion-2>Graph, plan, and verification indexes reference existing per-entity files.</criterion-2>
+  </exit-criteria>
+</Phase-0>

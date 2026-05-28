@@ -1,0 +1,26 @@
+<M-REASONIX-BASE NAME="ReasonixBase" TYPE="ENTRY_POINT" STATUS="pending">
+  <contract>
+    <purpose>Provide the imported Reasonix CLI, loop, dashboard, tool host, MCP bridge, hooks, sessions, memory, and edit-gate baseline for MAGRA.</purpose>
+    <scope>Import and preserve DeepSeek-Reasonix behavior before integrating MyGRACE, RTK, and SNARC features.</scope>
+    <source-path>src/cli/index.ts</source-path>
+    <test-path>tests/magra/reasonix-base.test.ts</test-path>
+    <verification-ref>V-M-REASONIX-BASE</verification-ref>
+  </contract>
+  <dependencies />
+  <interfaces>
+    <interface-1>CLI commands `code`, `chat`, `run`, `doctor`, `stats`, `mcp`, `desktop` remain available.</interface-1>
+    <interface-2>Dashboard API router, SSE protocol, Composer, Slash registry, and DashboardContext remain extension points.</interface-2>
+    <interface-3>ToolRegistry, CacheFirstLoop, HookRunner, SkillStore, and MCP bridge remain compatible integration seams.</interface-3>
+  </interfaces>
+  <write-scope>
+    <file-1>package.json</file-1>
+    <file-2>src/**</file-2>
+    <file-3>dashboard/**</file-3>
+    <file-4>tests/**</file-4>
+  </write-scope>
+  <acceptance>
+    <criterion-1>Reasonix baseline tests, typecheck, lint, build, and dashboard build pass before feature integration.</criterion-1>
+    <criterion-2>No MyGRACE, RTK, or SNARC integration removes existing Reasonix public behavior without explicit contract change.</criterion-2>
+  </acceptance>
+  <CrossLink from="M-REASONIX-BASE" to="S-DEEPSEEK-REASONIX" relation="source-analysis" />
+</M-REASONIX-BASE>

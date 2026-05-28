@@ -1,4 +1,9 @@
-<PlanIndex project="MAGRA" product="MAGRACE" version="1.0.0">
-  <!-- Phases are intentionally empty until /mygrace:plan is approved. -->
-  <!-- <Phase-N name="Phase Name" status="pending" steps="0" /> -->
+<PlanIndex project="MAGRA" product="MAGRA" version="1.0.0">
+  <Phase-0 NAME="PlanningApproval" STATUS="done" STEPS="4" />
+  <Phase-1 NAME="ReasonixBaseImport" STATUS="pending" STEPS="5" />
+  <Phase-2 NAME="MyGraceCore" STATUS="pending" STEPS="5" />
+  <Phase-3 NAME="WebMyGraceInterface" STATUS="pending" STEPS="5" />
+  <Phase-4 NAME="RtkShellIntegration" STATUS="pending" STEPS="4" />
+  <Phase-5 NAME="SnarcMemoryIntegration" STATUS="pending" STEPS="6" />
+  <Phase-6 NAME="HardeningRelease" STATUS="pending" STEPS="5" />
 </PlanIndex>

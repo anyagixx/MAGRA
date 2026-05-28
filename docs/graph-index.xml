@@ -1,9 +1,17 @@
-<GraphIndex project="MAGRA" product="MAGRACE" version="1.0.0">
+<GraphIndex project="MAGRA" product="MAGRA" version="1.0.0">
   <keywords>reasonix,mygrace,rtk,snarc,agent,web-chat,skills,memory,token-compression</keywords>
-  <annotation>MAGRACE is a Reasonix-based AI coding agent that integrates the full MyGRACE methodology, RTK token-optimized command execution, and SNARC salience-gated memory into one web-chat driven workflow.</annotation>
+  <annotation>MAGRA is a Reasonix-based AI coding agent that integrates the full MyGRACE methodology, RTK token-optimized command execution, and SNARC salience-gated memory into one web-chat driven workflow.</annotation>
   <source-analysis-index>docs/source-analysis-index.xml</source-analysis-index>
   <proposal-index>docs/proposals-index.xml</proposal-index>
 
-  <!-- Modules are intentionally empty until /mygrace:plan is approved. -->
-  <!-- Module entries will use unique module tags, one self-closing line each. -->
+  <M-REASONIX-BASE NAME="ReasonixBase" TYPE="ENTRY_POINT" STATUS="pending" PATH="src/cli/index.ts" DEPENDS="" VERIFICATION_REF="V-M-REASONIX-BASE" />
+  <M-MYGRACE-DOCS NAME="MyGraceDocs" TYPE="DATA_LAYER" STATUS="pending" PATH="src/mygrace/docs.ts" DEPENDS="M-REASONIX-BASE" VERIFICATION_REF="V-M-MYGRACE-DOCS" />
+  <M-MYGRACE-SKILLS NAME="MyGraceSkills" TYPE="CORE_LOGIC" STATUS="pending" PATH="src/mygrace/skills.ts" DEPENDS="M-MYGRACE-DOCS,M-REASONIX-BASE" VERIFICATION_REF="V-M-MYGRACE-SKILLS" />
+  <M-WEB-MYGRACE-COMMANDS NAME="WebMyGraceCommands" TYPE="UI_COMPONENT" STATUS="pending" PATH="dashboard/src/ui/mygrace-commands.tsx" DEPENDS="M-MYGRACE-SKILLS,M-MYGRACE-CLI-ADAPTER,M-REASONIX-BASE" VERIFICATION_REF="V-M-WEB-MYGRACE-COMMANDS" />
+  <M-MYGRACE-CLI-ADAPTER NAME="MyGraceCliAdapter" TYPE="INTEGRATION" STATUS="pending" PATH="src/mygrace/cli-adapter.ts" DEPENDS="M-MYGRACE-DOCS" VERIFICATION_REF="V-M-MYGRACE-CLI-ADAPTER" />
+  <M-RTK-SHELL-POLICY NAME="RtkShellPolicy" TYPE="INTEGRATION" STATUS="pending" PATH="src/tools/rtk-shell-policy.ts" DEPENDS="M-REASONIX-BASE" VERIFICATION_REF="V-M-RTK-SHELL-POLICY" />
+  <M-SNARC-MEMORY NAME="SnarcMemory" TYPE="DATA_LAYER" STATUS="pending" PATH="src/snarc/memory.ts" DEPENDS="M-REASONIX-BASE" VERIFICATION_REF="V-M-SNARC-MEMORY" />
+  <M-SNARC-LOOP-ADAPTER NAME="SnarcLoopAdapter" TYPE="INTEGRATION" STATUS="pending" PATH="src/snarc/loop-adapter.ts" DEPENDS="M-SNARC-MEMORY,M-REASONIX-BASE" VERIFICATION_REF="V-M-SNARC-LOOP-ADAPTER" />
+  <M-MCP-UNIFIED-BRIDGE NAME="McpUnifiedBridge" TYPE="INTEGRATION" STATUS="pending" PATH="src/mcp/magra-tools.ts" DEPENDS="M-MYGRACE-CLI-ADAPTER,M-SNARC-MEMORY,M-REASONIX-BASE" VERIFICATION_REF="V-M-MCP-UNIFIED-BRIDGE" />
+  <M-OBSERVABILITY-VERIFICATION NAME="ObservabilityVerification" TYPE="UTILITY" STATUS="pending" PATH="src/magra/observability.ts" DEPENDS="M-MYGRACE-DOCS,M-RTK-SHELL-POLICY,M-SNARC-MEMORY,M-MCP-UNIFIED-BRIDGE" VERIFICATION_REF="V-M-OBSERVABILITY-VERIFICATION" />
 </GraphIndex>

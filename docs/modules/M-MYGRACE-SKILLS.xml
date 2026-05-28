@@ -1,0 +1,27 @@
+<M-MYGRACE-SKILLS NAME="MyGraceSkills" TYPE="CORE_LOGIC" STATUS="pending">
+  <contract>
+    <purpose>Expose the full canonical MyGRACE skill set as deterministic MAGRA commands and runnable playbooks.</purpose>
+    <scope>Register all 14 MyGRACE skills, map slash names, load skill bodies lazily, and dispatch inline or service-backed workflows.</scope>
+    <source-path>src/mygrace/skills.ts</source-path>
+    <test-path>tests/mygrace-skills.test.ts</test-path>
+    <verification-ref>V-M-MYGRACE-SKILLS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-DOCS</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>listMyGraceSkills(): MyGraceSkillMeta[]</interface-1>
+    <interface-2>resolveMyGraceCommand(command): MyGraceInvocation</interface-2>
+    <interface-3>runMyGraceSkill(invocation, context): Promise&lt;SkillResult&gt;</interface-3>
+  </interfaces>
+  <skill-set>
+    <skill-1>init, plan, verification, execute, multiagent, refactor, refresh</skill-1>
+    <skill-2>fix, reviewer, status, ask, explainer, cli, setup-subagents</skill-2>
+  </skill-set>
+  <invariants>
+    <invariant-1>Slash names use `/mygrace:*` even when underlying Reasonix skill IDs cannot contain colon.</invariant-1>
+    <invariant-2>Skill bodies load on demand to preserve cache-first context discipline.</invariant-2>
+  </invariants>
+  <CrossLink from="M-MYGRACE-SKILLS" to="M-MYGRACE-DOCS" relation="uses" />
+</M-MYGRACE-SKILLS>

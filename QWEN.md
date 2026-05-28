@@ -1,6 +1,6 @@
 # MyGRACE Project Context: MAGRA
 
-MAGRA uses MyGRACE lazy navigation. The product target is MAGRACE: a Reasonix
+MAGRA uses MyGRACE lazy navigation. The product target is MAGRA: a Reasonix
 based coding/chat agent with first-class MyGRACE skills, RTK command
 compression, and SNARC memory.
 

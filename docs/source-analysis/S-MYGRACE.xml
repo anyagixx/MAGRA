@@ -17,7 +17,7 @@
   </key-surfaces>
 
   <strengths>
-    <strength-1>Directly supplies the MAGRACE governance model and all requested skills.</strength-1>
+    <strength-1>Directly supplies the MAGRA governance model and all requested skills.</strength-1>
     <strength-2>Index-first architecture aligns with Reasonix cache discipline and skill lazy-loading.</strength-2>
     <strength-3>CLI and MCP boundaries are small enough to port or wrap.</strength-3>
   </strengths>
@@ -30,7 +30,7 @@
   </integration-obligations>
 
   <risks>
-    <risk-1>Upstream MyGRACE CLI currently uses simple XML regex parsing; MAGRACE should harden this before broad writes.</risk-1>
+    <risk-1>Upstream MyGRACE CLI currently uses simple XML regex parsing; MAGRA should harden this before broad writes.</risk-1>
     <risk-2>The MCP reference has a phase command mapping that should be reviewed before reuse.</risk-2>
     <risk-3>Skill naming differs by platform; Reasonix needs a namespace adapter for slash names.</risk-3>
   </risks>

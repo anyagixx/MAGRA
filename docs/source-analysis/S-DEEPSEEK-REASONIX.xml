@@ -17,7 +17,7 @@
   </key-surfaces>
 
   <strengths>
-    <strength-1>Best base for MAGRACE because it already has chat/code loops, web UI, slash commands, skill loading, MCP, hooks, memory, and cost telemetry.</strength-1>
+    <strength-1>Best base for MAGRA because it already has chat/code loops, web UI, slash commands, skill loading, MCP, hooks, memory, and cost telemetry.</strength-1>
     <strength-2>Skill bodies are lazy-loaded, matching MyGRACE's token discipline.</strength-2>
     <strength-3>Dashboard `/api/slash` and composer popup are the correct extension point for MyGRACE web chat invocation.</strength-3>
     <strength-4>Shell tool and hook runner are natural RTK and SNARC attachment points.</strength-4>

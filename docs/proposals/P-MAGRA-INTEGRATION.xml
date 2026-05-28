@@ -1,4 +1,4 @@
-<P-MAGRACE-INTEGRATION NAME="MAGRACE Integration Decision" STATUS="proposed">
+<P-MAGRA-INTEGRATION NAME="MAGRA Integration Decision" STATUS="approved">
   <summary>Use DeepSeek-Reasonix as the base product. Integrate MyGRACE as the governance and skill namespace, RTK as the token-optimized shell sidecar, and SNARC as the salience-gated memory subsystem. Do not create four parallel runtimes.</summary>
 
   <decision>
@@ -61,5 +61,5 @@
     <check-6>MCP bridge: integration tests assert MyGRACE and SNARC tools are visible and callable without breaking existing MCP servers.</check-6>
   </verification-strategy-proposed>
 
-  <approval-needed>Before writing module, phase, or verification per-entity files, approve or revise this proposed module breakdown.</approval-needed>
-</P-MAGRACE-INTEGRATION>
+  <approval-record>Approved by user on 2026-05-28. Module, phase, and verification per-entity files may be generated from this proposal.</approval-record>
+</P-MAGRA-INTEGRATION>

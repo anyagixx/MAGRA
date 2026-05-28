@@ -1,0 +1,16 @@
+<V-M-MYGRACE-SKILLS MODULE="M-MYGRACE-SKILLS" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/mygrace-skills.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/mygrace-skills.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">All 14 MyGRACE skills resolve from `/mygrace:*` command names.</scenario-1>
+    <scenario-2 kind="failure">Unknown command returns available MyGRACE commands without throwing.</scenario-2>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MyGraceSkills][listMyGraceSkills][BLOCK_LOAD_METADATA]</marker-1>
+    <marker-2>[MyGraceSkills][runMyGraceSkill][BLOCK_DISPATCH_SKILL]</marker-2>
+  </required-log-markers>
+</V-M-MYGRACE-SKILLS>

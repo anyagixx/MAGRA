@@ -1,7 +1,7 @@
 <RequirementsAnalysis VERSION="1.0.0">
   <Project>
     <name>MAGRA</name>
-    <product-name>MAGRACE</product-name>
+    <product-name>MAGRA</product-name>
     <annotation>Reasonix-based AI coding agent with first-class MyGRACE workflows, RTK token compression, and SNARC salience memory exposed through a web chat interface.</annotation>
     <keywords>reasonix,mygrace,rtk,snarc,web-chat,skills,mcp,memory,token-compression</keywords>
   </Project>
@@ -15,7 +15,7 @@
   <UseCases>
     <UC-001>
       <Actor>Developer</Actor>
-      <Action>Runs MAGRACE as a Reasonix-compatible coding/chat agent.</Action>
+      <Action>Runs MAGRA as a Reasonix-compatible coding/chat agent.</Action>
       <Goal>Keep the DeepSeek cache-first loop, tool-call repair, cost controls, dashboard, TUI, MCP, hooks, skills, sessions, and edit gates.</Goal>
       <Preconditions>DeepSeek-Reasonix source is available as the base project.</Preconditions>
       <AcceptanceCriteria>Existing Reasonix build, typecheck, and tests continue to pass after integration phases.</AcceptanceCriteria>
@@ -87,7 +87,7 @@
   </Risks>
 
   <OpenQuestions>
-    <question-1>Should the distributable product name be MAGRA, MAGRACE, or MAGRA with MAGRACE as the integration layer?</question-1>
+    <question-1 STATUS="resolved">The distributable project and product name is MAGRA.</question-1>
     <question-2>Should RTK be bundled, downloaded on install, or treated as an external dependency with diagnostics?</question-2>
     <question-3>Should SNARC deep dream use DeepSeek through Reasonix instead of Claude CLI for semantic consolidation?</question-3>
   </OpenQuestions>

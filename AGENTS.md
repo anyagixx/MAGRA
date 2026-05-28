@@ -1,7 +1,7 @@
 # MAGRA Agent Protocol
 
 MAGRA uses MyGRACE: scalable Graph-RAG Anchored Code Engineering with lazy
-indexes and per-entity files. The product direction is MAGRACE: Reasonix as the
+indexes and per-entity files. The product direction is MAGRA: Reasonix as the
 base agent/web interface, with MyGRACE, RTK, and SNARC integrated as first-class
 subsystems.
 

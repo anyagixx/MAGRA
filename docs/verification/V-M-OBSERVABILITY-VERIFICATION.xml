@@ -1,0 +1,18 @@
+<V-M-OBSERVABILITY-VERIFICATION MODULE="M-OBSERVABILITY-VERIFICATION" PRIORITY="medium" STATUS="pending">
+  <test-files>
+    <file-1>tests/magra-observability.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-observability.test.ts</check-1>
+    <check-2>rtk npm run verify</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Health report includes Reasonix, MyGRACE, RTK, SNARC, MCP, and verification status.</scenario-1>
+    <scenario-2 kind="success">Log marker formatter emits stable `[Module][function][BLOCK]` strings.</scenario-2>
+    <scenario-3 kind="failure">Missing optional sidecar reports degraded health without crashing.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
+    <marker-2>[ObservabilityVerification][listVerificationCommands][BLOCK_BUILD_COMMANDS]</marker-2>
+  </required-log-markers>
+</V-M-OBSERVABILITY-VERIFICATION>

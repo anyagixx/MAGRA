@@ -1,0 +1,25 @@
+<M-WEB-MYGRACE-COMMANDS NAME="WebMyGraceCommands" TYPE="UI_COMPONENT" STATUS="pending">
+  <contract>
+    <purpose>Make all MyGRACE skills easy to invoke from the MAGRA web chat composer and command palette.</purpose>
+    <scope>Extend slash suggestions, `/api/slash`, command palette, and chat submission routing for `/mygrace:*` commands.</scope>
+    <source-path>dashboard/src/ui/mygrace-commands.tsx</source-path>
+    <test-path>tests/dashboard-mygrace-commands.test.tsx</test-path>
+    <verification-ref>V-M-WEB-MYGRACE-COMMANDS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-SKILLS</dependency-1>
+    <dependency-2>M-MYGRACE-CLI-ADAPTER</dependency-2>
+    <dependency-3>M-REASONIX-BASE</dependency-3>
+  </dependencies>
+  <interfaces>
+    <interface-1>getMyGraceSlashCommands(): SlashCommandSpec[]</interface-1>
+    <interface-2>renderMyGraceCommandGroup(props): ReactNode</interface-2>
+    <interface-3>submitMyGraceSlash(text, dashboardContext): SubmitResult</interface-3>
+  </interfaces>
+  <ux-rules>
+    <rule-1>Do not create a separate MyGRACE page before chat command invocation works.</rule-1>
+    <rule-2>Commands must be discoverable by typing `/mygrace` in the composer.</rule-2>
+    <rule-3>Long flows reuse existing plan, checkpoint, choice, and revision modals.</rule-3>
+  </ux-rules>
+  <CrossLink from="M-WEB-MYGRACE-COMMANDS" to="M-MYGRACE-SKILLS" relation="invokes" />
+</M-WEB-MYGRACE-COMMANDS>

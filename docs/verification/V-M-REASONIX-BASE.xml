@@ -1,0 +1,22 @@
+<V-M-REASONIX-BASE MODULE="M-REASONIX-BASE" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/magra/reasonix-base.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm run build</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk npm test -- tests/magra/reasonix-base.test.ts</check-3>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Imported Reasonix CLI and dashboard start with original public commands available.</scenario-1>
+    <scenario-2 kind="failure">Missing source import or broken package script fails with a clear baseline diagnostic.</scenario-2>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReasonixBase][loadRuntime][BLOCK_VALIDATE_BASELINE]</marker-1>
+    <marker-2>[ReasonixBase][runBaseline][BLOCK_VERIFY_IMPORT]</marker-2>
+  </required-log-markers>
+  <evidence-levels>
+    <level-1>Module-local tests for exported seams.</level-1>
+    <level-2>Phase-level `rtk npm run verify` after import.</level-2>
+  </evidence-levels>
+</V-M-REASONIX-BASE>

@@ -1,0 +1,25 @@
+<M-MCP-UNIFIED-BRIDGE NAME="McpUnifiedBridge" TYPE="INTEGRATION" STATUS="pending">
+  <contract>
+    <purpose>Expose MyGRACE and SNARC operations through the existing Reasonix MCP and native tool surfaces.</purpose>
+    <scope>Register MyGRACE navigation/lint tools and SNARC search/context/pattern/stats tools without breaking existing MCP transports.</scope>
+    <source-path>src/mcp/magra-tools.ts</source-path>
+    <test-path>tests/mcp-unified-bridge.test.ts</test-path>
+    <verification-ref>V-M-MCP-UNIFIED-BRIDGE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-CLI-ADAPTER</dependency-1>
+    <dependency-2>M-SNARC-MEMORY</dependency-2>
+    <dependency-3>M-REASONIX-BASE</dependency-3>
+  </dependencies>
+  <interfaces>
+    <interface-1>registerMagraTools(registry, context): ToolRegistry</interface-1>
+    <interface-2>listMagraMcpTools(): McpToolSummary[]</interface-2>
+    <interface-3>invokeMagraTool(name, args, context): Promise&lt;ToolResult&gt;</interface-3>
+  </interfaces>
+  <tool-set>
+    <tool-1>mygrace_list_modules, mygrace_show_module, mygrace_show_phase, mygrace_lint, mygrace_show_file</tool-1>
+    <tool-2>snarc_search, snarc_context, snarc_patterns, snarc_stats</tool-2>
+  </tool-set>
+  <CrossLink from="M-MCP-UNIFIED-BRIDGE" to="M-MYGRACE-CLI-ADAPTER" relation="exposes" />
+  <CrossLink from="M-MCP-UNIFIED-BRIDGE" to="M-SNARC-MEMORY" relation="exposes" />
+</M-MCP-UNIFIED-BRIDGE>

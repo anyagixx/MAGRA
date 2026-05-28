@@ -1,0 +1,17 @@
+<Phase-4 NAME="RtkShellIntegration" STATUS="pending">
+  <purpose>Integrate RTK as the token-optimized shell policy and telemetry layer.</purpose>
+  <modules>
+    <module-1>M-RTK-SHELL-POLICY</module-1>
+    <module-2>M-OBSERVABILITY-VERIFICATION</module-2>
+  </modules>
+  <steps>
+    <step-1>Detect RTK availability and version in doctor and dashboard health.</step-1>
+    <step-2>Rewrite eligible shell commands through RTK after approval policy resolution.</step-2>
+    <step-3>Preserve raw passthrough and exact exit-code behavior.</step-3>
+    <step-4>Expose RTK savings summary in observability views.</step-4>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-RTK-SHELL-POLICY</verification-1>
+    <verification-2>V-M-OBSERVABILITY-VERIFICATION</verification-2>
+  </verification-refs>
+</Phase-4>

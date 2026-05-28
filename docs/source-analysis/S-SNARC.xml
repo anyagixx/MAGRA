@@ -24,13 +24,13 @@
   <integration-obligations>
     <obligation-1>Use Reasonix hook and loop events as native SNARC input instead of Claude-only hook JSON.</obligation-1>
     <obligation-2>Add a Reasonix compaction event adapter so SNARC can capture conversation before or during compaction.</obligation-2>
-    <obligation-3>Route deep dream through Reasonix model client or make it optional; do not depend on Claude CLI in MAGRACE core.</obligation-3>
+    <obligation-3>Route deep dream through Reasonix model client or make it optional; do not depend on Claude CLI in MAGRA core.</obligation-3>
     <obligation-4>Expose SNARC stats/search/patterns in dashboard and MCP surfaces with provenance labels.</obligation-4>
   </integration-obligations>
 
   <risks>
     <risk-1>Current `.engram` naming should be migrated or aliased to MAGRA/SNARC without breaking portability.</risk-1>
-    <risk-2>Auto-promoted identity facts can be wrong; MAGRACE needs review controls and confidence decay visibility.</risk-2>
+    <risk-2>Auto-promoted identity facts can be wrong; MAGRA needs review controls and confidence decay visibility.</risk-2>
     <risk-3>Conversation capture must respect privacy and redaction settings.</risk-3>
   </risks>
 </S-SNARC>

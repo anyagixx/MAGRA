@@ -1,0 +1,24 @@
+<M-MYGRACE-DOCS NAME="MyGraceDocs" TYPE="DATA_LAYER" STATUS="pending">
+  <contract>
+    <purpose>Read, validate, and update MyGRACE index-first documentation artifacts for MAGRA.</purpose>
+    <scope>Manage graph, plan, verification, source-analysis, proposal, module, phase, and per-verification XML files without monolithic artifacts.</scope>
+    <source-path>src/mygrace/docs.ts</source-path>
+    <test-path>tests/mygrace-docs.test.ts</test-path>
+    <verification-ref>V-M-MYGRACE-DOCS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-REASONIX-BASE</dependency-1>
+  </dependencies>
+  <interfaces>
+    <interface-1>loadGraphIndex(root): GraphIndex</interface-1>
+    <interface-2>loadModule(root, moduleId): ModuleContract</interface-2>
+    <interface-3>writeModuleDelta(root, delta): WriteResult</interface-3>
+    <interface-4>lintMyGraceArtifacts(root): LintReport</interface-4>
+  </interfaces>
+  <invariants>
+    <invariant-1>Never create `knowledge-graph.xml`, `development-plan.xml`, or `verification-plan.xml`.</invariant-1>
+    <invariant-2>Index files stay small and only reference per-entity files.</invariant-2>
+    <invariant-3>XML unique tags stay aligned with file names and index entries.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MYGRACE-DOCS" to="S-MYGRACE" relation="ports-cli-behavior" />
+</M-MYGRACE-DOCS>

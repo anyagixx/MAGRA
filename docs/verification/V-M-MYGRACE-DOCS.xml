@@ -1,0 +1,17 @@
+<V-M-MYGRACE-DOCS MODULE="M-MYGRACE-DOCS" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/mygrace-docs.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/mygrace-docs.test.ts</check-1>
+    <check-2>rtk mygrace lint --path .</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Loads index files first and resolves one module, phase, and verification file on demand.</scenario-1>
+    <scenario-2 kind="failure">Rejects missing, orphaned, or drifted per-entity files without creating monolithic XML.</scenario-2>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MyGraceDocs][loadGraphIndex][BLOCK_READ_INDEX]</marker-1>
+    <marker-2>[MyGraceDocs][writeModuleDelta][BLOCK_SYNC_INDEX]</marker-2>
+  </required-log-markers>
+</V-M-MYGRACE-DOCS>

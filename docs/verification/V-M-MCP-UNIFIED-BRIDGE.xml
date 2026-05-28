@@ -1,0 +1,17 @@
+<V-M-MCP-UNIFIED-BRIDGE MODULE="M-MCP-UNIFIED-BRIDGE" PRIORITY="medium" STATUS="pending">
+  <test-files>
+    <file-1>tests/mcp-unified-bridge.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/mcp-unified-bridge.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">MyGRACE and SNARC tools register alongside existing Reasonix MCP tools.</scenario-1>
+    <scenario-2 kind="success">Tool calls return bounded text output and preserve errors as tool errors.</scenario-2>
+    <scenario-3 kind="failure">Broken adapter does not break unrelated MCP servers.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[McpUnifiedBridge][registerMagraTools][BLOCK_REGISTER_TOOLS]</marker-1>
+    <marker-2>[McpUnifiedBridge][invokeMagraTool][BLOCK_CALL_TOOL]</marker-2>
+  </required-log-markers>
+</V-M-MCP-UNIFIED-BRIDGE>

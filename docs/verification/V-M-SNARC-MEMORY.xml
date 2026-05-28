@@ -1,0 +1,17 @@
+<V-M-SNARC-MEMORY MODULE="M-SNARC-MEMORY" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/snarc-memory.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/snarc-memory.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Captures a salient observation and retrieves it by search with provenance.</scenario-1>
+    <scenario-2 kind="success">Session briefing includes only high-confidence observed, inferred, or identity entries.</scenario-2>
+    <scenario-3 kind="failure">Database errors are bounded and do not corrupt existing memory.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[SnarcMemory][captureObservation][BLOCK_SCORE_SALIENCE]</marker-1>
+    <marker-2>[SnarcMemory][searchMemory][BLOCK_QUERY_MEMORY]</marker-2>
+  </required-log-markers>
+</V-M-SNARC-MEMORY>
