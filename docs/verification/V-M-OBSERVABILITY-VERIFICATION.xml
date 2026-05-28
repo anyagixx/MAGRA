@@ -1,4 +1,4 @@
-<V-M-OBSERVABILITY-VERIFICATION MODULE="M-OBSERVABILITY-VERIFICATION" PRIORITY="medium" STATUS="pending">
+<V-M-OBSERVABILITY-VERIFICATION MODULE="M-OBSERVABILITY-VERIFICATION" PRIORITY="medium" STATUS="done">
   <test-files>
     <file-1>tests/magra-observability.test.ts</file-1>
   </test-files>
@@ -15,4 +15,9 @@
     <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
     <marker-2>[ObservabilityVerification][listVerificationCommands][BLOCK_BUILD_COMMANDS]</marker-2>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-observability.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm run lint</command-2>
+    <command-3 RESULT="passed">rtk mygrace lint --path .</command-3>
+  </evidence>
 </V-M-OBSERVABILITY-VERIFICATION>

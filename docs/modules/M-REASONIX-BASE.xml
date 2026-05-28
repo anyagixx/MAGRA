@@ -1,4 +1,4 @@
-<M-REASONIX-BASE NAME="ReasonixBase" TYPE="ENTRY_POINT" STATUS="pending">
+<M-REASONIX-BASE NAME="ReasonixBase" TYPE="ENTRY_POINT" STATUS="done">
   <contract>
     <purpose>Provide the imported Reasonix CLI, loop, dashboard, tool host, MCP bridge, hooks, sessions, memory, and edit-gate baseline for MAGRA.</purpose>
     <scope>Import and preserve DeepSeek-Reasonix behavior before integrating MyGRACE, RTK, and SNARC features.</scope>

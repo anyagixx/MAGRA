@@ -1,16 +1,25 @@
-<Phase-1 NAME="ReasonixBaseImport" STATUS="pending">
+<Phase-1 NAME="ReasonixBaseImport" STATUS="done">
   <purpose>Move DeepSeek-Reasonix from source reference into the managed MAGRA runtime baseline.</purpose>
   <modules>
     <module-1>M-REASONIX-BASE</module-1>
     <module-2>M-OBSERVABILITY-VERIFICATION</module-2>
   </modules>
   <steps>
-    <step-1>Copy the Reasonix source tree into the managed root while preserving package scripts and workspace layout.</step-1>
-    <step-2>Add initial MAGRA attribution and top-level naming without breaking `reasonix` runtime assumptions.</step-2>
-    <step-3>Run baseline build, typecheck, lint, and tests using RTK-prefixed commands.</step-3>
-    <step-4>Record baseline failures, if any, as verification evidence before integration changes.</step-4>
-    <step-5>Update M-REASONIX-BASE contract paths if import layout differs from this plan.</step-5>
+    <step-1 STATUS="done">Copy the Reasonix source tree into the managed root while preserving package scripts and workspace layout.</step-1>
+    <step-2 STATUS="done">Add initial MAGRA attribution and top-level naming without breaking `reasonix` runtime assumptions.</step-2>
+    <step-3 STATUS="done">Run baseline build, typecheck, lint, and tests using RTK-prefixed commands.</step-3>
+    <step-4 STATUS="done">Record baseline failures, if any, as verification evidence before integration changes.</step-4>
+    <step-5 STATUS="done">Update M-REASONIX-BASE contract paths if import layout differs from this plan.</step-5>
   </steps>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm run build</command-1>
+    <command-2 RESULT="passed">rtk npm run typecheck</command-2>
+    <command-3 RESULT="passed">rtk npm run lint</command-3>
+    <command-4 RESULT="passed">rtk npm test -- --silent</command-4>
+    <command-5 RESULT="passed">rtk mygrace lint --path .</command-5>
+    <note-1>DeepSeek-Reasonix remains available through `reasonix` and `dsnix`; MAGRA adds the `magra` package/bin identity.</note-1>
+    <warning-1>Vite reported a non-failing dynamic/static import chunking warning for dashboard/src/lib/tauri-bridge.ts.</warning-1>
+  </evidence>
   <verification-refs>
     <verification-1>V-M-REASONIX-BASE</verification-1>
     <verification-2>V-M-OBSERVABILITY-VERIFICATION</verification-2>
