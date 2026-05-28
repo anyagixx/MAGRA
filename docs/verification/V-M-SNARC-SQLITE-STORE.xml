@@ -1,4 +1,4 @@
-<V-M-SNARC-SQLITE-STORE MODULE="M-SNARC-SQLITE-STORE" PRIORITY="high" STATUS="pending">
+<V-M-SNARC-SQLITE-STORE MODULE="M-SNARC-SQLITE-STORE" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/snarc-sqlite-store.test.ts</file-1>
     <file-2>tests/snarc-memory.test.ts</file-2>
@@ -10,6 +10,7 @@
     <check-2>rtk npm run typecheck</check-2>
     <check-3>rtk npm run build</check-3>
     <check-4>rtk mygrace lint --path .</check-4>
+    <check-5>rtk npm run lint</check-5>
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">Observations, patterns, identity facts, sessions, and token stats persist in `.magra/snarc/memory.sqlite`.</scenario-1>

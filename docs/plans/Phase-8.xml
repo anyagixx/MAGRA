@@ -1,4 +1,4 @@
-<Phase-8 NAME="SnarcSqliteStore" STATUS="pending">
+<Phase-8 NAME="SnarcSqliteStore" STATUS="done">
   <purpose>Replace the pragmatic JSON SNARC store with the approved SQLite-backed project memory architecture.</purpose>
   <modules>
     <module-1>M-SNARC-SQLITE-STORE</module-1>
@@ -7,12 +7,12 @@
     <module-4>M-SNARC-DASHBOARD-API</module-4>
   </modules>
   <steps>
-    <step-1>Design SQLite schema for observations, patterns, identity facts, sessions, tokens, and migrations.</step-1>
-    <step-2>Implement transactional store adapter and integrate it behind the existing SNARC memory API.</step-2>
-    <step-3>Add JSON legacy import or fallback-read path for `.magra/snarc/memory.json`.</step-3>
-    <step-4>Update search, stats, consolidation, dashboard API, and MCP tools to use SQLite semantics.</step-4>
-    <step-5>Add corrupt database, migration, provenance, confidence, and query tests.</step-5>
-    <step-6>Run targeted SNARC/MCP/dashboard tests, full typecheck, lint, MyGRACE lint, and build.</step-6>
+    <step-1 STATUS="done">Design SQLite schema for observations, patterns, identity facts, sessions, tokens, and migrations.</step-1>
+    <step-2 STATUS="done">Implement transactional store adapter and integrate it behind the existing SNARC memory API.</step-2>
+    <step-3 STATUS="done">Add JSON legacy import or fallback-read path for `.magra/snarc/memory.json`.</step-3>
+    <step-4 STATUS="done">Update search, stats, consolidation, dashboard API, and MCP tools to use SQLite semantics.</step-4>
+    <step-5 STATUS="done">Add corrupt database, migration, provenance, confidence, and query tests.</step-5>
+    <step-6 STATUS="done">Run targeted SNARC/MCP/dashboard tests, full typecheck, lint, MyGRACE lint, and build.</step-6>
   </steps>
   <verification-refs>
     <verification-1>V-M-SNARC-SQLITE-STORE</verification-1>

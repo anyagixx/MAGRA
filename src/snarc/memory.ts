@@ -2,8 +2,8 @@
 // FILE: src/snarc/memory.ts
 // VERSION: 1.0.0
 // PURPOSE: Store and retrieve project-scoped salience-gated SNARC memory for MAGRA sessions.
-// SCOPE: Local persistence, heuristic SNARC scoring, redaction, search, briefing, stats, and consolidation.
-// DEPENDS: M-REASONIX-BASE
+// SCOPE: SQLite persistence, heuristic SNARC scoring, redaction, search, briefing, stats, consolidation, and legacy JSON import routing.
+// DEPENDS: M-SNARC-SQLITE-STORE,M-REASONIX-BASE
 // LINKS: docs/modules/M-SNARC-MEMORY.xml
 // ROLE: DATA_LAYER
 // MAP_MODE: EXPORTS
@@ -12,25 +12,24 @@
 // === END_MODULE_CONTRACT ===
 //
 // === MODULE_MAP ===
-// Exports: captureObservation, searchMemory, getSessionBriefing, runConsolidation, readSnarcStats, listSnarcPatterns, listSnarcIdentityFacts, resolveSnarcMemoryPath, redactSnarcText
+// Exports: captureObservation, searchMemory, getSessionBriefing, runConsolidation, readSnarcStats, listSnarcPatterns, listSnarcIdentityFacts, resolveSnarcMemoryPath, resolveLegacySnarcMemoryPath, redactSnarcText
 // Locals: readStore, writeStoreAtomic, scoreObservation, summarize, extractTokens, extractTags, upsertPattern
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
-// Initial MAGRA SNARC memory runtime with local project-scoped persistence and provenance-labeled retrieval.
+// Routed MAGRA SNARC memory through SQLite persistence while preserving provenance-labeled retrieval.
 // === END_CHANGE_SUMMARY ===
 
 import { randomUUID } from "node:crypto";
+import { statSync } from "node:fs";
+import { resolve } from "node:path";
 import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  renameSync,
-  statSync,
-  unlinkSync,
-  writeFileSync,
-} from "node:fs";
-import { dirname, join, resolve } from "node:path";
+  querySnarcRows,
+  readSnarcStoreSnapshot,
+  resolveSnarcLegacyJsonPath,
+  resolveSnarcSqlitePath,
+  writeSnarcStoreSnapshot,
+} from "./sqlite-store.js";
 
 export type SnarcProvenance = "observed" | "inferred" | "identity";
 
@@ -161,12 +160,12 @@ export interface SnarcStats {
   detail: string;
 }
 
-interface SeenToken {
+export interface SeenToken {
   firstSeen: string;
   count: number;
 }
 
-interface SnarcSession {
+export interface SnarcSession {
   sessionId: string;
   startedAt: string;
   endedAt?: string;
@@ -174,7 +173,7 @@ interface SnarcSession {
   obsCount: number;
 }
 
-interface SnarcStore {
+export interface SnarcStore {
   version: 1;
   projectRoot: string;
   observations: SnarcObservation[];
@@ -185,7 +184,7 @@ interface SnarcStore {
   sessions: Record<string, SnarcSession>;
 }
 
-type StoreRead =
+export type StoreRead =
   | { ok: true; store: SnarcStore; path: string }
   | { ok: false; path: string; error: string };
 
@@ -223,8 +222,20 @@ const STATE_CHANGE_PATTERNS =
 // === END_CONTRACT: resolveSnarcMemoryPath ===
 export function resolveSnarcMemoryPath(rootDir = process.cwd()): string {
   // === START_BLOCK_RESOLVE_PATH ===
-  return join(resolve(rootDir), ".magra", "snarc", "memory.json");
+  return resolveSnarcSqlitePath(rootDir);
   // === END_BLOCK_RESOLVE_PATH ===
+}
+
+// === START_CONTRACT: resolveLegacySnarcMemoryPath ===
+// PURPOSE: Resolve the old JSON SNARC memory path used for one-time imports.
+// INPUTS: rootDir?: string - project root or current working directory fallback
+// OUTPUTS: string
+// SIDE_EFFECTS: none
+// === END_CONTRACT: resolveLegacySnarcMemoryPath ===
+export function resolveLegacySnarcMemoryPath(rootDir = process.cwd()): string {
+  // === START_BLOCK_RESOLVE_LEGACY_PATH ===
+  return resolveSnarcLegacyJsonPath(rootDir);
+  // === END_BLOCK_RESOLVE_LEGACY_PATH ===
 }
 
 // === START_CONTRACT: redactSnarcText ===
@@ -267,7 +278,7 @@ function stripAnsiText(value: string): string {
 // PURPOSE: Score a prompt/tool/conversation observation and persist it when salience passes the SNARC gate.
 // INPUTS: input: CaptureObservationInput - observation payload with project root, session, text, tool, and provenance data
 // OUTPUTS: CaptureResult
-// SIDE_EFFECTS: reads and atomically writes .magra/snarc/memory.json when capture succeeds
+// SIDE_EFFECTS: reads and transactionally writes .magra/snarc/memory.sqlite when capture succeeds
 // === END_CONTRACT: captureObservation ===
 export function captureObservation(input: CaptureObservationInput): CaptureResult {
   // === START_BLOCK_SCORE_SALIENCE ===
@@ -391,86 +402,14 @@ export function captureObservation(input: CaptureObservationInput): CaptureResul
 // PURPOSE: Search observations, inferred patterns, and identity facts with provenance-labeled ranking.
 // INPUTS: query: string; options?: SearchMemoryOptions
 // OUTPUTS: SnarcSearchResult[]
-// SIDE_EFFECTS: reads .magra/snarc/memory.json
+// SIDE_EFFECTS: reads .magra/snarc/memory.sqlite
 // === END_CONTRACT: searchMemory ===
 export function searchMemory(
   query: string,
   options: SearchMemoryOptions = {},
 ): SnarcSearchResult[] {
   // === START_BLOCK_QUERY_MEMORY ===
-  const read = readStore(options.rootDir ?? process.cwd());
-  if (!read.ok) return [];
-  const queryTokens = extractTokens(query);
-  if (queryTokens.length === 0) return [];
-  const allowed = options.provenance ? new Set(options.provenance) : null;
-  const minConfidence = clamp(options.minConfidence ?? 0);
-  const results: SnarcSearchResult[] = [];
-
-  if (!allowed || allowed.has("observed")) {
-    for (const observation of read.store.observations) {
-      const score = lexicalScore(queryTokens, [
-        observation.toolName,
-        observation.inputSummary,
-        observation.outputSummary,
-        observation.tags.join(" "),
-      ]);
-      if (score <= 0 || observation.confidence < minConfidence) continue;
-      results.push({
-        id: observation.id,
-        tier: 1,
-        summary: `[${observation.toolName}] ${observation.inputSummary || observation.outputSummary}`,
-        provenance: "observed",
-        confidence: observation.confidence,
-        salience: observation.salience,
-        score: score + observation.salience + observation.confidence * 0.2,
-        ts: observation.ts,
-        sessionId: observation.sessionId,
-        tags: [...observation.tags],
-      });
-    }
-  }
-
-  if (!allowed || allowed.has("inferred")) {
-    for (const pattern of read.store.patterns) {
-      const score = lexicalScore(queryTokens, [
-        pattern.kind,
-        pattern.summary,
-        pattern.detail,
-        pattern.tags.join(" "),
-      ]);
-      if (score <= 0 || pattern.confidence < minConfidence) continue;
-      results.push({
-        id: pattern.id,
-        tier: 2,
-        summary: pattern.summary,
-        provenance: "inferred",
-        confidence: pattern.confidence,
-        score: score + pattern.confidence + Math.min(pattern.frequency / 10, 0.5),
-        kind: pattern.kind,
-        tags: [...pattern.tags],
-      });
-    }
-  }
-
-  if (!allowed || allowed.has("identity")) {
-    for (const fact of read.store.identity) {
-      const score = lexicalScore(queryTokens, [fact.key, fact.value, fact.source]);
-      if (score <= 0 || fact.confidence < minConfidence) continue;
-      results.push({
-        id: fact.id,
-        tier: 3,
-        summary: `${fact.key}: ${fact.value}`,
-        provenance: "identity",
-        confidence: fact.confidence,
-        score: score + fact.confidence,
-        tags: ["identity", fact.key],
-      });
-    }
-  }
-
-  return results
-    .sort((a, b) => b.score - a.score || b.confidence - a.confidence)
-    .slice(0, Math.max(1, Math.min(options.limit ?? 10, 50)));
+  return querySnarcRows(query, options);
   // === END_BLOCK_QUERY_MEMORY ===
 }
 
@@ -478,7 +417,7 @@ export function searchMemory(
 // PURPOSE: Build conservative provenance-labeled memory context for injection into the next MAGRA turn.
 // INPUTS: rootDir?: string; options?: SessionBriefingOptions
 // OUTPUTS: string
-// SIDE_EFFECTS: reads .magra/snarc/memory.json
+// SIDE_EFFECTS: reads .magra/snarc/memory.sqlite
 // === END_CONTRACT: getSessionBriefing ===
 export function getSessionBriefing(
   rootDir = process.cwd(),
@@ -543,7 +482,7 @@ export function getSessionBriefing(
 // PURPOSE: Consolidate session observations into inferred patterns and decay stale low-confidence memory.
 // INPUTS: sessionId: string; options?: ConsolidationOptions
 // OUTPUTS: ConsolidationResult
-// SIDE_EFFECTS: reads and atomically writes .magra/snarc/memory.json
+// SIDE_EFFECTS: reads and transactionally writes .magra/snarc/memory.sqlite
 // === END_CONTRACT: runConsolidation ===
 export function runConsolidation(
   sessionId: string,
@@ -612,7 +551,7 @@ export function runConsolidation(
 // PURPOSE: Read bounded SNARC health and counts for doctor, dashboard, and native tools.
 // INPUTS: rootDir?: string
 // OUTPUTS: SnarcStats
-// SIDE_EFFECTS: reads filesystem metadata and memory file
+// SIDE_EFFECTS: reads filesystem metadata and SQLite memory file
 // === END_CONTRACT: readSnarcStats ===
 export function readSnarcStats(rootDir = process.cwd()): SnarcStats {
   // === START_BLOCK_READ_STATS ===
@@ -657,7 +596,7 @@ export function readSnarcStats(rootDir = process.cwd()): SnarcStats {
 // PURPOSE: Return bounded inferred pattern rows for dashboard and MAGRA tools.
 // INPUTS: rootDir?: string; limit?: number
 // OUTPUTS: SnarcPattern[]
-// SIDE_EFFECTS: reads .magra/snarc/memory.json
+// SIDE_EFFECTS: reads .magra/snarc/memory.sqlite
 // === END_CONTRACT: listSnarcPatterns ===
 export function listSnarcPatterns(rootDir = process.cwd(), limit = 20): SnarcPattern[] {
   // === START_BLOCK_LIST_PATTERNS ===
@@ -674,7 +613,7 @@ export function listSnarcPatterns(rootDir = process.cwd(), limit = 20): SnarcPat
 // PURPOSE: Return bounded identity/proposed fact rows with provenance labels.
 // INPUTS: rootDir?: string; limit?: number
 // OUTPUTS: SnarcIdentityFact[]
-// SIDE_EFFECTS: reads .magra/snarc/memory.json
+// SIDE_EFFECTS: reads .magra/snarc/memory.sqlite
 // === END_CONTRACT: listSnarcIdentityFacts ===
 export function listSnarcIdentityFacts(rootDir = process.cwd(), limit = 20): SnarcIdentityFact[] {
   // === START_BLOCK_LIST_IDENTITY ===
@@ -689,34 +628,14 @@ export function listSnarcIdentityFacts(rootDir = process.cwd(), limit = 20): Sna
 
 function readStore(rootDir: string): StoreRead {
   const projectRoot = resolve(rootDir);
-  const path = resolveSnarcMemoryPath(projectRoot);
-  if (!existsSync(path)) return { ok: true, path, store: emptyStore(projectRoot) };
-  try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as Partial<SnarcStore>;
-    return { ok: true, path, store: normalizeStore(parsed, projectRoot) };
-  } catch (err) {
-    return { ok: false, path, error: (err as Error).message };
-  }
+  return readSnarcStoreSnapshot(projectRoot, { emptyStore, normalizeStore });
 }
 
 function writeStoreAtomic(
   path: string,
   store: SnarcStore,
 ): { ok: true } | { ok: false; error: string } {
-  const tmp = `${path}.${process.pid}.${Date.now()}.tmp`;
-  try {
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(tmp, `${JSON.stringify(store, null, 2)}\n`, "utf8");
-    renameSync(tmp, path);
-    return { ok: true };
-  } catch (err) {
-    try {
-      unlinkSync(tmp);
-    } catch {
-      /* best-effort cleanup */
-    }
-    return { ok: false, error: (err as Error).message };
-  }
+  return writeSnarcStoreSnapshot(path, store);
 }
 
 function emptyStore(projectRoot: string): SnarcStore {

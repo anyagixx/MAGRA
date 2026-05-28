@@ -7,7 +7,7 @@
   <Phase-5 NAME="SnarcMemoryIntegration" STATUS="done" STEPS="6" />
   <Phase-6 NAME="HardeningRelease" STATUS="done" STEPS="5" />
   <Phase-7 NAME="SnarcContextIsolation" STATUS="done" STEPS="5" />
-  <Phase-8 NAME="SnarcSqliteStore" STATUS="pending" STEPS="6" />
+  <Phase-8 NAME="SnarcSqliteStore" STATUS="done" STEPS="6" />
   <Phase-9 NAME="MagraRuntimeIdentity" STATUS="pending" STEPS="5" />
   <Phase-10 NAME="MyGraceGovernanceLint" STATUS="pending" STEPS="5" />
   <Phase-11 NAME="MagraReleaseSurface" STATUS="pending" STEPS="5" />

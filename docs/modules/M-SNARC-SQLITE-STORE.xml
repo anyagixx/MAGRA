@@ -1,4 +1,4 @@
-<M-SNARC-SQLITE-STORE NAME="SnarcSqliteStore" TYPE="DATA_LAYER" STATUS="pending">
+<M-SNARC-SQLITE-STORE NAME="SnarcSqliteStore" TYPE="DATA_LAYER" STATUS="done">
   <contract>
     <purpose>Implement the approved SQLite-backed SNARC memory store for project-scoped MAGRA memory.</purpose>
     <scope>SQLite schema, migrations, transaction boundaries, JSON import fallback, search indexes, corrupt-store handling, and stats.</scope>

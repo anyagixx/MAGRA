@@ -1,13 +1,14 @@
 <M-SNARC-MEMORY NAME="SnarcMemory" TYPE="DATA_LAYER" STATUS="done">
   <contract>
     <purpose>Store and retrieve project-scoped salience-gated memory for MAGRA sessions.</purpose>
-    <scope>Implement SNARC-compatible local schema, scoring, capture, search, context, patterns, identity facts, confidence decay, and stats.</scope>
+    <scope>Implement SNARC-compatible SQLite-backed local schema, scoring, capture, search, context, patterns, identity facts, confidence decay, and stats.</scope>
     <source-path>src/snarc/memory.ts</source-path>
     <test-path>tests/snarc-memory.test.ts</test-path>
     <verification-ref>V-M-SNARC-MEMORY</verification-ref>
   </contract>
   <dependencies>
-    <dependency-1>M-REASONIX-BASE</dependency-1>
+    <dependency-1>M-SNARC-SQLITE-STORE</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
   </dependencies>
   <interfaces>
     <interface-1>captureObservation(input): CaptureResult</interface-1>
@@ -17,7 +18,7 @@
     <interface-5>readSnarcStats(root): SnarcStats</interface-5>
   </interfaces>
   <invariants>
-    <invariant-1>Memory is local-first and project-scoped.</invariant-1>
+    <invariant-1>Memory is local-first, project-scoped, and primarily stored in `.magra/snarc/memory.sqlite`.</invariant-1>
     <invariant-2>Injected memories label provenance as observed, inferred, or identity.</invariant-2>
     <invariant-3>Secrets and private prompt content respect Reasonix redaction settings.</invariant-3>
   </invariants>
