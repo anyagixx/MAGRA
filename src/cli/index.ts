@@ -1,3 +1,23 @@
+// === MODULE_CONTRACT ===
+// FILE: src/cli/index.ts
+// VERSION: 1.0.0
+// PURPOSE: Provide the MAGRA command-line entry point and command routing.
+// SCOPE: CLI bootstrap, command definitions, default chat/run prompt wiring, and compatibility alias behavior.
+// DEPENDS: M-REASONIX-BASE,M-MAGRA-RUNTIME-IDENTITY
+// LINKS: docs/modules/M-REASONIX-BASE.xml,docs/modules/M-MAGRA-RUNTIME-IDENTITY.xml
+// ROLE: ENTRY_POINT
+// MAP_MODE: EXPORTS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: none
+// Locals: maybeStartCpuProfile, persistEffortFlag, parseBudgetFlag, parseDashboardPortFlag, resolveDashboardPort, resolveDashboardHost, resolveDashboardToken
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added MAGRA runtime identity contract and centralized default prompt wiring.
+// === END_CHANGE_SUMMARY ===
+
 // First import — reject unsupported Node versions before heavier startup
 // paths can turn an engine mismatch into an opaque crash.
 import "./node-version-guard.js";
@@ -21,10 +41,10 @@ import {
 } from "../config.js";
 import { t } from "../i18n/index.js";
 import { VERSION } from "../index.js";
+import { MAGRA_CLI_NAME, defaultSystemPrompt } from "../magra/identity.js";
 import { listSessions } from "../memory/session.js";
 import { applyMemoryStack } from "../memory/user.js";
 import { installProxyIfConfigured } from "../net/proxy.js";
-import { escalationContract } from "../prompt-fragments.js";
 import { startCpuProfile, stopAndSaveCpuProfile } from "./cpu-prof.js";
 import { resolveBareCommandMode, resolveContinueFlag, resolveDefaults } from "./resolve.js";
 import { markPhase } from "./startup-profile.js";
@@ -61,30 +81,6 @@ installProxyIfConfigured(process.env, {
 });
 
 markPhase("cli_module_loaded");
-
-function defaultSystemPrompt(modelId: string): string {
-  return `You are Reasonix, a helpful DeepSeek-powered assistant. Be concise and accurate. Use tools when available.
-
-# Cite or shut up — non-negotiable
-
-Every factual claim about a codebase must be backed by evidence. Reasonix VALIDATES your citations — broken paths render in **red strikethrough with ❌** in front of the user.
-
-**Positive claims** — append a markdown link:
-- ✅ \`The MCP client supports listResources [listResources](src/mcp/client.ts:142).\`
-- ❌ \`The MCP client supports listResources.\` ← unverifiable, do not write.
-
-**Negative claims** ("X is missing", "Y isn't implemented", "lacks Z") are the #1 hallucination shape. STOP before writing them. If you have a search tool, call it first; if the search returns nothing, cite the search itself as evidence (\`No matches for "foo" in src/\`). If you have no tool, qualify hard: "I haven't verified — this is a guess."
-
-Asserting absence without checking is how evaluative answers go wrong. Treat the urge to write "missing" as a red flag in your own reasoning.
-
-# Don't invent what changes — search instead
-
-Your training data has a cutoff. When an answer's correctness depends on something that changes over time (the user is asking what's happening, not what's true) and a search tool is available, search first. Inventing currently-correct values from training memory is the most common way these answers go wrong, and the user usually can't tell until much later.
-
-The signal isn't a topic list — it's: "if I'm wrong about this, is it because reality moved on?". If yes, ground the answer in fresh evidence; if no (definitions, mechanisms, well-established APIs), answer from memory.
-
-${escalationContract(modelId)}`;
-}
 
 /** Lenient: malformed → undefined (no cap) so a bad flag doesn't abort launch. */
 function parseBudgetFlag(raw: number | undefined): number | undefined {
@@ -156,16 +152,16 @@ function resolveDashboardToken(noConfig: boolean): string | undefined {
 
 const program = new Command();
 program
-  .name("reasonix")
+  .name(MAGRA_CLI_NAME)
   .description(t("cli.description"))
   .version(VERSION)
   .option("-c, --continue", t("cli.continue"))
   .option("--no-mouse", t("ui.noMouseHint"))
   .option("--no-proxy", t("ui.noProxyHint"));
 
-// `reasonix` with no subcommand → setup wizard on first run, otherwise `code`
+// `magra` with no subcommand → setup wizard on first run, otherwise `code`
 // in the current directory. Filesystem-less chat stays reachable via
-// `reasonix chat`.
+// `magra chat`.
 program.action(async (opts: { continue?: boolean; mouse?: boolean }) => {
   const cfg = readConfig();
   const mode = resolveBareCommandMode(cfg);
@@ -369,7 +365,7 @@ program
 
 program
   .command("acp")
-  .description("run reasonix as an Agent Client Protocol (ACP) agent on stdio NDJSON JSON-RPC")
+  .description("run MAGRA as an Agent Client Protocol (ACP) agent on stdio NDJSON JSON-RPC")
   .option("-m, --model <id>", t("ui.modelIdHint"))
   .option("--dir <path>", "root directory for filesystem tools (default: cwd)")
   .option("--effort <level>", t("ui.effortHintShort"))

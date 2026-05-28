@@ -35,7 +35,7 @@ export const EN: TranslationSchema = {
     index: "Build (or incrementally refresh) a local semantic search index.",
   },
   stats: {
-    usageHint: "run `reasonix chat`, `reasonix code`, or `reasonix run <task>` — every turn",
+    usageHint: "run `magra chat`, `magra code`, or `magra run <task>` — every turn",
     usageDetail: "appends one line to the log and `reasonix stats` will roll it up.",
   },
   run: {
@@ -254,7 +254,7 @@ export const EN: TranslationSchema = {
   },
   code: {
     workspaceConflict:
-      "⚠ workspace contains another agent platform's files ({platforms}). Reasonix Code may read them as project content; relaunch with --dir <your-project> if that's not what you want.\n",
+      "⚠ workspace contains another agent platform's files ({platforms}). MAGRA Code may read them as project content; relaunch with --dir <your-project> if that's not what you want.\n",
     systemAppendEmpty: "--system-append is empty — no prompt text will be appended\n",
     systemAppendFileReadError:
       'Error: cannot read --system-append-file "{filePath}": {errorDetails}\n',
@@ -1534,7 +1534,7 @@ export const EN: TranslationSchema = {
   },
   startup: {
     codeRooted:
-      '\u25b8 reasonix code: rooted at {rootDir}, session "{session}" \u00b7 {tools} native tool(s){semantic}',
+      '\u25b8 magra code: rooted at {rootDir}, session "{session}" \u00b7 {tools} native tool(s){semantic}',
     ephemeral: "(ephemeral)",
     semanticOn: " \u00b7 semantic_search on",
   },
@@ -1799,8 +1799,8 @@ export const EN: TranslationSchema = {
     bridged: "\u2713 installed {name} - bridged",
     bridgeFailed: "\u25b2 installed {name} - bridge failed: {reason}",
     bridgeReloadFailed:
-      "\u2713 installed {name} - restart `reasonix code` to bridge (reload failed: {message})",
-    restartBridge: "\u2713 installed {name} - restart `reasonix code` to bridge",
+      "\u2713 installed {name} - restart `magra code` to bridge (reload failed: {message})",
+    restartBridge: "\u2713 installed {name} - restart `magra code` to bridge",
     needsEnv: "  \u00b7  needs env: {env}",
     badgeOfficial: "[off]",
     badgeSmithery: "[smt]",

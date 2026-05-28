@@ -1,7 +1,26 @@
-/** `reasonix stats [path]` — path arg switches to per-transcript mode; default is the cross-session dashboard. */
+// === MODULE_CONTRACT ===
+// FILE: src/cli/commands/stats.ts
+// VERSION: 1.0.0
+// PURPOSE: Render MAGRA usage statistics from usage logs or transcripts.
+// SCOPE: Stats command routing, transcript summary, rolling-window dashboard rendering, and subagent usage section.
+// DEPENDS: M-REASONIX-BASE,M-MAGRA-RUNTIME-IDENTITY
+// LINKS: docs/modules/M-MAGRA-RUNTIME-IDENTITY.xml
+// ROLE: ENTRY_POINT
+// MAP_MODE: EXPORTS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: StatsOptions, statsCommand, renderDashboard
+// Locals: transcriptSummary, dashboard, renderSubagentSection, header, divider, bucketRow, pad
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Updated usage dashboard title to use MAGRA primary identity.
+// === END_CHANGE_SUMMARY ===
 
 import { existsSync, readFileSync } from "node:fs";
 import { t } from "../../i18n/index.js";
+import { MAGRA_PROJECT_NAME } from "../../magra/identity.js";
 import {
   type UsageAggregate,
   type UsageBucket,
@@ -76,7 +95,7 @@ function dashboard(opts: StatsOptions): void {
 export function renderDashboard(agg: UsageAggregate, logPath: string): string {
   const lines: string[] = [];
   const size = formatLogSize(logPath);
-  lines.push(`Reasonix usage — ${logPath}${size ? ` (${size})` : ""}`);
+  lines.push(`${MAGRA_PROJECT_NAME} usage — ${logPath}${size ? ` (${size})` : ""}`);
   lines.push("");
   lines.push(header());
   lines.push(divider());

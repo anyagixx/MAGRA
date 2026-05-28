@@ -35,7 +35,7 @@ export const zhCN: TranslationSchema = {
     index: "构建（或增量刷新）本地语义搜索索引。",
   },
   stats: {
-    usageHint: "运行 `reasonix chat`、`reasonix code` 或 `reasonix run <task>` — 每次对话都会记录",
+    usageHint: "运行 `magra chat`、`magra code` 或 `magra run <task>` — 每次对话都会记录",
     usageDetail: "每次对话在日志中追加一行，`reasonix stats` 会将其汇总统计。",
   },
   run: {
@@ -246,7 +246,7 @@ export const zhCN: TranslationSchema = {
   },
   code: {
     workspaceConflict:
-      "⚠ 工作区包含另一个智能体平台的文件 ({platforms})。Reasonix Code 可能会将其作为项目内容读取；如果不是您想要的，请使用 --dir <your-project> 重新启动。\n",
+      "⚠ 工作区包含另一个智能体平台的文件 ({platforms})。MAGRA Code 可能会将其作为项目内容读取；如果不是您想要的，请使用 --dir <your-project> 重新启动。\n",
     systemAppendEmpty: "--system-append 为空 — 不会追加任何提示文本\n",
     systemAppendFileReadError: '错误：无法读取 --system-append-file "{filePath}"：{errorDetails}\n',
   },
@@ -1449,8 +1449,7 @@ export const zhCN: TranslationSchema = {
     turnLabel: "轮",
   },
   startup: {
-    codeRooted:
-      '▸ reasonix code：根目录 {rootDir}，会话 "{session}" · {tools} 个原生工具{semantic}',
+    codeRooted: '▸ magra code：根目录 {rootDir}，会话 "{session}" · {tools} 个原生工具{semantic}',
     ephemeral: "（临时）",
     semanticOn: " · 语义搜索已开启",
   },
@@ -1703,8 +1702,8 @@ export const zhCN: TranslationSchema = {
     notInstalled: "未安装：{name}",
     bridged: "✓ 已安装 {name} — 已桥接",
     bridgeFailed: "▲ 已安装 {name} — 桥接失败：{reason}",
-    bridgeReloadFailed: "✓ 已安装 {name} — 重启 `reasonix code` 以桥接（重载失败：{message}）",
-    restartBridge: "✓ 已安装 {name} — 重启 `reasonix code` 以桥接",
+    bridgeReloadFailed: "✓ 已安装 {name} — 重启 `magra code` 以桥接（重载失败：{message}）",
+    restartBridge: "✓ 已安装 {name} — 重启 `magra code` 以桥接",
     needsEnv: "  ·  需要环境变量：{env}",
     badgeOfficial: "[官方]",
     badgeSmithery: "[三方]",

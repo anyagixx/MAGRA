@@ -475,7 +475,7 @@ function reduceRaw(state: State, action: Action): State {
           ...state.messages,
           {
             kind: "error",
-            message: `reasonix exited (code ${action.code ?? "?"})`,
+            message: `MAGRA exited (code ${action.code ?? "?"})`,
             id: nextErrorId(),
           },
         ],
@@ -1293,7 +1293,7 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
           })
           .filter(Boolean)
           .join("\n\n");
-        return `### Reasonix\n\n${body}`;
+        return `### MAGRA\n\n${body}`;
       }
       if (m.kind === "error") return `### Error\n\n${m.message}`;
       return "";
@@ -2179,7 +2179,7 @@ function TabRuntime({
   const elapsed = useElapsed(state.busy);
   const workspaceLabel = state.settings?.workspaceDir
     ? state.settings.workspaceDir.split(/[\\/]/).pop() || "workspace"
-    : "Reasonix";
+    : "MAGRA";
   const session = (() => {
     if (state.currentSession) {
       const s = state.sessions.find((x) => x.name === state.currentSession);
@@ -2761,7 +2761,7 @@ function TitleBar({
         <div className="tb-meta" data-tauri-drag-region>
           <div className="brand" data-tauri-drag-region>
             <span className="mark" />
-            <span className="brand-name">Reasonix</span>
+            <span className="brand-name">MAGRA</span>
           </div>
           {session && (
             <div className="crumbs" data-tauri-drag-region>
@@ -3585,7 +3585,7 @@ export function App() {
           if (dispatchersRef.current.size === 0) {
             setStartupFailure(
               coerceStartupFailure(
-                new Error(`reasonix exited (code ${e.payload.code ?? "?"})`),
+                new Error(`MAGRA exited (code ${e.payload.code ?? "?"})`),
                 startupStderrRef.current,
               ),
             );

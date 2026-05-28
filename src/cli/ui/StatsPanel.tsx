@@ -4,6 +4,7 @@ import React from "react";
 import stringWidth from "string-width";
 import type { EditMode } from "../../config.js";
 import { t } from "../../i18n/index.js";
+import { MAGRA_PROJECT_NAME } from "../../magra/identity.js";
 import type { SessionSummary } from "../../telemetry/stats.js";
 import { Bar, ChromeRule } from "./primitives.js";
 import { COLOR, GRADIENT } from "./theme.js";
@@ -95,7 +96,7 @@ function ChromeRow({
   const GAP = 2;
 
   const fixedLeft =
-    stringWidth("◈ reasonix") + (projectName ? SEP_DOT + stringWidth(projectName) : 0);
+    stringWidth(`◈ ${MAGRA_PROJECT_NAME}`) + (projectName ? SEP_DOT + stringWidth(projectName) : 0);
   const modeW = modePill ? GAP + stringWidth(`[${modePill.label}]`) : 0;
   const fixedRight = modeW + stringWidth(costLabel);
   let budget = cols - fixedLeft - fixedRight;
@@ -120,7 +121,7 @@ function ChromeRow({
         {"◈ "}
       </Text>
       <Text color={COLOR.brand} bold>
-        reasonix
+        {MAGRA_PROJECT_NAME}
       </Text>
       {projectName ? (
         <>

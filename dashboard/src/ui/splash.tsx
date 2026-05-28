@@ -55,7 +55,7 @@ export function Splash({ onDone }: { onDone: () => void }) {
     <div className="splash" data-leaving={leaving} onClick={skipClick}>
       <div className="splash-card">
         <div className="splash-mark" />
-        <div className="splash-name">Reasonix</div>
+        <div className="splash-name">MAGRA</div>
         <div className="splash-sub">{t("app.splashSubtitle")}</div>
         <div className="splash-dots">
           <span />

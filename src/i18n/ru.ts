@@ -41,7 +41,7 @@ export const ru: TranslationSchema = {
   },
   stats: {
     ...EN.stats,
-    usageHint: "запусти `reasonix chat`, `reasonix code` или `reasonix run <task>` — каждый шаг",
+    usageHint: "запусти `magra chat`, `magra code` или `magra run <task>` — каждый шаг",
     usageDetail: "добавляет одну строку в лог, а `reasonix stats` сводит всё вместе.",
   },
   run: {
@@ -165,7 +165,7 @@ export const ru: TranslationSchema = {
   code: {
     ...EN.code,
     workspaceConflict:
-      "⚠ рабочая область содержит файлы другой платформы агента ({platforms}). Reasonix Code может прочитать их как содержимое проекта; перезапусти с --dir <твой-проект> если это нежелательно.\n",
+      "⚠ рабочая область содержит файлы другой платформы агента ({platforms}). MAGRA Code может прочитать их как содержимое проекта; перезапусти с --dir <твой-проект> если это нежелательно.\n",
     systemAppendEmpty: "--system-append пуст — текст промпта не будет добавлен\n",
     systemAppendFileReadError:
       'Ошибка: не удалось прочитать --system-append-file "{filePath}": {errorDetails}\n',

@@ -1,4 +1,4 @@
-<Phase-9 NAME="MagraRuntimeIdentity" STATUS="pending">
+<Phase-9 NAME="MagraRuntimeIdentity" STATUS="done">
   <purpose>Complete MAGRA runtime identity across prompt, CLI, dashboard, diagnostics, and compatibility aliases.</purpose>
   <modules>
     <module-1>M-MAGRA-RUNTIME-IDENTITY</module-1>
@@ -6,12 +6,20 @@
     <module-3>M-OBSERVABILITY-VERIFICATION</module-3>
   </modules>
   <steps>
-    <step-1>Inventory runtime self-identification strings in CLI, TUI, dashboard, doctor, setup, and system prompt.</step-1>
-    <step-2>Introduce or reuse MAGRA identity constants and update the default system prompt.</step-2>
-    <step-3>Update dashboard and CLI labels while preserving `reasonix` and `dsnix` compatibility aliases.</step-3>
-    <step-4>Add tests for prompt identity, CLI metadata, dashboard labels, and alias compatibility.</step-4>
-    <step-5>Run identity tests, lint, typecheck, MyGRACE lint, and build.</step-5>
+    <step-1 STATUS="done">Inventory runtime self-identification strings in CLI, TUI, dashboard, doctor, setup, and system prompt.</step-1>
+    <step-2 STATUS="done">Introduce or reuse MAGRA identity constants and update the default system prompt.</step-2>
+    <step-3 STATUS="done">Update dashboard and CLI labels while preserving `reasonix` and `dsnix` compatibility aliases.</step-3>
+    <step-4 STATUS="done">Add tests for prompt identity, CLI metadata, dashboard labels, and alias compatibility.</step-4>
+    <step-5 STATUS="done">Run identity tests, lint, typecheck, MyGRACE lint, and build.</step-5>
   </steps>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-runtime-identity.test.ts tests/magra/reasonix-base.test.ts tests/acp.test.ts tests/acp-transcript.test.ts tests/server-dashboard.test.ts tests/startup-banner-i18n.test.ts desktop/src/notifications.test.ts tests/feedback.test.ts tests/installer-nsh-no-placeholders.test.ts tests/demo-utils.test.ts tests/desktop-startup-failure.test.tsx</command-1>
+    <command-2 RESULT="passed">rtk npm run typecheck</command-2>
+    <command-3 RESULT="passed">rtk npm run lint</command-3>
+    <command-4 RESULT="passed">rtk mygrace lint --path .</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm test</command-6>
+  </evidence>
   <verification-refs>
     <verification-1>V-M-MAGRA-RUNTIME-IDENTITY</verification-1>
     <verification-2>V-M-REASONIX-BASE</verification-2>

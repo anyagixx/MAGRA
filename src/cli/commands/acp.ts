@@ -1,4 +1,22 @@
-/** ACP (Agent Client Protocol) agent — drives the cache-first loop over stdio NDJSON JSON-RPC. */
+// === MODULE_CONTRACT ===
+// FILE: src/cli/commands/acp.ts
+// VERSION: 1.0.0
+// PURPOSE: Run MAGRA as an Agent Client Protocol agent over stdio NDJSON JSON-RPC.
+// SCOPE: ACP server initialization, session lifecycle, transcript metadata, MCP bridging, and agent identity metadata.
+// DEPENDS: M-REASONIX-BASE,M-MAGRA-RUNTIME-IDENTITY
+// LINKS: docs/modules/M-MAGRA-RUNTIME-IDENTITY.xml
+// ROLE: ENTRY_POINT
+// MAP_MODE: EXPORTS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: AcpOptions, loadMcpServers, acpCommand
+// Locals: Session, resolveMcpPrefix, resolveDir, buildSession
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Aligned ACP transcript and agentInfo metadata with MAGRA primary identity.
+// === END_CHANGE_SUMMARY ===
 
 import { AsyncLocalStorage } from "node:async_hooks";
 import { type WriteStream, existsSync, statSync } from "node:fs";
@@ -42,6 +60,7 @@ import { loadDotenv } from "../../env.js";
 import { t } from "../../i18n/index.js";
 import { CacheFirstLoop, DeepSeekClient, ImmutablePrefix } from "../../index.js";
 import { errorMeta } from "../../loop/errors.js";
+import { MAGRA_CLI_NAME, MAGRA_PROJECT_NAME } from "../../magra/identity.js";
 import { McpClient } from "../../mcp/client.js";
 import { preflightStdioSpec } from "../../mcp/preflight.js";
 import { bridgeMcpTools } from "../../mcp/registry.js";
@@ -219,7 +238,7 @@ export async function acpCommand(opts: AcpOptions): Promise<void> {
     const defaultModel = opts.model || loadModel() || DEFAULT_MODEL;
     transcriptStream = openTranscriptFile(opts.transcript, {
       version: 1,
-      source: "reasonix acp",
+      source: `${MAGRA_CLI_NAME} acp`,
       model: defaultModel,
       startedAt: new Date().toISOString(),
     });
@@ -254,7 +273,7 @@ export async function acpCommand(opts: AcpOptions): Promise<void> {
         promptCapabilities: { image: false, audio: false, embeddedContext: true },
         mcpCapabilities: { http: false, sse: false },
       },
-      agentInfo: { name: "reasonix", title: "Reasonix", version: VERSION },
+      agentInfo: { name: MAGRA_CLI_NAME, title: MAGRA_PROJECT_NAME, version: VERSION },
       authMethods: [],
     };
   });

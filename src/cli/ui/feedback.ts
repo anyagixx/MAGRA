@@ -1,5 +1,24 @@
-/** Pre-fills the GitHub new-issue body with version + platform + terminal + Node + locale + model. No transcripts, paths, or secrets. */
+// === MODULE_CONTRACT ===
+// FILE: src/cli/ui/feedback.ts
+// VERSION: 1.0.0
+// PURPOSE: Build MAGRA feedback diagnostics and issue URLs without leaking transcripts, paths, or secrets.
+// SCOPE: Diagnostic markdown generation and GitHub issue URL prefill.
+// DEPENDS: M-REASONIX-BASE,M-MAGRA-RUNTIME-IDENTITY
+// LINKS: docs/modules/M-MAGRA-RUNTIME-IDENTITY.xml
+// ROLE: UTILITY
+// MAP_MODE: EXPORTS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: FeedbackDiagnosticInput, FEEDBACK_ISSUE_URL, buildFeedbackIssueUrl, buildFeedbackDiagnostic
+// Locals: FEEDBACK_ISSUE_BASE, FEEDBACK_BODY_QUERY_LIMIT, formatVersion, formatModel, formatMode, formatTerminal
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Updated feedback diagnostic product label to MAGRA.
+// === END_CHANGE_SUMMARY ===
 
+import { MAGRA_PROJECT_NAME } from "../../magra/identity.js";
 import { compareVersions } from "../../version.js";
 
 export interface FeedbackDiagnosticInput {
@@ -45,7 +64,7 @@ export function buildFeedbackIssueUrl(diagnostic: string): string {
 
 export function buildFeedbackDiagnostic(input: FeedbackDiagnosticInput): string {
   const lines: string[] = [];
-  lines.push(`**Reasonix**: ${formatVersion(input.version, input.latestVersion)}`);
+  lines.push(`**${MAGRA_PROJECT_NAME}**: ${formatVersion(input.version, input.latestVersion)}`);
   lines.push(`**Platform**: ${input.platform} (${input.osRelease})`);
   lines.push(`**Terminal**: ${formatTerminal(input)}`);
   if (typeof input.cols === "number" && typeof input.rows === "number") {

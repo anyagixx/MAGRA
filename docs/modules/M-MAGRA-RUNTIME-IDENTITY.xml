@@ -1,8 +1,8 @@
-<M-MAGRA-RUNTIME-IDENTITY NAME="MagraRuntimeIdentity" TYPE="ENTRY_POINT" STATUS="pending">
+<M-MAGRA-RUNTIME-IDENTITY NAME="MagraRuntimeIdentity" TYPE="ENTRY_POINT" STATUS="done">
   <contract>
     <purpose>Make MAGRA the runtime identity across system prompt, CLI, doctor, dashboard labels, and compatibility messaging.</purpose>
     <scope>Product constants, default system prompt, CLI help/version text, dashboard brand labels, and Reasonix compatibility aliases.</scope>
-    <source-path>src/cli/index.ts</source-path>
+    <source-path>src/magra/identity.ts</source-path>
     <test-path>tests/magra-runtime-identity.test.ts</test-path>
     <verification-ref>V-M-MAGRA-RUNTIME-IDENTITY</verification-ref>
   </contract>
@@ -12,7 +12,10 @@
   <interfaces>
     <interface-1>defaultSystemPrompt(modelId): string</interface-1>
     <interface-2>MAGRA_PROJECT_NAME: "MAGRA"</interface-2>
-    <interface-3>formatCompatibilityAlias(alias): string</interface-3>
+    <interface-3>MAGRA_CLI_NAME: "magra"</interface-3>
+    <interface-4>MAGRA_CODE_NAME: "MAGRA Code"</interface-4>
+    <interface-5>formatCompatibilityAlias(alias): string</interface-5>
+    <interface-6>isCompatibilityAlias(alias): boolean</interface-6>
   </interfaces>
   <invariants>
     <invariant-1>The primary runtime self-identifies as MAGRA.</invariant-1>
@@ -20,4 +23,7 @@
     <invariant-3>Brand changes do not break existing Reasonix-compatible command behavior.</invariant-3>
   </invariants>
   <CrossLink from="M-MAGRA-RUNTIME-IDENTITY" to="M-REASONIX-BASE" relation="renames-primary-runtime" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-runtime-identity.test.ts tests/magra/reasonix-base.test.ts</command-1>
+  </evidence>
 </M-MAGRA-RUNTIME-IDENTITY>

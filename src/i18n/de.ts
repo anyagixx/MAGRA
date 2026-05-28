@@ -41,7 +41,7 @@ export const de: TranslationSchema = {
   },
   stats: {
     ...EN.stats,
-    usageHint: "Führe `reasonix chat`, `reasonix code` oder `reasonix run <task>` aus – jeden Turn",
+    usageHint: "Führe `magra chat`, `magra code` oder `magra run <task>` aus – jeden Turn",
     usageDetail: "Hängt eine Zeile an das Log an; `reasonix stats` fasst sie zusammen.",
   },
   run: {
@@ -174,7 +174,7 @@ export const de: TranslationSchema = {
   code: {
     ...EN.code,
     workspaceConflict:
-      "⚠ Arbeitsbereich enthält Dateien einer anderen Agent-Plattform ({platforms}). Reasonix Code kann sie als Projektinhalt lesen; starte mit --dir <dein-projekt> neu, falls das nicht gewünscht ist.\n",
+      "⚠ Arbeitsbereich enthält Dateien einer anderen Agent-Plattform ({platforms}). MAGRA Code kann sie als Projektinhalt lesen; starte mit --dir <dein-projekt> neu, falls das nicht gewünscht ist.\n",
     systemAppendEmpty: "--system-append ist leer — kein Prompt-Text wird angehängt\n",
     systemAppendFileReadError:
       'Fehler: kann --system-append-file "{filePath}" nicht lesen: {errorDetails}\n',
@@ -1618,7 +1618,7 @@ export const de: TranslationSchema = {
   startup: {
     ...EN.startup,
     codeRooted:
-      '▸ reasonix code: verwurzelt in {rootDir}, Sitzung "{session}" · {tools} native Tool{s}{semantic}',
+      '▸ magra code: verwurzelt in {rootDir}, Sitzung "{session}" · {tools} native Tool{s}{semantic}',
     ephemeral: "(ephemer)",
     semanticOn: " · Semantic-Search an",
   },
@@ -1885,8 +1885,8 @@ export const de: TranslationSchema = {
     bridged: "✓ {name} installiert - verbunden",
     bridgeFailed: "▲ {name} installiert - Verbindung fehlgeschlagen: {reason}",
     bridgeReloadFailed:
-      "✓ {name} installiert - starte `reasonix code` neu zur Verbindung (Neuladen fehlgeschlagen: {message})",
-    restartBridge: "✓ {name} installiert - starte `reasonix code` neu zur Verbindung",
+      "✓ {name} installiert - starte `magra code` neu zur Verbindung (Neuladen fehlgeschlagen: {message})",
+    restartBridge: "✓ {name} installiert - starte `magra code` neu zur Verbindung",
     needsEnv: "  ·  benötigt Umgebungsvariable: {env}",
     badgeOfficial: "[off]",
     badgeSmithery: "[smt]",

@@ -3,7 +3,7 @@
 // VERSION: 1.0.0
 // PURPOSE: Provide MAGRA health, verification command, and log-marker utilities.
 // SCOPE: Pure helpers for Phase-1 attribution and later MyGRACE/RTK/SNARC integration diagnostics.
-// DEPENDS: none
+// DEPENDS: M-MAGRA-RUNTIME-IDENTITY
 // LINKS: docs/modules/M-OBSERVABILITY-VERIFICATION.xml
 // ROLE: RUNTIME
 // MAP_MODE: EXPORTS
@@ -18,9 +18,12 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial MAGRA observability utility module for Phase-1 baseline work.
+// Updated to reuse canonical MAGRA runtime identity constant.
 // === END_CHANGE_SUMMARY ===
 
-export const MAGRA_PROJECT_NAME = "MAGRA";
+import { MAGRA_PROJECT_NAME } from "./identity.js";
+
+export { MAGRA_PROJECT_NAME };
 
 export type MagraComponentName = "reasonix" | "mygrace" | "rtk" | "snarc" | "mcp" | "verification";
 

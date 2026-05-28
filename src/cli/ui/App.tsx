@@ -941,7 +941,7 @@ function AppInner({
   if (transcript && !transcriptRef.current) {
     transcriptRef.current = openTranscriptFile(transcript, {
       version: 1,
-      source: "reasonix chat",
+      source: "magra chat",
       model,
       startedAt: new Date().toISOString(),
     });
@@ -2170,7 +2170,7 @@ function AppInner({
    */
   const startWalkthrough = useCallback((): string => {
     if (!codeMode) {
-      return "/walk is only available inside `reasonix code`.";
+      return "/walk is only available inside `magra code`.";
     }
     if (pendingEdits.current.length === 0) {
       return "nothing pending - nothing to walk through.";
@@ -4471,7 +4471,7 @@ function AppInner({
                         onSwitchSession(outcome.name);
                       } else {
                         log.pushInfo(
-                          `to switch to "${outcome.name}", quit and run: reasonix chat --session ${outcome.name}`,
+                          `to switch to "${outcome.name}", quit and run: magra chat --session ${outcome.name}`,
                         );
                       }
                       return;
@@ -4482,7 +4482,7 @@ function AppInner({
                         onSwitchSession(freshSessionName(session));
                       } else {
                         log.pushInfo(
-                          "to start a fresh session, quit and run: reasonix chat (no --session flag)",
+                          "to start a fresh session, quit and run: magra chat (no --session flag)",
                         );
                       }
                       return;

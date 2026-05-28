@@ -37,7 +37,7 @@ export const JA: TranslationSchema = {
     index: "ローカルのセマンティック検索インデックスを構築（または増分更新）します。",
   },
   stats: {
-    usageHint: "`reasonix chat`、`reasonix code`、または `reasonix run <task>` を実行するたびに",
+    usageHint: "`magra chat`、`magra code`、または `magra run <task>` を実行するたびに",
     usageDetail: "ログに1行追加され、`reasonix stats` で集計されます。",
   },
   run: {
@@ -273,7 +273,7 @@ export const JA: TranslationSchema = {
   },
   code: {
     workspaceConflict:
-      "⚠ ワークスペースに別のエージェントプラットフォームのファイル ({platforms}) が含まれています。Reasonix Code がそれらをプロジェクトコンテンツとして読み取る可能性があります。意図しない場合は --dir <your-project> で再起動してください。\n",
+      "⚠ ワークスペースに別のエージェントプラットフォームのファイル ({platforms}) が含まれています。MAGRA Code がそれらをプロジェクトコンテンツとして読み取る可能性があります。意図しない場合は --dir <your-project> で再起動してください。\n",
     systemAppendEmpty: "--system-append が空です — プロンプトテキストは追加されません\n",
     systemAppendFileReadError:
       'エラー: --system-append-file "{filePath}" を読み取れません: {errorDetails}\n',
@@ -1584,7 +1584,7 @@ export const JA: TranslationSchema = {
   },
   startup: {
     codeRooted:
-      '\u25b8 reasonix code: ルート {rootDir}, セッション "{session}" \u00b7 {tools} ネイティブツール{semantic}',
+      '\u25b8 magra code: ルート {rootDir}, セッション "{session}" \u00b7 {tools} ネイティブツール{semantic}',
     ephemeral: "（エフェメラル）",
     semanticOn: " \u00b7 semantic_search オン",
   },
@@ -1851,8 +1851,8 @@ export const JA: TranslationSchema = {
     bridged: "\u2713 {name} をインストール - ブリッジ済み",
     bridgeFailed: "\u25b2 {name} をインストール - ブリッジ失敗: {reason}",
     bridgeReloadFailed:
-      "\u2713 {name} をインストール - `reasonix code` を再起動してブリッジ（再読込失敗: {message}）",
-    restartBridge: "\u2713 {name} をインストール - `reasonix code` を再起動してブリッジ",
+      "\u2713 {name} をインストール - `magra code` を再起動してブリッジ（再読込失敗: {message}）",
+    restartBridge: "\u2713 {name} をインストール - `magra code` を再起動してブリッジ",
     needsEnv: "  \u00b7  要環境変数: {env}",
     badgeOfficial: "[公式]",
     badgeSmithery: "[smt]",

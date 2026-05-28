@@ -547,7 +547,7 @@ describe("dashboard server: SPA shell", () => {
     const html = String(r.body);
     expect(html).toContain(TOKEN); // token interpolated into <meta>
     expect(html).toContain("standalone"); // mode interpolated
-    expect(html).toContain("<title>Reasonix</title>");
+    expect(html).toContain("<title>MAGRA</title>");
   });
 
   it("rendered index.html replaces ALL token placeholders, not just the first", async () => {

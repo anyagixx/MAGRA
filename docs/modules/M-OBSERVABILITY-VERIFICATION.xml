@@ -7,10 +7,11 @@
     <verification-ref>V-M-OBSERVABILITY-VERIFICATION</verification-ref>
   </contract>
   <dependencies>
-    <dependency-1>M-MYGRACE-DOCS</dependency-1>
-    <dependency-2>M-RTK-SHELL-POLICY</dependency-2>
-    <dependency-3>M-SNARC-MEMORY</dependency-3>
-    <dependency-4>M-MCP-UNIFIED-BRIDGE</dependency-4>
+    <dependency-1>M-MAGRA-RUNTIME-IDENTITY</dependency-1>
+    <dependency-2>M-MYGRACE-DOCS</dependency-2>
+    <dependency-3>M-RTK-SHELL-POLICY</dependency-3>
+    <dependency-4>M-SNARC-MEMORY</dependency-4>
+    <dependency-5>M-MCP-UNIFIED-BRIDGE</dependency-5>
   </dependencies>
   <interfaces>
     <interface-1>getMagraHealth(context): MagraHealthReport</interface-1>
@@ -24,4 +25,5 @@
   </invariants>
   <CrossLink from="M-OBSERVABILITY-VERIFICATION" to="M-RTK-SHELL-POLICY" relation="observes" />
   <CrossLink from="M-OBSERVABILITY-VERIFICATION" to="M-SNARC-MEMORY" relation="observes" />
+  <CrossLink from="M-OBSERVABILITY-VERIFICATION" to="M-MAGRA-RUNTIME-IDENTITY" relation="uses-product-identity" />
 </M-OBSERVABILITY-VERIFICATION>

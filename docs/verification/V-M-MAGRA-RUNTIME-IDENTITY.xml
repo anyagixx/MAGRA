@@ -1,13 +1,16 @@
-<V-M-MAGRA-RUNTIME-IDENTITY MODULE="M-MAGRA-RUNTIME-IDENTITY" PRIORITY="high" STATUS="pending">
+<V-M-MAGRA-RUNTIME-IDENTITY MODULE="M-MAGRA-RUNTIME-IDENTITY" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/magra-runtime-identity.test.ts</file-1>
     <file-2>tests/magra/reasonix-base.test.ts</file-2>
+    <file-3>tests/acp.test.ts</file-3>
+    <file-4>tests/server-dashboard.test.ts</file-4>
   </test-files>
   <module-checks>
     <check-1>rtk npm test -- tests/magra-runtime-identity.test.ts tests/magra/reasonix-base.test.ts</check-1>
     <check-2>rtk npm run typecheck</check-2>
     <check-3>rtk npm run lint</check-3>
     <check-4>rtk mygrace lint --path .</check-4>
+    <check-5>rtk npm run build</check-5>
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">Default runtime system prompt self-identifies as MAGRA.</scenario-1>
@@ -35,4 +38,12 @@
   <required-log-markers>
     <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-runtime-identity.test.ts tests/magra/reasonix-base.test.ts tests/acp.test.ts tests/acp-transcript.test.ts tests/server-dashboard.test.ts tests/startup-banner-i18n.test.ts desktop/src/notifications.test.ts tests/feedback.test.ts tests/installer-nsh-no-placeholders.test.ts tests/demo-utils.test.ts tests/desktop-startup-failure.test.tsx</command-1>
+    <command-2 RESULT="passed">rtk npm run typecheck</command-2>
+    <command-3 RESULT="passed">rtk npm run lint</command-3>
+    <command-4 RESULT="passed">rtk mygrace lint --path .</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm test</command-6>
+  </evidence>
 </V-M-MAGRA-RUNTIME-IDENTITY>

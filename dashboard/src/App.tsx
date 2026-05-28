@@ -367,7 +367,7 @@ function reduceRaw(state: State, action: Action): State {
         queuedSends: [],
         messages: [
           ...state.messages,
-          { kind: "error", message: `reasonix exited (code ${action.code ?? "?"})` },
+          { kind: "error", message: `MAGRA exited (code ${action.code ?? "?"})` },
         ],
       };
     case "incoming":
@@ -1105,7 +1105,7 @@ function formatConversationMarkdown(messages: ChatMessage[], userLabel: string):
           })
           .filter(Boolean)
           .join("\n\n");
-        return `### Reasonix\n\n${body}`;
+        return `### MAGRA\n\n${body}`;
       }
       if (m.kind === "error") return `### Error\n\n${m.message}`;
       return "";
@@ -1819,7 +1819,7 @@ function TabRuntime({
   const elapsed = useElapsed(state.busy);
   const workspaceLabel = state.settings?.workspaceDir
     ? state.settings.workspaceDir.split(/[\\/]/).pop() || "workspace"
-    : "Reasonix";
+    : "MAGRA";
   const session = (() => {
     const firstUser = state.messages.find((m) => m.kind === "user");
     if (firstUser && firstUser.kind === "user") {
@@ -2479,7 +2479,7 @@ function TitleBar({
         <div className="tb-meta" data-tauri-drag-region>
           <div className="brand" data-tauri-drag-region>
             <span className="mark" />
-            <span className="brand-name">Reasonix</span>
+            <span className="brand-name">MAGRA</span>
           </div>
           {session && (
             <div className="crumbs" data-tauri-drag-region>

@@ -148,7 +148,7 @@ async function getStatus(ctx: DashboardContext): Promise<ApiResult> {
       body: {
         attached: false,
         reason:
-          "Semantic indexing requires a code-mode session — run `/dashboard` from inside `reasonix code` instead of standalone `reasonix dashboard`.",
+          "Semantic indexing requires a code-mode session — run `/dashboard` from inside `magra code` instead of standalone `magra dashboard`.",
       },
     };
   }

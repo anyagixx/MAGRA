@@ -55,7 +55,7 @@ export function AboutModal({ onClose }: { onClose: () => void }) {
           <I.x size={14} />
         </button>
         <div className="about-brand">
-          <div className="about-name">Reasonix</div>
+          <div className="about-name">MAGRA</div>
           <div className="about-tagline">{t("about.tagline")}</div>
         </div>
         <div className="about-meta">

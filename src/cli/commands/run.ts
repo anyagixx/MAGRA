@@ -160,7 +160,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
   if (opts.transcript) {
     transcriptStream = openTranscriptFile(opts.transcript, {
       version: 1,
-      source: "reasonix run",
+      source: "magra run",
       model: opts.model,
       startedAt: new Date().toISOString(),
     });
@@ -203,7 +203,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
   );
   if (opts.transcript) {
     process.stdout.write(`\ntranscript: ${opts.transcript}\n`);
-    process.stdout.write(`  → npx reasonix replay ${opts.transcript}\n`);
+    process.stdout.write(`  → npx magra replay ${opts.transcript}\n`);
   }
 
   for (const c of clients) await c.close();
