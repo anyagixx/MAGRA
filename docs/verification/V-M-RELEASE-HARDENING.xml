@@ -1,0 +1,20 @@
+<V-M-RELEASE-HARDENING MODULE="M-RELEASE-HARDENING" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>docs/release/verification-report.md</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm run lint</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk mygrace lint --path .</check-3>
+    <check-4>rtk npm test</check-4>
+    <check-5>rtk npm run build</check-5>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Operator flows document MyGRACE, RTK, SNARC, MCP, and dashboard usage.</scenario-1>
+    <scenario-2 kind="success">Release checklist includes verification, packaging, smoke, and rollback steps.</scenario-2>
+    <scenario-3 kind="success">NOTICE records upstream Reasonix, MyGRACE, RTK, and SNARC attribution.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
+  </required-log-markers>
+</V-M-RELEASE-HARDENING>

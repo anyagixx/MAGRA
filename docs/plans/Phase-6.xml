@@ -1,4 +1,4 @@
-<Phase-6 NAME="HardeningRelease" STATUS="pending">
+<Phase-6 NAME="HardeningRelease" STATUS="done">
   <purpose>Harden MAGRA integration, complete contract migration, and prepare release packaging.</purpose>
   <modules>
     <module-1>M-REASONIX-BASE</module-1>
@@ -6,6 +6,7 @@
     <module-3>M-RTK-SHELL-POLICY</module-3>
     <module-4>M-SNARC-MEMORY</module-4>
     <module-5>M-OBSERVABILITY-VERIFICATION</module-5>
+    <module-6>M-RELEASE-HARDENING</module-6>
   </modules>
   <steps>
     <step-1>Run full verify and targeted integration suites.</step-1>
@@ -16,5 +17,6 @@
   </steps>
   <verification-refs>
     <verification-1>V-M-OBSERVABILITY-VERIFICATION</verification-1>
+    <verification-2>V-M-RELEASE-HARDENING</verification-2>
   </verification-refs>
 </Phase-6>

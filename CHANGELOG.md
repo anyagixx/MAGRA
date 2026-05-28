@@ -1,7 +1,13 @@
 # Changelog
 
-All notable changes to Reasonix. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
+All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [MAGRA integration] — 2026-05-28
+
+**MAGRA product integration.** The project is named MAGRA and packages the Reasonix base runtime with MyGRACE methodology, RTK shell compression, SNARC salience-gated memory, unified native/MCP tools, and dashboard SNARC visibility.
+
+**Release hardening.** Added MAGRA operator flows, release checklist, verification report, and attribution notice for integrated upstream sources.
 
 ## [0.52.0] — 2026-05-26
 

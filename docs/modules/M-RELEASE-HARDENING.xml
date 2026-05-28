@@ -1,0 +1,29 @@
+<M-RELEASE-HARDENING NAME="ReleaseHardening" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Prepare MAGRA integration for operator use and release packaging.</purpose>
+    <scope>Verification evidence, operator flows, release checklist, rollback notes, package metadata review, and attribution notice.</scope>
+    <source-path>docs/release/MAGRA-release-checklist.md</source-path>
+    <test-path>docs/release/verification-report.md</test-path>
+    <verification-ref>V-M-RELEASE-HARDENING</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-REASONIX-BASE</dependency-1>
+    <dependency-2>M-MYGRACE-SKILLS</dependency-2>
+    <dependency-3>M-RTK-SHELL-POLICY</dependency-3>
+    <dependency-4>M-SNARC-MEMORY</dependency-4>
+    <dependency-5>M-MCP-UNIFIED-BRIDGE</dependency-5>
+  </dependencies>
+  <interfaces>
+    <interface-1>docs/operations/MAGRA-operator-flows.md</interface-1>
+    <interface-2>docs/release/MAGRA-release-checklist.md</interface-2>
+    <interface-3>docs/release/verification-report.md</interface-3>
+    <interface-4>NOTICE.md</interface-4>
+  </interfaces>
+  <invariants>
+    <invariant-1>Release docs use the product name MAGRA.</invariant-1>
+    <invariant-2>Verification evidence records commands and outcomes.</invariant-2>
+    <invariant-3>Rollback notes cover SNARC local memory and RTK raw bypass.</invariant-3>
+  </invariants>
+  <CrossLink from="M-RELEASE-HARDENING" to="M-SNARC-MEMORY" relation="documents" />
+  <CrossLink from="M-RELEASE-HARDENING" to="M-RTK-SHELL-POLICY" relation="documents" />
+</M-RELEASE-HARDENING>

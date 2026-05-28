@@ -5,5 +5,5 @@
   <Phase-3 NAME="WebMyGraceInterface" STATUS="done" STEPS="5" />
   <Phase-4 NAME="RtkShellIntegration" STATUS="done" STEPS="4" />
   <Phase-5 NAME="SnarcMemoryIntegration" STATUS="done" STEPS="6" />
-  <Phase-6 NAME="HardeningRelease" STATUS="pending" STEPS="5" />
+  <Phase-6 NAME="HardeningRelease" STATUS="done" STEPS="5" />
 </PlanIndex>

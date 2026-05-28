@@ -1,3 +1,22 @@
+<!-- === MODULE_CONTRACT ===
+FILE: README.md
+VERSION: 1.0.0
+PURPOSE: Present MAGRA product context while preserving upstream Reasonix user documentation.
+SCOPE: Top-level project overview, install guidance, attribution, and links.
+DEPENDS: M-REASONIX-BASE,M-MYGRACE-SKILLS,M-RTK-SHELL-POLICY,M-SNARC-MEMORY
+LINKS: docs/plans/Phase-6.xml
+ROLE: RELEASE
+MAP_MODE: DOCUMENT
+START_MODULE_CONTRACT
+END_MODULE_CONTRACT
+=== END_MODULE_CONTRACT === -->
+
+# MAGRA
+
+MAGRA is a Reasonix-based coding agent that integrates MyGRACE workflows, RTK shell compression, SNARC salience-gated memory, unified native/MCP tools, and a web chat surface for MyGRACE skills.
+
+The documentation below preserves the upstream Reasonix user guide where it still applies. Use the `magra` binary for MAGRA-first operation; `reasonix` and `dsnix` remain compatibility aliases.
+
 <p align="center">
   <img src="docs/logo.svg" alt="Reasonix" width="640"/>
 </p>

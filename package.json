@@ -26,6 +26,7 @@
     "patches",
     "scripts/postinstall.mjs",
     "README.md",
+    "NOTICE.md",
     "LICENSE"
   ],
   "workspaces": [
