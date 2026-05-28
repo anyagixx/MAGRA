@@ -1,0 +1,25 @@
+<M-MAGRA-RELEASE-SURFACE NAME="MagraReleaseSurface" TYPE="UTILITY" STATUS="pending">
+  <contract>
+    <purpose>Make the public release surface consistently MAGRA-first while preserving upstream Reasonix attribution.</purpose>
+    <scope>README, package metadata, badges, release checklist, changelog, NOTICE, install commands, and user-facing docs.</scope>
+    <source-path>README.md</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-RELEASE-SURFACE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-RUNTIME-IDENTITY</dependency-1>
+    <dependency-2>M-RELEASE-HARDENING</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>README.md MAGRA install and usage sections</interface-1>
+    <interface-2>package.json repository, bugs, homepage, bin, files, and description</interface-2>
+    <interface-3>docs/release/MAGRA-release-checklist.md release readiness checklist</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Primary install and launch examples use `magra`.</invariant-1>
+    <invariant-2>Reasonix appears as upstream attribution or compatibility wording only.</invariant-2>
+    <invariant-3>Release docs point to MAGRA artifacts and verification gates.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-RELEASE-SURFACE" to="M-MAGRA-RUNTIME-IDENTITY" relation="documents" />
+  <CrossLink from="M-MAGRA-RELEASE-SURFACE" to="M-RELEASE-HARDENING" relation="extends" />
+</M-MAGRA-RELEASE-SURFACE>

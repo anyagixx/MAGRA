@@ -1,0 +1,18 @@
+<Phase-10 NAME="MyGraceGovernanceLint" STATUS="pending">
+  <purpose>Strengthen MyGRACE governance so managed source, dashboard, docs, and release files obey contract and markup rules.</purpose>
+  <modules>
+    <module-1>M-MYGRACE-GOVERNANCE-LINT</module-1>
+    <module-2>M-MYGRACE-DOCS</module-2>
+  </modules>
+  <steps>
+    <step-1>Define managed-file discovery rules from graph-index PATH entries and approved docs directories.</step-1>
+    <step-2>Require MODULE_CONTRACT, MODULE_MAP, and CHANGE_SUMMARY in managed files where the role requires them.</step-2>
+    <step-3>Change semantic block linting to pair START/END tags by exact block name.</step-3>
+    <step-4>Add negative tests for missing maps, missing change summaries, orphan blocks, and dashboard/docs drift.</step-4>
+    <step-5>Run MyGRACE lint, targeted MyGRACE tests, lint, and typecheck.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MYGRACE-GOVERNANCE-LINT</verification-1>
+    <verification-2>V-M-MYGRACE-DOCS</verification-2>
+  </verification-refs>
+</Phase-10>

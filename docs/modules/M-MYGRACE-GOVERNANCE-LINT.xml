@@ -1,0 +1,23 @@
+<M-MYGRACE-GOVERNANCE-LINT NAME="MyGraceGovernanceLint" TYPE="UTILITY" STATUS="pending">
+  <contract>
+    <purpose>Strengthen MyGRACE lint so managed files across src, dashboard, docs, and release surfaces cannot drift from contract rules.</purpose>
+    <scope>Managed-file discovery, MODULE_CONTRACT/MODULE_MAP/CHANGE_SUMMARY enforcement, semantic block pairing, and negative drift tests.</scope>
+    <source-path>src/mygrace/docs.ts</source-path>
+    <test-path>tests/mygrace-governance-lint.test.ts</test-path>
+    <verification-ref>V-M-MYGRACE-GOVERNANCE-LINT</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-DOCS</dependency-1>
+  </dependencies>
+  <interfaces>
+    <interface-1>lintMyGraceArtifacts(root): LintReport</interface-1>
+    <interface-2>discoverManagedFiles(root): ManagedFile[]</interface-2>
+    <interface-3>lintManagedFileMarkup(file): LintIssue[]</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Every graph-index PATH that points to an existing managed file is linted.</invariant-1>
+    <invariant-2>Managed runtime and release files require MODULE_CONTRACT, MODULE_MAP, and CHANGE_SUMMARY.</invariant-2>
+    <invariant-3>Semantic block START/END tags are paired by name, not only by count.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MYGRACE-GOVERNANCE-LINT" to="M-MYGRACE-DOCS" relation="hardens" />
+</M-MYGRACE-GOVERNANCE-LINT>

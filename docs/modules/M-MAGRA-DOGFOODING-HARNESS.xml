@@ -1,0 +1,26 @@
+<M-MAGRA-DOGFOODING-HARNESS NAME="MagraDogfoodingHarness" TYPE="UTILITY" STATUS="pending">
+  <contract>
+    <purpose>Validate MAGRA as a comfortable beta tool for real pet-project development workflows.</purpose>
+    <scope>Disposable project scenarios, runtime smoke, web chat MyGRACE calls, RTK shell behavior, SNARC recall across restart, and friction reporting.</scope>
+    <source-path>docs/dogfooding/MAGRA-dogfooding-report.md</source-path>
+    <test-path>tests/magra-dogfooding-smoke.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-DOGFOODING-HARNESS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-SNARC-CONTEXT-ISOLATION</dependency-1>
+    <dependency-2>M-SNARC-SQLITE-STORE</dependency-2>
+    <dependency-3>M-MAGRA-RUNTIME-IDENTITY</dependency-3>
+    <dependency-4>M-MYGRACE-GOVERNANCE-LINT</dependency-4>
+    <dependency-5>M-MAGRA-RELEASE-SURFACE</dependency-5>
+  </dependencies>
+  <interfaces>
+    <interface-1>docs/dogfooding/MAGRA-dogfooding-report.md</interface-1>
+    <interface-2>scripts or deterministic smoke tests for disposable pet-project flows</interface-2>
+  </interfaces>
+  <invariants>
+    <invariant-1>Dogfooding records exact commands, outcomes, failures, and friction.</invariant-1>
+    <invariant-2>At least three pet-project scenarios are exercised before beta readiness is claimed.</invariant-2>
+    <invariant-3>Failed or awkward workflows become tracked follow-up items.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-DOGFOODING-HARNESS" to="M-MAGRA-RELEASE-SURFACE" relation="validates" />
+</M-MAGRA-DOGFOODING-HARNESS>

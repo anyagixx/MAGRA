@@ -1,0 +1,25 @@
+<M-SNARC-CONTEXT-ISOLATION NAME="SnarcContextIsolation" TYPE="INTEGRATION" STATUS="pending">
+  <contract>
+    <purpose>Keep SNARC injected memory context model-only so it is not persisted as user-authored transcript content.</purpose>
+    <scope>Loop prompt assembly, transcript persistence, compaction input, export behavior, and SNARC capture boundaries.</scope>
+    <source-path>src/loop.ts</source-path>
+    <test-path>tests/snarc-loop-context-isolation.test.ts</test-path>
+    <verification-ref>V-M-SNARC-CONTEXT-ISOLATION</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-SNARC-LOOP-ADAPTER</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>buildModelInputWithContext(userInput, additionalContext): ModelInputEnvelope</interface-1>
+    <interface-2>persistUserInputOnly(userInput): void</interface-2>
+    <interface-3>excludeTransientMemoryFromCompaction(messages): Message[]</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Raw user prompt is the only text persisted as role=user.</invariant-1>
+    <invariant-2>SNARC memory context is visible to the model but absent from transcript export and user cards.</invariant-2>
+    <invariant-3>SNARC does not recapture its own injected context as a fresh user statement.</invariant-3>
+  </invariants>
+  <CrossLink from="M-SNARC-CONTEXT-ISOLATION" to="M-SNARC-LOOP-ADAPTER" relation="hardens" />
+  <CrossLink from="M-SNARC-CONTEXT-ISOLATION" to="M-SNARC-MEMORY" relation="protects" />
+</M-SNARC-CONTEXT-ISOLATION>

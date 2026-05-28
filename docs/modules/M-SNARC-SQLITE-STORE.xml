@@ -1,0 +1,26 @@
+<M-SNARC-SQLITE-STORE NAME="SnarcSqliteStore" TYPE="DATA_LAYER" STATUS="pending">
+  <contract>
+    <purpose>Implement the approved SQLite-backed SNARC memory store for project-scoped MAGRA memory.</purpose>
+    <scope>SQLite schema, migrations, transaction boundaries, JSON import fallback, search indexes, corrupt-store handling, and stats.</scope>
+    <source-path>src/snarc/sqlite-store.ts</source-path>
+    <test-path>tests/snarc-sqlite-store.test.ts</test-path>
+    <verification-ref>V-M-SNARC-SQLITE-STORE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-SNARC-MEMORY</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>openSnarcStore(rootDir): SnarcStoreConnection</interface-1>
+    <interface-2>migrateSnarcStore(connection): MigrationResult</interface-2>
+    <interface-3>importLegacyJsonMemory(rootDir): ImportResult</interface-3>
+    <interface-4>querySnarcRows(query, options): SnarcSearchResult[]</interface-4>
+  </interfaces>
+  <invariants>
+    <invariant-1>Primary persistence path is `.magra/snarc/memory.sqlite`.</invariant-1>
+    <invariant-2>Writes are transactional and preserve observed, inferred, and identity provenance.</invariant-2>
+    <invariant-3>Existing JSON memory is imported or readable without silent data loss.</invariant-3>
+  </invariants>
+  <CrossLink from="M-SNARC-SQLITE-STORE" to="M-SNARC-MEMORY" relation="replaces-json-store" />
+  <CrossLink from="M-SNARC-SQLITE-STORE" to="S-SNARC" relation="aligns-with-source" />
+</M-SNARC-SQLITE-STORE>

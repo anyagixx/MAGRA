@@ -1,0 +1,23 @@
+<V-M-SNARC-SQLITE-STORE MODULE="M-SNARC-SQLITE-STORE" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/snarc-sqlite-store.test.ts</file-1>
+    <file-2>tests/snarc-memory.test.ts</file-2>
+    <file-3>tests/mcp-unified-bridge.test.ts</file-3>
+    <file-4>tests/dashboard-snarc-server.test.ts</file-4>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/snarc-sqlite-store.test.ts tests/snarc-memory.test.ts tests/mcp-unified-bridge.test.ts tests/dashboard-snarc-server.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk npm run build</check-3>
+    <check-4>rtk mygrace lint --path .</check-4>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Observations, patterns, identity facts, sessions, and token stats persist in `.magra/snarc/memory.sqlite`.</scenario-1>
+    <scenario-2 kind="success">Legacy JSON memory imports without duplicate rows or silent data loss.</scenario-2>
+    <scenario-3 kind="failure">Corrupt SQLite database returns bounded errors and does not overwrite existing bytes.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[SnarcMemory][captureObservation][BLOCK_SCORE_SALIENCE]</marker-1>
+    <marker-2>[SnarcMemory][searchMemory][BLOCK_QUERY_MEMORY]</marker-2>
+  </required-log-markers>
+</V-M-SNARC-SQLITE-STORE>

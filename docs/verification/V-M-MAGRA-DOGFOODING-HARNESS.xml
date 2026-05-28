@@ -1,0 +1,19 @@
+<V-M-MAGRA-DOGFOODING-HARNESS MODULE="M-MAGRA-DOGFOODING-HARNESS" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/magra-dogfooding-smoke.test.ts</file-1>
+    <file-2>docs/dogfooding/MAGRA-dogfooding-report.md</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-dogfooding-smoke.test.ts</check-1>
+    <check-2>rtk mygrace lint --path .</check-2>
+    <check-3>rtk npm run build</check-3>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Node CLI, React/Vite, and docs/tooling pet-project workflows are exercised and recorded.</scenario-1>
+    <scenario-2 kind="success">SNARC recalls relevant project decisions after restart without transcript pollution.</scenario-2>
+    <scenario-3 kind="failure">Any blocker or repeated friction is captured as a follow-up backlog item before beta readiness.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MagraDogfoodingHarness][runScenario][BLOCK_RECORD_OUTCOME]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-DOGFOODING-HARNESS>

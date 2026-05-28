@@ -1,0 +1,19 @@
+<Phase-7 NAME="SnarcContextIsolation" STATUS="pending">
+  <purpose>Ensure SNARC memory context is transient model-only context and never persisted as user-authored transcript text.</purpose>
+  <modules>
+    <module-1>M-SNARC-CONTEXT-ISOLATION</module-1>
+    <module-2>M-SNARC-LOOP-ADAPTER</module-2>
+    <module-3>M-SNARC-MEMORY</module-3>
+  </modules>
+  <steps>
+    <step-1>Trace the current prompt assembly path from user input to model messages and transcript persistence.</step-1>
+    <step-2>Define a transient model context envelope for SNARC injected context.</step-2>
+    <step-3>Update loop behavior so only raw user text is persisted as role=user.</step-3>
+    <step-4>Add tests proving SNARC context is absent from transcript, export, compaction capture, and user cards.</step-4>
+    <step-5>Run targeted loop/SNARC tests, typecheck, lint, and MyGRACE lint.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-SNARC-CONTEXT-ISOLATION</verification-1>
+    <verification-2>V-M-SNARC-LOOP-ADAPTER</verification-2>
+  </verification-refs>
+</Phase-7>

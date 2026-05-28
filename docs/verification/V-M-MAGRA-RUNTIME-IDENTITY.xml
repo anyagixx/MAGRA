@@ -1,0 +1,20 @@
+<V-M-MAGRA-RUNTIME-IDENTITY MODULE="M-MAGRA-RUNTIME-IDENTITY" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/magra-runtime-identity.test.ts</file-1>
+    <file-2>tests/magra/reasonix-base.test.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-runtime-identity.test.ts tests/magra/reasonix-base.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk npm run lint</check-3>
+    <check-4>rtk mygrace lint --path .</check-4>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Default runtime system prompt self-identifies as MAGRA.</scenario-1>
+    <scenario-2 kind="success">CLI and dashboard primary labels show MAGRA.</scenario-2>
+    <scenario-3 kind="success">`reasonix` and `dsnix` compatibility aliases still route to the same CLI entry point.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-RUNTIME-IDENTITY>

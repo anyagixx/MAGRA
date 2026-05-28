@@ -1,0 +1,19 @@
+<V-M-MAGRA-RELEASE-SURFACE MODULE="M-MAGRA-RELEASE-SURFACE" PRIORITY="medium" STATUS="pending">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+    <file-2>docs/release/verification-report.md</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk mygrace lint --path .</check-2>
+    <check-3>rtk npm run build</check-3>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">README quickstart and install commands are MAGRA-first.</scenario-1>
+    <scenario-2 kind="success">Package metadata points to MAGRA release surfaces or clearly labeled upstream attribution.</scenario-2>
+    <scenario-3 kind="failure">Unqualified Reasonix branding in primary MAGRA release sections fails docs verification.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ObservabilityVerification][listVerificationCommands][BLOCK_FILTER_COMMANDS]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-RELEASE-SURFACE>

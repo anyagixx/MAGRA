@@ -1,0 +1,19 @@
+<V-M-SNARC-CONTEXT-ISOLATION MODULE="M-SNARC-CONTEXT-ISOLATION" PRIORITY="high" STATUS="pending">
+  <test-files>
+    <file-1>tests/snarc-loop-context-isolation.test.ts</file-1>
+    <file-2>tests/loop-user-persist.test.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/snarc-loop-context-isolation.test.ts tests/loop-user-persist.test.ts tests/snarc-loop-adapter.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk mygrace lint --path .</check-3>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">SNARC context reaches model input but is absent from persisted role=user message text.</scenario-1>
+    <scenario-2 kind="failure">Transcript export or compaction capture containing `<snarc_memory_context>` fails verification.</scenario-2>
+    <scenario-3 kind="success">SNARC prompt capture stores the raw prompt, not the injected memory block.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[SnarcLoopAdapter][onUserPromptSubmit][BLOCK_INJECT_MEMORY]</marker-1>
+  </required-log-markers>
+</V-M-SNARC-CONTEXT-ISOLATION>
