@@ -1,4 +1,4 @@
-<V-M-SNARC-CONTEXT-ISOLATION MODULE="M-SNARC-CONTEXT-ISOLATION" PRIORITY="high" STATUS="pending">
+<V-M-SNARC-CONTEXT-ISOLATION MODULE="M-SNARC-CONTEXT-ISOLATION" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/snarc-loop-context-isolation.test.ts</file-1>
     <file-2>tests/loop-user-persist.test.ts</file-2>
@@ -7,6 +7,7 @@
     <check-1>rtk npm test -- tests/snarc-loop-context-isolation.test.ts tests/loop-user-persist.test.ts tests/snarc-loop-adapter.test.ts</check-1>
     <check-2>rtk npm run typecheck</check-2>
     <check-3>rtk mygrace lint --path .</check-3>
+    <check-4>rtk npm run lint</check-4>
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">SNARC context reaches model input but is absent from persisted role=user message text.</scenario-1>

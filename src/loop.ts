@@ -1,3 +1,25 @@
+// === MODULE_CONTRACT ===
+// FILE: src/loop.ts
+// VERSION: 1.0.0
+// PURPOSE: Run the cache-first MAGRA/Reasonix model loop with tools, sessions, compaction, and SNARC integration.
+// SCOPE: Prompt assembly, transcript persistence, tool dispatch, context folding, abort handling, and SNARC model-only context.
+// DEPENDS: M-REASONIX-BASE,M-SNARC-LOOP-ADAPTER,M-SNARC-CONTEXT-ISOLATION
+// LINKS: docs/modules/M-SNARC-CONTEXT-ISOLATION.xml
+// ROLE: RUNTIME
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: CacheFirstLoop, MID_TURN_STEER_WRAPPER, loop helper exports
+// Locals: buildMessages, applyTransientModelContext, runOneToolCall, compactHistory, notifyStop, summaryContext
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added MAGRA MyGRACE contract and isolated SNARC memory context from persisted user transcript.
+// === END_CHANGE_SUMMARY ===
+
 import { type DeepSeekClient, Usage } from "./client.js";
 import type { ReasoningEffort } from "./config.js";
 import type { PauseGate } from "./core/pause-gate.js";
@@ -121,6 +143,11 @@ export interface LoopAbortOptions {
   discardCurrentTurn?: boolean;
 }
 
+interface TurnTransientModelContext {
+  rawUserInput: string;
+  context: string;
+}
+
 function shrinkMessageForRetention(message: ChatMessage): ChatMessage {
   if (message.role !== "assistant" || !Array.isArray(message.tool_calls)) return message;
   return (
@@ -180,6 +207,7 @@ export class CacheFirstLoop {
 
   /** Set true when a steer was consumed this turn; cleared on next step() entry. */
   private _steerConsumed = false;
+  private _turnTransientModelContext: TurnTransientModelContext | null = null;
 
   /** UI calls this to inject a mid-turn steer message without aborting the current turn.
    *  New text resets steerConsumed because a fresh steer is queued. */
@@ -562,7 +590,23 @@ export class CacheFirstLoop {
 
   private buildMessages(): ChatMessage[] {
     const healedMessages = this.healActiveLogBeforeSend();
-    return [...this.prefix.toMessages(), ...healedMessages];
+    return [...this.prefix.toMessages(), ...this.applyTransientModelContext(healedMessages)];
+  }
+
+  private applyTransientModelContext(messages: ChatMessage[]): ChatMessage[] {
+    const transient = this._turnTransientModelContext;
+    if (!transient?.context) return messages;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const message = messages[i];
+      if (message?.role !== "user" || message.content !== transient.rawUserInput) continue;
+      const out = [...messages];
+      out[i] = {
+        ...message,
+        content: `${transient.rawUserInput}\n\n${transient.context}`,
+      };
+      return out;
+    }
+    return messages;
   }
 
   private healActiveLogBeforeSend(): ChatMessage[] {
@@ -668,6 +712,7 @@ export class CacheFirstLoop {
   async *step(userInput: string): AsyncGenerator<LoopEvent> {
     // Reset per-turn flags.
     this._steerConsumed = false;
+    this._turnTransientModelContext = null;
 
     // Budget gate runs FIRST, before any per-turn state mutation, so a
     // refusal leaves the loop unchanged and the user can correct the
@@ -714,9 +759,9 @@ export class CacheFirstLoop {
       turn: this._turn + 1,
       prompt: userInput,
     });
-    const modelUserInput = snarcContext?.context
-      ? `${userInput}\n\n${snarcContext.context}`
-      : userInput;
+    this._turnTransientModelContext = snarcContext?.context
+      ? { rawUserInput: userInput, context: snarcContext.context }
+      : null;
     this._turn++;
     this.scratch.reset();
     // A fresh user turn is a new intent — don't let StormBreaker's
@@ -750,7 +795,7 @@ export class CacheFirstLoop {
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
     const turnStartLogIndex = this.log.length;
-    this.appendAndPersist({ role: "user", content: modelUserInput });
+    this.appendAndPersist({ role: "user", content: userInput });
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 

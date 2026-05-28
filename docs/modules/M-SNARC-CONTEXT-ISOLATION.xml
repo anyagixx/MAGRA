@@ -1,4 +1,4 @@
-<M-SNARC-CONTEXT-ISOLATION NAME="SnarcContextIsolation" TYPE="INTEGRATION" STATUS="pending">
+<M-SNARC-CONTEXT-ISOLATION NAME="SnarcContextIsolation" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Keep SNARC injected memory context model-only so it is not persisted as user-authored transcript content.</purpose>
     <scope>Loop prompt assembly, transcript persistence, compaction input, export behavior, and SNARC capture boundaries.</scope>
