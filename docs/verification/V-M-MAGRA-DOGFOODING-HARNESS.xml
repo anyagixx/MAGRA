@@ -13,6 +13,25 @@
     <scenario-2 kind="success">SNARC recalls relevant project decisions after restart without transcript pollution.</scenario-2>
     <scenario-3 kind="failure">Any blocker or repeated friction is captured as a follow-up backlog item before beta readiness.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic smoke tests validate launch, slash command metadata, SNARC endpoints, and RTK policy.</evidence-1>
+    <evidence-2 order="2">Trace assertions record commands, timestamps, workspace roots, and outcomes in the dogfooding report.</evidence-2>
+    <evidence-3 order="3">Manual integration evidence records screenshots or concise notes for UI comfort issues.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run dogfooding smoke tests against disposable temporary projects.</level-1>
+    <level-2 scope="wave-level">Run MyGRACE slash, RTK, SNARC, MCP, and dashboard focused tests.</level-2>
+    <level-3 scope="phase-level">Run full test suite, build, MyGRACE lint, and review the dogfooding report before marking Phase-12 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Dogfooding report records exact command, result, duration, friction, and follow-up owner.</telemetry-1>
+    <telemetry-2>Reports must not include API keys, private prompts, or real user project secrets.</telemetry-2>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>Autonomous execution may create and mutate disposable projects only.</safety-1>
+    <safety-2>Any real project mutation outside the disposable workspace blocks dogfooding completion.</safety-2>
+    <safety-3>Beta readiness requires no unresolved critical or high dogfooding blockers.</safety-3>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[MagraDogfoodingHarness][runScenario][BLOCK_RECORD_OUTCOME]</marker-1>
   </required-log-markers>

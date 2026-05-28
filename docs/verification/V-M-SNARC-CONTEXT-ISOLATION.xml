@@ -13,6 +13,25 @@
     <scenario-2 kind="failure">Transcript export or compaction capture containing `<snarc_memory_context>` fails verification.</scenario-2>
     <scenario-3 kind="success">SNARC prompt capture stores the raw prompt, not the injected memory block.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic assertions inspect persisted session log and exported transcript bytes.</evidence-1>
+    <evidence-2 order="2">Trace assertions verify transient model input receives SNARC context.</evidence-2>
+    <evidence-3 order="3">Integration checks cover loop plus SNARC adapter behavior.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run focused loop context isolation tests.</level-1>
+    <level-2 scope="wave-level">Run SNARC loop adapter and user persistence regression tests.</level-2>
+    <level-3 scope="phase-level">Run typecheck, MyGRACE lint, and full test suite before marking Phase-7 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Log whether memory context was injected without logging the memory payload.</telemetry-1>
+    <telemetry-2>Expose warnings when SNARC context generation fails, but do not block the turn.</telemetry-2>
+    <telemetry-3>Redact secrets before any trace or failure assertion stores prompt fragments.</telemetry-3>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>A model may execute this phase autonomously only after tests prove user transcript bytes stay raw.</safety-1>
+    <safety-2>Any transcript pollution finding blocks Phase-7 completion.</safety-2>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[SnarcLoopAdapter][onUserPromptSubmit][BLOCK_INJECT_MEMORY]</marker-1>
   </required-log-markers>

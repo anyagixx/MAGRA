@@ -13,6 +13,24 @@
     <scenario-2 kind="failure">A mismatched START_BLOCK/END_BLOCK name fails MyGRACE lint even when counts match.</scenario-2>
     <scenario-3 kind="success">Managed docs, dashboard, src, and release files pass with complete contract markup.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic negative fixtures assert missing contracts, maps, change summaries, and block mismatches fail.</evidence-1>
+    <evidence-2 order="2">Trace assertions identify the exact managed file, missing marker, and index source entry.</evidence-2>
+    <evidence-3 order="3">Integration checks run `mygrace lint` against the real MAGRA tree.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run governance lint unit tests with temporary MyGRACE projects.</level-1>
+    <level-2 scope="wave-level">Run existing MyGRACE docs and CLI adapter regression tests.</level-2>
+    <level-3 scope="phase-level">Run `rtk mygrace lint --path .`, lint, and typecheck before marking Phase-10 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Lint output reports severity, file, marker name, and source index entry.</telemetry-1>
+    <telemetry-2>No file contents or secrets are included in lint telemetry.</telemetry-2>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>Autonomous execution is safe for lint rule additions when negative fixtures fail before implementation and pass after.</safety-1>
+    <safety-2>Any new rule that breaks existing valid MyGRACE artifacts without migration plan blocks Phase-10 completion.</safety-2>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[MyGraceDocs][lintMyGraceArtifacts][BLOCK_RUN_LINT]</marker-1>
   </required-log-markers>

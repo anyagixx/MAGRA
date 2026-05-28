@@ -13,6 +13,24 @@
     <scenario-2 kind="success">Package metadata points to MAGRA release surfaces or clearly labeled upstream attribution.</scenario-2>
     <scenario-3 kind="failure">Unqualified Reasonix branding in primary MAGRA release sections fails docs verification.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic grep-style assertions inspect README, package metadata, NOTICE, changelog, and release docs.</evidence-1>
+    <evidence-2 order="2">Trace assertions list each allowed Reasonix attribution or compatibility occurrence.</evidence-2>
+    <evidence-3 order="3">Integration checks run package build and package-file inclusion checks.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run release surface docs tests.</level-1>
+    <level-2 scope="wave-level">Run runtime identity tests and release hardening checks.</level-2>
+    <level-3 scope="phase-level">Run MyGRACE lint, build, and package smoke before marking Phase-11 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Docs verification reports file path, line number, and classification: primary-brand, attribution, or compatibility.</telemetry-1>
+    <telemetry-2>Package metadata check reports final package name, bins, repository, bugs, homepage, and files list.</telemetry-2>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>Autonomous docs edits are safe when they preserve upstream attribution and license notice.</safety-1>
+    <safety-2>Any ambiguous license or upstream attribution removal blocks Phase-11 completion.</safety-2>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[ObservabilityVerification][listVerificationCommands][BLOCK_FILTER_COMMANDS]</marker-1>
   </required-log-markers>

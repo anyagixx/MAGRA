@@ -14,6 +14,24 @@
     <scenario-2 kind="success">CLI and dashboard primary labels show MAGRA.</scenario-2>
     <scenario-3 kind="success">`reasonix` and `dsnix` compatibility aliases still route to the same CLI entry point.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic assertions inspect prompt text, package bins, CLI help output, and dashboard labels.</evidence-1>
+    <evidence-2 order="2">Trace assertions verify compatibility alias paths are explicitly marked as aliases.</evidence-2>
+    <evidence-3 order="3">Integration checks launch CLI entry points without changing public command behavior.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run runtime identity tests for prompt and metadata surfaces.</level-1>
+    <level-2 scope="wave-level">Run Reasonix base compatibility tests and dashboard smoke tests.</level-2>
+    <level-3 scope="phase-level">Run lint, typecheck, MyGRACE lint, and build before marking Phase-9 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Health and doctor output identify the product as MAGRA.</telemetry-1>
+    <telemetry-2>Compatibility alias usage is visible as alias metadata, not a primary product rename.</telemetry-2>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>Autonomous edits may update branding strings only when tests preserve CLI compatibility aliases.</safety-1>
+    <safety-2>Any user-facing primary Reasonix identity in runtime surfaces blocks Phase-9 completion.</safety-2>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[ObservabilityVerification][getMagraHealth][BLOCK_COLLECT_HEALTH]</marker-1>
   </required-log-markers>

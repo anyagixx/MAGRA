@@ -16,6 +16,25 @@
     <scenario-2 kind="success">Legacy JSON memory imports without duplicate rows or silent data loss.</scenario-2>
     <scenario-3 kind="failure">Corrupt SQLite database returns bounded errors and does not overwrite existing bytes.</scenario-3>
   </scenarios>
+  <evidence-types>
+    <evidence-1 order="1">Deterministic assertions inspect SQLite tables, row counts, indexes, and transaction rollback behavior.</evidence-1>
+    <evidence-2 order="2">Trace assertions verify migration and import paths report bounded, redacted details.</evidence-2>
+    <evidence-3 order="3">Integration checks cover MCP, dashboard API, and SNARC memory API compatibility.</evidence-3>
+  </evidence-types>
+  <verification-levels>
+    <level-1 scope="module-local">Run SQLite store and SNARC memory tests against temporary project roots.</level-1>
+    <level-2 scope="wave-level">Run MCP bridge and dashboard SNARC API tests against SQLite-backed data.</level-2>
+    <level-3 scope="phase-level">Run build, typecheck, MyGRACE lint, and full test suite before marking Phase-8 done.</level-3>
+  </verification-levels>
+  <telemetry-requirements>
+    <telemetry-1>Expose store path, schema version, migration status, and bounded error class without raw prompt content.</telemetry-1>
+    <telemetry-2>Report legacy JSON import counts and duplicate skips.</telemetry-2>
+    <telemetry-3>Keep query telemetry aggregate-only: result counts, provenance counts, and latency bucket.</telemetry-3>
+  </telemetry-requirements>
+  <autonomous-safety>
+    <safety-1>Autonomous execution may modify store code only with temporary-root tests and no live user memory migration.</safety-1>
+    <safety-2>Any migration data loss, duplicate inflation, or corrupt DB overwrite blocks Phase-8 completion.</safety-2>
+  </autonomous-safety>
   <required-log-markers>
     <marker-1>[SnarcMemory][captureObservation][BLOCK_SCORE_SALIENCE]</marker-1>
     <marker-2>[SnarcMemory][searchMemory][BLOCK_QUERY_MEMORY]</marker-2>
