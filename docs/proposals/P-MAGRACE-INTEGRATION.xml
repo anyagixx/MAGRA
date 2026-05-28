@@ -1,0 +1,65 @@
+<P-MAGRACE-INTEGRATION NAME="MAGRACE Integration Decision" STATUS="proposed">
+  <summary>Use DeepSeek-Reasonix as the base product. Integrate MyGRACE as the governance and skill namespace, RTK as the token-optimized shell sidecar, and SNARC as the salience-gated memory subsystem. Do not create four parallel runtimes.</summary>
+
+  <decision>
+    <decision-1>Reasonix remains the core loop, CLI, web dashboard, tool host, MCP bridge, sessions, permissions, hooks, skills, and edit gate.</decision-1>
+    <decision-2>MyGRACE becomes a first-class runtime namespace under `/mygrace:*`, backed by Node-compatible MyGRACE services and the canonical skill bodies.</decision-2>
+    <decision-3>RTK stays a Rust sidecar invoked by the Reasonix shell/tool host, with missing-binary fallback and doctor diagnostics.</decision-3>
+    <decision-4>SNARC becomes a local memory service wired into Reasonix tool, prompt, compaction, and stop events, with MCP/tool retrieval exposed to the agent and web UI.</decision-4>
+  </decision>
+
+  <why-this-shape>
+    <reason-1>Reasonix already owns the web chat and slash command UX the user wants; replacing it would discard the strongest base.</reason-1>
+    <reason-2>MyGRACE is primarily methodology, skills, templates, and index navigation; it should govern the Reasonix project rather than compete with its loop.</reason-2>
+    <reason-3>RTK is strongest as a binary proxy with ecosystem-specific filters; reimplementing it in TypeScript would reduce capability and increase risk.</reason-3>
+    <reason-4>SNARC complements Reasonix memory because it captures high-salience events and conversation turns with provenance, not just pinned static memory.</reason-4>
+  </why-this-shape>
+
+  <proposed-modules>
+    <module-1 id="M-REASONIX-BASE" type="ENTRY_POINT">Imported Reasonix CLI/dashboard/runtime baseline, kept compatible during all phases.</module-1>
+    <module-2 id="M-MYGRACE-DOCS" type="DATA_LAYER">Index-first MyGRACE artifact reader/writer for docs/, modules, plans, verification, and source/proposal indexes.</module-2>
+    <module-3 id="M-MYGRACE-SKILLS" type="CORE_LOGIC">Canonical MyGRACE skill registry and command mapping for all 14 skills.</module-3>
+    <module-4 id="M-WEB-MYGRACE-COMMANDS" type="UI_COMPONENT">Dashboard composer, command palette, and `/api/slash` support for `/mygrace:*` commands.</module-4>
+    <module-5 id="M-MYGRACE-CLI-ADAPTER" type="INTEGRATION">Node-compatible adapter for MyGRACE CLI/MCP behaviors: init, lint, module/phase/verification navigation, file markup.</module-5>
+    <module-6 id="M-RTK-SHELL-POLICY" type="INTEGRATION">Shell tool RTK auto-prefix, bypass, raw fallback, exit-code preservation, and savings telemetry.</module-6>
+    <module-7 id="M-SNARC-MEMORY" type="DATA_LAYER">SQLite-backed salience memory, scorer, consolidation, search, stats, identity review, and project scoping.</module-7>
+    <module-8 id="M-SNARC-LOOP-ADAPTER" type="INTEGRATION">Reasonix event adapter for prompt, tool, compaction, and stop memory capture/injection.</module-8>
+    <module-9 id="M-MCP-UNIFIED-BRIDGE" type="INTEGRATION">MCP/native tool exposure for MyGRACE and SNARC capabilities through Reasonix.</module-9>
+    <module-10 id="M-OBSERVABILITY-VERIFICATION" type="UTILITY">Shared log markers, verification commands, dashboard health, and regression gates.</module-10>
+  </proposed-modules>
+
+  <data-flow>
+    <DF-CHAT-MYGRACE>Web chat composer -> `/api/slash` -> MyGRACE slash handler -> skill body or MyGRACE service -> Reasonix loop/tool registry -> MyGRACE docs update or answer.</DF-CHAT-MYGRACE>
+    <DF-SHELL-RTK>Agent shell request -> approval gate -> RTK policy -> `rtk <command>` or raw fallback -> filtered result -> Reasonix log -> RTK savings telemetry.</DF-SHELL-RTK>
+    <DF-SNARC-MEMORY>Prompt/tool/compaction/stop event -> SNARC scorer/store -> SQLite project DB -> related memory retrieval -> labeled context injection and dashboard/MCP retrieval.</DF-SNARC-MEMORY>
+    <DF-MCP>Reasonix MCP bridge -> MyGRACE/SNARC tool adapters -> lazy docs navigation or memory retrieval -> distilled tool result.</DF-MCP>
+  </data-flow>
+
+  <web-chat-requirement>
+    <requirement-1>Add slash suggestions for all 14 MyGRACE commands in the existing Composer popup.</requirement-1>
+    <requirement-2>Add command palette entries for MyGRACE status, lint, skills, and docs navigation.</requirement-2>
+    <requirement-3>Expose command metadata through the existing `/api/slash` endpoint rather than a parallel endpoint.</requirement-3>
+    <requirement-4>For long-running MyGRACE execute/multiagent flows, reuse Reasonix plan/checkpoint/revision modal patterns.</requirement-4>
+  </web-chat-requirement>
+
+  <implementation-phases-proposed>
+    <phase-0>Approve this proposal and create graph, plan, and verification per-entity files.</phase-0>
+    <phase-1>Import Reasonix base into the managed source tree with minimal renaming and baseline verification.</phase-1>
+    <phase-2>Add MyGRACE docs service, CLI adapter, and full `/mygrace:*` slash namespace.</phase-2>
+    <phase-3>Add dashboard MyGRACE UX and skill invocation from web chat.</phase-3>
+    <phase-4>Add RTK shell policy, doctor checks, and savings UI.</phase-4>
+    <phase-5>Add SNARC memory service, loop adapters, MCP tools, and dashboard memory views.</phase-5>
+    <phase-6>Run compatibility hardening, contract migration waves, license attribution, and release packaging.</phase-6>
+  </implementation-phases-proposed>
+
+  <verification-strategy-proposed>
+    <check-1>Reasonix baseline: `rtk npm run verify` passes before and after integration phases.</check-1>
+    <check-2>MyGRACE namespace: unit tests assert all 14 `/mygrace:*` commands appear in `/api/slash` and Composer suggestions.</check-2>
+    <check-3>MyGRACE docs: lint tests detect index/per-file drift and reject monolithic artifact creation.</check-3>
+    <check-4>RTK policy: shell tests assert command rewrite, raw fallback, exit-code preservation, and approval behavior.</check-4>
+    <check-5>SNARC memory: SQLite tests assert capture, scoring, search, briefing, compaction capture, and provenance labels.</check-5>
+    <check-6>MCP bridge: integration tests assert MyGRACE and SNARC tools are visible and callable without breaking existing MCP servers.</check-6>
+  </verification-strategy-proposed>
+
+  <approval-needed>Before writing module, phase, or verification per-entity files, approve or revise this proposed module breakdown.</approval-needed>
+</P-MAGRACE-INTEGRATION>

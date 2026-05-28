@@ -1,0 +1,94 @@
+<RequirementsAnalysis VERSION="1.0.0">
+  <Project>
+    <name>MAGRA</name>
+    <product-name>MAGRACE</product-name>
+    <annotation>Reasonix-based AI coding agent with first-class MyGRACE workflows, RTK token compression, and SNARC salience memory exposed through a web chat interface.</annotation>
+    <keywords>reasonix,mygrace,rtk,snarc,web-chat,skills,mcp,memory,token-compression</keywords>
+  </Project>
+
+  <Actors>
+    <actor-Developer>Primary user working in the MAGRA web chat and CLI surfaces.</actor-Developer>
+    <actor-Agent>Reasonix-derived loop executing tools, skills, plans, and edits.</actor-Agent>
+    <actor-Reviewer>Human or agent reviewer validating MyGRACE contracts and verification evidence.</actor-Reviewer>
+  </Actors>
+
+  <UseCases>
+    <UC-001>
+      <Actor>Developer</Actor>
+      <Action>Runs MAGRACE as a Reasonix-compatible coding/chat agent.</Action>
+      <Goal>Keep the DeepSeek cache-first loop, tool-call repair, cost controls, dashboard, TUI, MCP, hooks, skills, sessions, and edit gates.</Goal>
+      <Preconditions>DeepSeek-Reasonix source is available as the base project.</Preconditions>
+      <AcceptanceCriteria>Existing Reasonix build, typecheck, and tests continue to pass after integration phases.</AcceptanceCriteria>
+      <Priority>high</Priority>
+    </UC-001>
+    <UC-002>
+      <Actor>Developer</Actor>
+      <Action>Invokes MyGRACE skills from the web chat composer.</Action>
+      <Goal>Call `/mygrace:init`, `/mygrace:plan`, `/mygrace:verification`, `/mygrace:execute`, `/mygrace:multiagent`, `/mygrace:refactor`, `/mygrace:refresh`, `/mygrace:fix`, `/mygrace:reviewer`, `/mygrace:status`, `/mygrace:ask`, `/mygrace:explainer`, `/mygrace:cli`, and `/mygrace:setup-subagents` without leaving chat.</Goal>
+      <Preconditions>Workspace has MyGRACE indexes or can be initialized.</Preconditions>
+      <AcceptanceCriteria>Composer slash suggestions and `/api/slash` expose the full namespace; each command maps to a deterministic skill/service handler.</AcceptanceCriteria>
+      <Priority>high</Priority>
+    </UC-002>
+    <UC-003>
+      <Actor>Agent</Actor>
+      <Action>Reads and updates MyGRACE project artifacts lazily.</Action>
+      <Goal>Maintain `graph-index.xml`, `plan-index.xml`, `verification-index.xml`, and per-entity files without monolithic XML artifacts.</Goal>
+      <Preconditions>MyGRACE docs structure exists.</Preconditions>
+      <AcceptanceCriteria>MyGRACE lint detects missing, orphaned, and drifted per-entity files.</AcceptanceCriteria>
+      <Priority>high</Priority>
+    </UC-003>
+    <UC-004>
+      <Actor>Agent</Actor>
+      <Action>Runs shell, build, lint, and test commands through RTK when appropriate.</Action>
+      <Goal>Reduce tool-output tokens while preserving exit codes, raw-output recovery, and RTK savings telemetry.</Goal>
+      <Preconditions>`rtk` binary is installed or bundled as a sidecar.</Preconditions>
+      <AcceptanceCriteria>Shell tool has RTK auto-prefix policy, fallback to raw execution, and UI-visible savings metadata.</AcceptanceCriteria>
+      <Priority>high</Priority>
+    </UC-004>
+    <UC-005>
+      <Actor>Agent</Actor>
+      <Action>Captures salient tool and conversation events into SNARC memory.</Action>
+      <Goal>Inject relevant observed, inferred, and identity memory into future turns while avoiding low-value context bloat.</Goal>
+      <Preconditions>Project-local SQLite memory store is available.</Preconditions>
+      <AcceptanceCriteria>Post-tool, user-prompt, compaction, and stop events update or query SNARC memory with explicit provenance labels.</AcceptanceCriteria>
+      <Priority>high</Priority>
+    </UC-005>
+    <UC-006>
+      <Actor>Developer</Actor>
+      <Action>Uses MCP tools for MyGRACE and SNARC retrieval.</Action>
+      <Goal>Expose index navigation, lint, file markup inspection, memory search, patterns, context, and stats through the existing Reasonix MCP bridge.</Goal>
+      <Preconditions>Reasonix MCP client remains active.</Preconditions>
+      <AcceptanceCriteria>Dashboard and loop can call MyGRACE/SNARC MCP tools or equivalent in-process adapters.</AcceptanceCriteria>
+      <Priority>medium</Priority>
+    </UC-006>
+  </UseCases>
+
+  <NonGoals>
+    <non-goal-1>No blind copy-paste merge of four repositories without contracts and verification.</non-goal-1>
+    <non-goal-2>No replacement of Reasonix's cache-first loop with a generic agent loop.</non-goal-2>
+    <non-goal-3>No mandatory Bun runtime inside the Reasonix web/chat runtime path.</non-goal-3>
+    <non-goal-4>No mandatory Rust rewrite of TypeScript agent features.</non-goal-4>
+  </NonGoals>
+
+  <Constraints>
+    <constraint-1>DeepSeek-Reasonix is the base source and compatibility surface.</constraint-1>
+    <constraint-2>MyGRACE artifacts must remain index-first and per-entity; monolithic GRACE files are forbidden.</constraint-2>
+    <constraint-3>RTK should remain a sidecar CLI/binary boundary unless a narrow Rust library bridge is deliberately approved.</constraint-3>
+    <constraint-4>SNARC memory must be local-first, project-scoped, and explicitly label observed, inferred, and identity facts.</constraint-4>
+    <constraint-5>All user-facing MyGRACE skill calls must be reachable from the web chat composer.</constraint-5>
+  </Constraints>
+
+  <Risks>
+    <risk-1>Runtime mismatch: Reasonix uses Node 22, MyGRACE CLI targets Bun, RTK is Rust, and SNARC is Node 18+ TypeScript.</risk-1>
+    <risk-2>Slash namespace mismatch: Reasonix skill identifiers disallow colon, while the target UX requires `/mygrace:*` commands.</risk-2>
+    <risk-3>Hook mismatch: SNARC has Claude-specific PreCompact/PostCompact hooks; Reasonix currently exposes PreToolUse, PostToolUse, UserPromptSubmit, and Stop.</risk-3>
+    <risk-4>Contract migration risk: DeepSeek-Reasonix has many files and cannot be marked fully MyGRACE-managed in one uncontrolled wave.</risk-4>
+    <risk-5>License and attribution must remain clear across MIT and Apache-2.0 sources.</risk-5>
+  </Risks>
+
+  <OpenQuestions>
+    <question-1>Should the distributable product name be MAGRA, MAGRACE, or MAGRA with MAGRACE as the integration layer?</question-1>
+    <question-2>Should RTK be bundled, downloaded on install, or treated as an external dependency with diagnostics?</question-2>
+    <question-3>Should SNARC deep dream use DeepSeek through Reasonix instead of Claude CLI for semantic consolidation?</question-3>
+  </OpenQuestions>
+</RequirementsAnalysis>

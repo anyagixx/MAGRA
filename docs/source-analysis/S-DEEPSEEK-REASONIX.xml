@@ -1,0 +1,38 @@
+<S-DEEPSEEK-REASONIX NAME="DeepSeek-Reasonix" ROLE="base-runtime" STATUS="analyzed">
+  <source-path>SOURCES/DeepSeek-Reasonix-main</source-path>
+  <files-count>1244</files-count>
+  <package-name>reasonix</package-name>
+  <package-version>0.52.0</package-version>
+  <runtime>Node &gt;=22</runtime>
+
+  <core-purpose>DeepSeek-native coding agent optimized for prefix-cache stability, tool-call repair, flash-first cost control, CLI/TUI, web dashboard, skills, MCP, hooks, sessions, memory, checkpoints, and code editing.</core-purpose>
+
+  <key-surfaces>
+    <surface-1>src/loop.ts and src/loop/* implement the cache-first loop, dispatch, streaming, shrinking, and hook events.</surface-1>
+    <surface-2>src/tools/* implements filesystem, shell, jobs, memory, skills, web, subagent, plan, and code-query tools.</surface-2>
+    <surface-3>src/server/* and dashboard/src/* implement the web dashboard API, SSE protocol, composer, slash suggestions, modals, and settings.</surface-3>
+    <surface-4>src/cli/ui/slash/* is the current slash command registry and handler surface.</surface-4>
+    <surface-5>src/mcp/* implements MCP client transports and registry integration.</surface-5>
+    <surface-6>src/hooks.ts implements hook loading and execution for PreToolUse, PostToolUse, UserPromptSubmit, and Stop.</surface-6>
+  </key-surfaces>
+
+  <strengths>
+    <strength-1>Best base for MAGRACE because it already has chat/code loops, web UI, slash commands, skill loading, MCP, hooks, memory, and cost telemetry.</strength-1>
+    <strength-2>Skill bodies are lazy-loaded, matching MyGRACE's token discipline.</strength-2>
+    <strength-3>Dashboard `/api/slash` and composer popup are the correct extension point for MyGRACE web chat invocation.</strength-3>
+    <strength-4>Shell tool and hook runner are natural RTK and SNARC attachment points.</strength-4>
+  </strengths>
+
+  <integration-obligations>
+    <obligation-1>Keep Reasonix as the base tree instead of building a new shell around the other projects.</obligation-1>
+    <obligation-2>Add a `/mygrace:*` slash namespace rather than relying only on Reasonix `run_skill`, because Reasonix skill identifiers do not allow colon.</obligation-2>
+    <obligation-3>Preserve Reasonix test, lint, typecheck, dashboard build, CLI, and package scripts as regression gates.</obligation-3>
+    <obligation-4>Use existing DashboardContext, router, protocol, and Composer patterns instead of inventing a parallel web API.</obligation-4>
+  </integration-obligations>
+
+  <risks>
+    <risk-1>Large existing codebase cannot receive full MyGRACE contracts in one wave without high regression risk.</risk-1>
+    <risk-2>Reasonix currently supports a fixed hook set; SNARC compaction hooks require a new native event or adapter.</risk-2>
+    <risk-3>Reasonix's built-in skills are not a full namespace command system; MyGRACE UX needs first-class slash commands.</risk-3>
+  </risks>
+</S-DEEPSEEK-REASONIX>

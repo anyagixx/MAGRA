@@ -1,0 +1,37 @@
+<S-MYGRACE NAME="MyGrace" ROLE="methodology-and-skills" STATUS="analyzed">
+  <source-path>SOURCES/MyGrace-main</source-path>
+  <files-count>60</files-count>
+  <package-name>@osovv/mygrace-cli</package-name>
+  <package-version>0.0.3</package-version>
+  <runtime>Bun &gt;=1.3.8 upstream</runtime>
+
+  <core-purpose>Scalable GRACE methodology using lightweight indexes, per-module files, per-phase files, per-verification files, CLI lint/navigation, MCP tools, templates, and 14 skills.</core-purpose>
+
+  <key-surfaces>
+    <surface-1>skills/mygrace/grace-* contain the 14 canonical MyGRACE skill bodies.</surface-1>
+    <surface-2>templates/* provide index, module, phase, verification, AGENTS, QWEN, requirements, technology, and packet templates.</surface-2>
+    <surface-3>src/grace.ts is the CLI entry point.</surface-3>
+    <surface-4>src/grace-module.ts provides index-first module, phase, and verification navigation.</surface-4>
+    <surface-5>src/grace-lint.ts checks index sync, per-entity drift, semantic markup, XML tag conventions, and verification refs.</surface-5>
+    <surface-6>src/grace-mcp.ts exposes MyGRACE navigation and lint tools over MCP.</surface-6>
+  </key-surfaces>
+
+  <strengths>
+    <strength-1>Directly supplies the MAGRACE governance model and all requested skills.</strength-1>
+    <strength-2>Index-first architecture aligns with Reasonix cache discipline and skill lazy-loading.</strength-2>
+    <strength-3>CLI and MCP boundaries are small enough to port or wrap.</strength-3>
+  </strengths>
+
+  <integration-obligations>
+    <obligation-1>Expose all 14 skills in MAGRA web chat through `/mygrace:*` slash commands.</obligation-1>
+    <obligation-2>Port CLI internals to Node-compatible TypeScript or wrap Bun as optional, so Reasonix runtime does not require Bun on the critical path.</obligation-2>
+    <obligation-3>Use MyGRACE templates but correct classic-template references to monolithic GRACE files when generating MAGRA artifacts.</obligation-3>
+    <obligation-4>Keep the CLI/MCP lazy navigation behavior intact.</obligation-4>
+  </integration-obligations>
+
+  <risks>
+    <risk-1>Upstream MyGRACE CLI currently uses simple XML regex parsing; MAGRACE should harden this before broad writes.</risk-1>
+    <risk-2>The MCP reference has a phase command mapping that should be reviewed before reuse.</risk-2>
+    <risk-3>Skill naming differs by platform; Reasonix needs a namespace adapter for slash names.</risk-3>
+  </risks>
+</S-MYGRACE>

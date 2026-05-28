@@ -1,0 +1,6 @@
+<SourceAnalysisIndex project="MAGRA" version="1.0.0">
+  <S-DEEPSEEK-REASONIX NAME="DeepSeek-Reasonix" ROLE="base-runtime" STATUS="analyzed" PATH="docs/source-analysis/S-DEEPSEEK-REASONIX.xml" SOURCE_PATH="SOURCES/DeepSeek-Reasonix-main" FILES="1244" />
+  <S-MYGRACE NAME="MyGrace" ROLE="methodology-and-skills" STATUS="analyzed" PATH="docs/source-analysis/S-MYGRACE.xml" SOURCE_PATH="SOURCES/MyGrace-main" FILES="60" />
+  <S-RTK NAME="rtk" ROLE="token-command-proxy" STATUS="analyzed" PATH="docs/source-analysis/S-RTK.xml" SOURCE_PATH="SOURCES/rtk-develop" FILES="288" />
+  <S-SNARC NAME="SNARC" ROLE="salience-memory" STATUS="analyzed" PATH="docs/source-analysis/S-SNARC.xml" SOURCE_PATH="SOURCES/snarc-main" FILES="35" />
+</SourceAnalysisIndex>

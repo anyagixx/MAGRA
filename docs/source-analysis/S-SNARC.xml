@@ -1,0 +1,36 @@
+<S-SNARC NAME="SNARC" ROLE="salience-memory" STATUS="analyzed">
+  <source-path>SOURCES/snarc-main</source-path>
+  <files-count>35</files-count>
+  <package-name>snarc</package-name>
+  <package-version>0.3.0</package-version>
+  <runtime>Node &gt;=18 TypeScript</runtime>
+
+  <core-purpose>Salience-gated memory that captures tool use and conversation, scores Surprise/Novelty/Arousal/Reward/Conflict, stores salient observations in SQLite, consolidates patterns, injects relevant memories, and exposes MCP retrieval tools.</core-purpose>
+
+  <key-surfaces>
+    <surface-1>src/memory.ts orchestrates capture, scoring, storage, consolidation, search, context, stats, and session briefing.</surface-1>
+    <surface-2>src/snarc.ts implements heuristic SNARC salience scoring.</surface-2>
+    <surface-3>src/db.ts defines project-scoped SQLite schema and prepared statements.</surface-3>
+    <surface-4>src/server.ts exposes MCP tools: snarc_search, snarc_context, snarc_patterns, snarc_stats.</surface-4>
+    <surface-5>hooks/handlers/* maps Claude hook events to memory capture/injection/dream cycles.</surface-5>
+  </key-surfaces>
+
+  <strengths>
+    <strength-1>Complements Reasonix memory with selective, provenance-labeled, project-scoped memory.</strength-1>
+    <strength-2>Heuristic scoring is fast enough for tool hooks and does not require live model calls.</strength-2>
+    <strength-3>MCP retrieval tools map cleanly into Reasonix MCP or native tool registry.</strength-3>
+  </strengths>
+
+  <integration-obligations>
+    <obligation-1>Use Reasonix hook and loop events as native SNARC input instead of Claude-only hook JSON.</obligation-1>
+    <obligation-2>Add a Reasonix compaction event adapter so SNARC can capture conversation before or during compaction.</obligation-2>
+    <obligation-3>Route deep dream through Reasonix model client or make it optional; do not depend on Claude CLI in MAGRACE core.</obligation-3>
+    <obligation-4>Expose SNARC stats/search/patterns in dashboard and MCP surfaces with provenance labels.</obligation-4>
+  </integration-obligations>
+
+  <risks>
+    <risk-1>Current `.engram` naming should be migrated or aliased to MAGRA/SNARC without breaking portability.</risk-1>
+    <risk-2>Auto-promoted identity facts can be wrong; MAGRACE needs review controls and confidence decay visibility.</risk-2>
+    <risk-3>Conversation capture must respect privacy and redaction settings.</risk-3>
+  </risks>
+</S-SNARC>

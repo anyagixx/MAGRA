@@ -1,0 +1,9 @@
+<GraphIndex project="MAGRA" product="MAGRACE" version="1.0.0">
+  <keywords>reasonix,mygrace,rtk,snarc,agent,web-chat,skills,memory,token-compression</keywords>
+  <annotation>MAGRACE is a Reasonix-based AI coding agent that integrates the full MyGRACE methodology, RTK token-optimized command execution, and SNARC salience-gated memory into one web-chat driven workflow.</annotation>
+  <source-analysis-index>docs/source-analysis-index.xml</source-analysis-index>
+  <proposal-index>docs/proposals-index.xml</proposal-index>
+
+  <!-- Modules are intentionally empty until /mygrace:plan is approved. -->
+  <!-- Module entries will use unique module tags, one self-closing line each. -->
+</GraphIndex>

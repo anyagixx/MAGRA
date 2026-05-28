@@ -1,0 +1,62 @@
+<TechnologyStack VERSION="1.0.0">
+  <Runtime>Node &gt;=22 for the base Reasonix runtime; optional Bun &gt;=1.3.8 for upstream MyGRACE CLI compatibility; Rust 2021 for RTK sidecar.</Runtime>
+  <Language>TypeScript 5.x primary; Rust 2021 sidecar; TSX/React for web dashboard.</Language>
+  <Framework>Reasonix CLI/dashboard architecture with React 19, Vite dashboard, Commander CLI, MCP bridge, Ink TUI, and optional Tauri desktop.</Framework>
+
+  <Dependencies>
+    <dep name="reasonix" version="0.52.0" purpose="Base agent loop, CLI, dashboard, tools, MCP, hooks, skills, memory, telemetry" />
+    <dep name="@osovv/mygrace-cli" version="0.0.3" purpose="Upstream MyGRACE CLI, skills, templates, lint, MCP reference" />
+    <dep name="rtk" version="0.40.0-source" purpose="Token-optimized command proxy and savings telemetry" />
+    <dep name="snarc" version="0.3.0" purpose="Salience-gated memory, consolidation, MCP retrieval" />
+    <dep name="react" version="19.2.6" purpose="Reasonix dashboard UI" />
+    <dep name="zod" version="4.4.1-reasonix-3.23-snarc" purpose="Runtime schema validation across subsystems" />
+    <dep name="better-sqlite3" version="11.0.0" purpose="SNARC local memory database" />
+    <dep name="@modelcontextprotocol/sdk" version="1.x" purpose="SNARC and MyGRACE MCP servers; Reasonix MCP bridge" />
+    <dep name="vitest" version="2.1.5" purpose="Reasonix unit and integration tests" />
+    <dep name="biome" version="1.9.4" purpose="Reasonix lint and formatting" />
+  </Dependencies>
+
+  <VersionConstraints>
+    <constraint-1 lib="node" min="22.0.0" reason="Reasonix declares Node &gt;=22 and uses modern runtime APIs." />
+    <constraint-2 lib="typescript" min="5.6.0" reason="Reasonix base uses TypeScript 5.6.x and TSX runtime tooling." />
+    <constraint-3 lib="bun" min="1.3.8" reason="Only required for unported upstream MyGRACE CLI execution." />
+    <constraint-4 lib="rust" min="1.75.0" reason="RTK sidecar builds with modern Rust 2021 ecosystem dependencies." />
+  </VersionConstraints>
+
+  <Tooling>
+    <tool-1 name="package-manager" value="npm workspaces for Reasonix base" version="npm-compatible" />
+    <tool-2 name="dashboard-builder" value="Vite" version="from dashboard package" />
+    <tool-3 name="bundler" value="tsup" version="8.3.5" />
+    <tool-4 name="test-runner" value="Vitest" version="2.1.5" />
+    <tool-5 name="linter" value="Biome" version="1.9.4" />
+    <tool-6 name="command-proxy" value="rtk" version="0.40.0-source" />
+    <tool-7 name="mygrace-lint" value="mygrace lint --path ." version="0.0.3 reference" />
+  </Tooling>
+
+  <Testing>
+    <module-level>
+      <command>rtk npm test -- --runInBand false</command>
+      <focus>Focused Vitest files for touched TypeScript modules.</focus>
+    </module-level>
+    <wave-level>
+      <command>rtk npm run typecheck</command>
+      <focus>Reasonix runtime, dashboard, MyGRACE adapters, SNARC adapters, and RTK shell policy type safety.</focus>
+    </wave-level>
+    <phase-level>
+      <command>rtk npm run verify</command>
+      <focus>Build, lint, typecheck, dashboard build, and test regression.</focus>
+    </phase-level>
+    <mocking-policy>Prefer in-process fakes for shell, MCP, SQLite, and hook runners; do not require live DeepSeek calls in deterministic tests.</mocking-policy>
+  </Testing>
+
+  <Observability>
+    <logger>Reasonix loop events, dashboard SSE events, MyGRACE log markers, RTK gain telemetry, SNARC memory stats.</logger>
+    <log-format>[Module][function][BLOCK_NAME] message</log-format>
+    <required-fields>sessionId, workspaceRoot, commandId, moduleId, correlationId</required-fields>
+    <redaction>Never log API keys, secrets, full raw prompts marked private, credentials, or high-risk payloads.</redaction>
+  </Observability>
+
+  <DeliveryShape>
+    <shape>Node-first monorepo based on Reasonix, with optional Rust RTK sidecar and local SQLite memory store.</shape>
+  </DeliveryShape>
+</TechnologyStack>

@@ -1,0 +1,36 @@
+<S-RTK NAME="rtk" ROLE="token-command-proxy" STATUS="analyzed">
+  <source-path>SOURCES/rtk-develop</source-path>
+  <files-count>288</files-count>
+  <package-name>rtk</package-name>
+  <package-version>0.40.0-source</package-version>
+  <runtime>Rust 2021 single binary</runtime>
+
+  <core-purpose>High-performance command proxy that filters command output, preserves exit codes, tracks savings, supports hooks, and reduces LLM-visible shell output.</core-purpose>
+
+  <key-surfaces>
+    <surface-1>src/main.rs defines the CLI command router across git, JS/TS, Python, Go, Rust, cloud, system, analytics, and hooks.</surface-1>
+    <surface-2>src/core/runner.rs provides shared execution, filtering, passthrough, streaming, and tracking skeletons.</surface-2>
+    <surface-3>src/core/filter.rs provides source-code filtering levels and language detection.</surface-3>
+    <surface-4>src/cmds/* implements ecosystem-specific compact formatters.</surface-4>
+    <surface-5>src/hooks/* implements agent command-rewrite support.</surface-5>
+    <surface-6>src/analytics/* implements gain/session/economics telemetry.</surface-6>
+  </key-surfaces>
+
+  <strengths>
+    <strength-1>Best preserved as a sidecar boundary: fast, mature, language-specific, and already tracks savings.</strength-1>
+    <strength-2>Fits Reasonix shell tool and terminal command workflows without replacing the agent loop.</strength-2>
+    <strength-3>Can expose savings telemetry to MAGRA dashboard through `rtk gain` or history DB reads.</strength-3>
+  </strengths>
+
+  <integration-obligations>
+    <obligation-1>Add RTK policy to Reasonix shell execution: auto-prefix supported commands, allow raw bypass, preserve exit code and approval gates.</obligation-1>
+    <obligation-2>Surface RTK savings in dashboard status/usage views without hiding raw-output recovery.</obligation-2>
+    <obligation-3>Detect missing or wrong RTK binary in doctor/health checks.</obligation-3>
+  </integration-obligations>
+
+  <risks>
+    <risk-1>Blind auto-prefix can alter command output shape expected by tests or scripts; policy must be per-shell-tool output, not arbitrary user scripts.</risk-1>
+    <risk-2>RTK installed version may differ from source version; diagnostics must report both when relevant.</risk-2>
+    <risk-3>Bundling Rust binaries raises packaging and platform support work.</risk-3>
+  </risks>
+</S-RTK>
