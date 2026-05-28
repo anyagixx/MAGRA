@@ -2,6 +2,7 @@ import { existsSync, readdirSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { listSessions } from "../../memory/session.js";
+import { diagnoseRtk, readRtkSavings } from "../../tools/rtk-shell-policy.js";
 import { VERSION } from "../../version.js";
 import type { DashboardContext } from "../context.js";
 import type { ApiResult } from "../router.js";
@@ -71,6 +72,8 @@ export async function handleHealth(
   const sessionsStat = dirSize(join(reasonixHome, "sessions"));
   const memoryStat = dirSize(join(reasonixHome, "memory"));
   const semanticStat = dirSize(join(reasonixHome, "semantic"));
+  const rtkRoot = ctx.getCurrentCwd?.() ?? process.cwd();
+  const rtkHealth = diagnoseRtk({ cwd: rtkRoot });
 
   let usageBytes = 0;
   if (existsSync(ctx.usageLogPath)) {
@@ -108,6 +111,10 @@ export async function handleHealth(
       usageLog: {
         path: ctx.usageLogPath,
         bytes: usageBytes,
+      },
+      rtk: {
+        health: rtkHealth,
+        savings: readRtkSavings(rtkRoot),
       },
       jobs: ctx.jobs ? ctx.jobs.list().length : null,
     },

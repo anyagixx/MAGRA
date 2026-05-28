@@ -1,4 +1,4 @@
-<V-M-RTK-SHELL-POLICY MODULE="M-RTK-SHELL-POLICY" PRIORITY="high" STATUS="pending">
+<V-M-RTK-SHELL-POLICY MODULE="M-RTK-SHELL-POLICY" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/rtk-shell-policy.test.ts</file-1>
   </test-files>

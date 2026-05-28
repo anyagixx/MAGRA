@@ -5,6 +5,7 @@ import { addProjectShellAllowed } from "../config.js";
 import { pauseGate } from "../core/pause-gate.js";
 import type { ToolRegistry } from "../tools.js";
 import { JobRegistry } from "./jobs.js";
+import { buildRtkCommand, diagnoseRtk, resolveRtkPolicy } from "./rtk-shell-policy.js";
 import {
   DEFAULT_MAX_OUTPUT_CHARS,
   DEFAULT_TIMEOUT_SEC,
@@ -48,6 +49,8 @@ export interface ShellToolsOptions {
   /** Fired after `run_background` / `stop_job` mutate the registry — used by the desktop popover for near-real-time updates without polling. */
   onJobsChanged?: () => void;
   sensitivePaths?: { prefixes?: readonly string[]; patterns?: readonly string[] };
+  /** Test hook and deployment override for RTK probing. Omit in production. */
+  rtk?: { binary?: string; available?: boolean };
 }
 
 /** Error thrown by `run_command` when the command isn't allowlisted. */
@@ -67,6 +70,13 @@ export function registerShellTools(registry: ToolRegistry, opts: ShellToolsOptio
   const timeoutSec = opts.timeoutSec ?? DEFAULT_TIMEOUT_SEC;
   const maxOutputChars = opts.maxOutputChars ?? DEFAULT_MAX_OUTPUT_CHARS;
   const jobs = opts.jobs ?? new JobRegistry();
+  const rtkHealth =
+    opts.rtk?.available === undefined
+      ? diagnoseRtk({ binary: opts.rtk?.binary, cwd: rootDir })
+      : {
+          available: opts.rtk.available,
+          binary: opts.rtk.binary ?? "rtk",
+        };
   // Resolved on every dispatch so newly-persisted "always allow"
   // prefixes take effect inside the session that added them, not just
   // on the next launch. Static arrays are wrapped into a constant
@@ -117,6 +127,14 @@ export function registerShellTools(registry: ToolRegistry, opts: ShellToolsOptio
       const cmd = args.command.trim();
       if (!cmd) throw new Error("run_command: empty command");
       const effectiveTimeout = Math.max(1, Math.min(600, args.timeoutSec ?? timeoutSec));
+      const rtkCommand = buildRtkCommand(
+        resolveRtkPolicy(cmd, {
+          rootDir,
+          rtkAvailable: rtkHealth.available,
+          rtkBinary: rtkHealth.binary,
+          env: process.env,
+        }),
+      );
       if (
         !isAllowAll() &&
         !isCommandAllowed(cmd, getExtraAllowed(), rootDir, opts.sensitivePaths)
@@ -124,11 +142,11 @@ export function registerShellTools(registry: ToolRegistry, opts: ShellToolsOptio
         const gate = ctx?.confirmationGate ?? pauseGate;
         const choice = await gate.ask({
           kind: "run_command",
-          payload: { command: cmd, cwd: rootDir, timeoutSec: effectiveTimeout },
+          payload: { command: rtkCommand.command, cwd: rootDir, timeoutSec: effectiveTimeout },
         });
         if (choice.type === "deny") {
           throw new Error(
-            `user denied: ${cmd}${choice.denyContext ? ` — ${choice.denyContext}` : ""}`,
+            `user denied: ${rtkCommand.command}${choice.denyContext ? ` — ${choice.denyContext}` : ""}`,
           );
         }
         if (choice.type === "always_allow") {
@@ -136,13 +154,13 @@ export function registerShellTools(registry: ToolRegistry, opts: ShellToolsOptio
         }
         // "run_once" — fall through and execute
       }
-      const result = await runCommand(cmd, {
+      const result = await runCommand(rtkCommand.command, {
         cwd: rootDir,
         timeoutSec: effectiveTimeout,
         maxOutputChars,
         signal: ctx?.signal,
       });
-      return formatCommandResult(cmd, result);
+      return formatCommandResult(rtkCommand.command, result);
     },
   });
 

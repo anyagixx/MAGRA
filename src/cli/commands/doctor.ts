@@ -20,6 +20,7 @@ import { checkOllamaStatus } from "../../index/semantic/ollama-launcher.js";
 import { listSessions } from "../../memory/session.js";
 import { detectProxyUrl, matchesNoProxy, resolveNoProxy } from "../../net/proxy.js";
 import { resolveDataPath } from "../../tokenizer.js";
+import { diagnoseRtk } from "../../tools/rtk-shell-policy.js";
 import { VERSION } from "../../version.js";
 
 export type DoctorLevel = "ok" | "warn" | "fail";
@@ -47,12 +48,13 @@ export async function runDoctorChecks(projectRoot: string): Promise<DoctorCheck[
     checkConfig(),
     checkApiReach(),
     checkTokenizer(),
+    checkRtk(projectRoot),
     checkSessions(),
     checkHooks(projectRoot),
     checkOllama(projectRoot),
     checkProject(projectRoot),
   ]);
-  return [r[0], r[1], ...checkProxy(), r[2], r[3], r[4], r[5], r[6], r[7]];
+  return [r[0], r[1], ...checkProxy(), r[2], r[3], r[4], r[5], r[6], r[7], r[8]];
 }
 
 /** Probe hosts used to show users what's going through the proxy vs. direct. Cheap (no I/O), purely a routing simulation against the same NO_PROXY patterns the dispatcher uses. */
@@ -318,6 +320,16 @@ async function checkTokenizer(): Promise<Check> {
     level: "warn",
     detail:
       "data/deepseek-tokenizer.json.gz not found — token counts will fall back to char heuristics",
+  };
+}
+
+async function checkRtk(projectRoot: string): Promise<Check> {
+  const health = diagnoseRtk({ cwd: projectRoot });
+  return {
+    id: "rtk",
+    label: "rtk          ",
+    level: health.available ? "ok" : "warn",
+    detail: health.version ?? health.detail,
   };
 }
 

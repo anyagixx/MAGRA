@@ -63,12 +63,20 @@ describe("MAGRA observability", () => {
   it("lists scoped verification commands without exposing mutable shared state", () => {
     // === START_BLOCK_ASSERT_VERIFICATION_COMMANDS ===
     const moduleCommands = listVerificationCommands("module");
-    expect(moduleCommands).toHaveLength(1);
-    expect(moduleCommands[0]?.moduleId).toBe("M-OBSERVABILITY-VERIFICATION");
-    moduleCommands[0]!.command = "mutated";
+    expect(moduleCommands.map((command) => command.moduleId)).toEqual([
+      "M-OBSERVABILITY-VERIFICATION",
+      "M-RTK-SHELL-POLICY",
+    ]);
+    const observability = moduleCommands.find(
+      (command) => command.moduleId === "M-OBSERVABILITY-VERIFICATION",
+    );
+    expect(observability).toBeDefined();
+    observability!.command = "mutated";
 
     const freshCommands = listVerificationCommands("module");
-    expect(freshCommands[0]?.command).toBe("rtk npm test -- tests/magra-observability.test.ts");
+    expect(
+      freshCommands.find((command) => command.moduleId === "M-OBSERVABILITY-VERIFICATION")?.command,
+    ).toBe("rtk npm test -- tests/magra-observability.test.ts");
     // === END_BLOCK_ASSERT_VERIFICATION_COMMANDS ===
   });
 });

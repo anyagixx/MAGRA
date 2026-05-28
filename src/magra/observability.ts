@@ -60,8 +60,8 @@ const DEFAULT_COMPONENT_HEALTH: Record<MagraComponentName, MagraComponentHealth>
     detail: "MyGRACE docs, CLI adapter, and canonical skill registry are available.",
   },
   rtk: {
-    status: "degraded",
-    detail: "RTK is required by policy; shell integration work starts in Phase-4.",
+    status: "ok",
+    detail: "RTK shell policy is integrated for eligible MAGRA shell commands.",
   },
   snarc: {
     status: "degraded",
@@ -105,6 +105,13 @@ const VERIFICATION_COMMANDS: readonly VerificationCommand[] = Object.freeze([
     scope: "wave",
     command: "rtk mygrace lint --path .",
     focus: "Index and per-entity MyGRACE artifact consistency.",
+  },
+  {
+    id: "V-RTK-SHELL-POLICY",
+    moduleId: "M-RTK-SHELL-POLICY",
+    scope: "module",
+    command: "rtk npm test -- tests/rtk-shell-policy.test.ts",
+    focus: "RTK command classification, raw bypass, health probing, and savings parsing.",
   },
 ]);
 

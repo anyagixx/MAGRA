@@ -1,4 +1,4 @@
-<M-RTK-SHELL-POLICY NAME="RtkShellPolicy" TYPE="INTEGRATION" STATUS="pending">
+<M-RTK-SHELL-POLICY NAME="RtkShellPolicy" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Route appropriate shell, build, lint, and test commands through RTK while preserving Reasonix safety gates and command semantics.</purpose>
     <scope>Detect RTK, rewrite eligible shell commands, allow raw bypass, preserve exit code, surface savings telemetry, and report health in doctor/dashboard.</scope>
