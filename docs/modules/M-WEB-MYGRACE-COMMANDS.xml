@@ -1,9 +1,10 @@
-<M-WEB-MYGRACE-COMMANDS NAME="WebMyGraceCommands" TYPE="UI_COMPONENT" STATUS="pending">
+<M-WEB-MYGRACE-COMMANDS NAME="WebMyGraceCommands" TYPE="UI_COMPONENT" STATUS="done">
   <contract>
     <purpose>Make all MyGRACE skills easy to invoke from the MAGRA web chat composer and command palette.</purpose>
     <scope>Extend slash suggestions, `/api/slash`, command palette, and chat submission routing for `/mygrace:*` commands.</scope>
     <source-path>dashboard/src/ui/mygrace-commands.tsx</source-path>
     <test-path>tests/dashboard-mygrace-commands.test.tsx</test-path>
+    <test-path-2>tests/dashboard-mygrace-server.test.ts</test-path-2>
     <verification-ref>V-M-WEB-MYGRACE-COMMANDS</verification-ref>
   </contract>
   <dependencies>

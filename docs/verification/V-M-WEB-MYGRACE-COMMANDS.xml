@@ -1,10 +1,12 @@
-<V-M-WEB-MYGRACE-COMMANDS MODULE="M-WEB-MYGRACE-COMMANDS" PRIORITY="high" STATUS="pending">
+<V-M-WEB-MYGRACE-COMMANDS MODULE="M-WEB-MYGRACE-COMMANDS" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/dashboard-mygrace-commands.test.tsx</file-1>
+    <file-2>tests/dashboard-mygrace-server.test.ts</file-2>
   </test-files>
   <module-checks>
-    <check-1>rtk npm test -- tests/dashboard-mygrace-commands.test.tsx</check-1>
+    <check-1>rtk npm test -- tests/dashboard-mygrace-commands.test.tsx tests/dashboard-mygrace-server.test.ts</check-1>
     <check-2>rtk npm run typecheck</check-2>
+    <check-3>rtk npm run build:dashboard</check-3>
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">Typing `/mygrace` in the composer shows all MyGRACE commands.</scenario-1>

@@ -47,6 +47,11 @@ import { ContextPanel } from "./ui/context-panel";
 import { JobsPop } from "./ui/jobs-pop";
 import { useElapsed } from "./ui/live";
 import { AboutModal } from "./ui/about";
+import {
+  getMyGraceCommandPaletteActions,
+  getMyGraceSlashCommands,
+  submitMyGraceSlash,
+} from "./ui/mygrace-commands";
 import { SettingsModal, type PageId as SettingsPageId } from "./ui/settings";
 import { Sidebar } from "./ui/sidebar";
 import { Shortcut, localizeShortcutText, shortcutText } from "./ui/shortcut";
@@ -1398,6 +1403,17 @@ function TabRuntime({
       const text = (override ?? draft).trim();
       if (!text || !state.ready || state.busy) return;
 
+      const myGraceResult = submitMyGraceSlash(text, {
+        startSkill: (skill, args, clientId) =>
+          dispatch({ t: "start_skill", skill, args, clientId }),
+        runSkill: (command, args) =>
+          sendRpc({ cmd: "mygrace_skill_run", command, args: args || undefined }),
+      });
+      if (myGraceResult.handled) {
+        if (!override) setDraft("");
+        return;
+      }
+
       // /btw <question> — route to side-question RPC instead of user_input
       const btwMatch = /^\/btw(?:\s+([\s\S]+))?$/.exec(text);
       if (btwMatch) {
@@ -1698,6 +1714,7 @@ function TabRuntime({
     canCloseTab,
     hasMessages: state.messages.length > 0,
   });
+  commands.push(...getMyGraceCommandPaletteActions((command) => send(command)));
 
   const slashCommands: SlashCmd[] = [
     {
@@ -1780,6 +1797,10 @@ function TabRuntime({
         composerRef.current?.focus();
       },
     },
+    ...getMyGraceSlashCommands((command) => {
+      setDraft(`${command} `);
+      composerRef.current?.focus();
+    }),
     ...state.skills.map((s) => ({
       cmd: `/${s.name}`,
       desc: s.description?.trim() || fallbackSkillDesc(s),

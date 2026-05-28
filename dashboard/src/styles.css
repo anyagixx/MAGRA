@@ -3014,7 +3014,7 @@ html:not([data-platform="macos"]) .shortcut kbd[data-key="mod"] {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  width: 420px;
+  width: min(420px, calc(100vw - 24px));
   max-height: 320px;
   background: var(--card);
   border: 1px solid var(--border-strong);
@@ -3050,7 +3050,7 @@ html:not([data-platform="macos"]) .shortcut kbd[data-key="mod"] {
 }
 .popup-item {
   display: grid;
-  grid-template-columns: 24px 1fr auto;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   padding: 7px 8px;
@@ -3073,10 +3073,17 @@ html:not([data-platform="macos"]) .shortcut kbd[data-key="mod"] {
   color: var(--fg-2);
 }
 .popup-item .nm {
+  min-width: 0;
+  overflow: hidden;
   font-weight: 500;
   color: var(--fg);
 }
 .popup-item .nm .cmd {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
   font-family: inherit;
   color: var(--accent);
   margin-right: 6px;

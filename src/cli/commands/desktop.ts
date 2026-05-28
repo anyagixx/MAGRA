@@ -117,6 +117,7 @@ import {
   sessionPath,
   timestampSuffix,
 } from "../../memory/session.js";
+import { resolveMyGraceCommand, runMyGraceSkill } from "../../mygrace/skills.js";
 import { QQChannel } from "../../qq/channel.js";
 import {
   type ExternalSessionSource,
@@ -216,6 +217,7 @@ type InMessage = { tabId?: string } & (
   | { cmd: "mcp_specs_remove"; spec: string }
   | { cmd: "skills_get" }
   | { cmd: "skill_run"; name: string; args?: string }
+  | { cmd: "mygrace_skill_run"; command: string; args?: string }
   | { cmd: "jobs_list" }
   | { cmd: "jobs_stop"; jobId: number }
   | { cmd: "jobs_stop_all" }
@@ -1274,6 +1276,21 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
     const header = `# Skill: ${found.name}${found.description ? `\n> ${found.description}` : ""}`;
     const argsLine = extra ? `\n\nArguments: ${extra}` : "";
     return `${header}\n\n${found.body}${argsLine}`;
+  }
+
+  async function buildMyGraceSkillPayload(
+    tab: Tab,
+    command: string,
+    args?: string,
+  ): Promise<string | null> {
+    const extra = args?.trim() ?? "";
+    const merged = extra ? `${command.trim()} ${extra}` : command.trim();
+    const result = await runMyGraceSkill(resolveMyGraceCommand(merged), { rootDir: tab.rootDir });
+    if (!result.ok) return null;
+    const rootLine = result.rootDir ? `\n> Root: ${result.rootDir}` : "";
+    const argsLine = result.args ? `\n\nArguments: ${result.args}` : "";
+    const header = `# Skill: ${result.skill.sourceSkillName}\n> ${result.skill.description}${rootLine}`;
+    return `${header}\n\n${result.body}${argsLine}`;
   }
 
   function availableSkillNamesForTab(tab: Tab): string[] {
@@ -2651,6 +2668,28 @@ export async function desktopCommand(opts: DesktopOptions): Promise<void> {
       } catch (err) {
         emit({ type: "$error", message: `skill_run: ${(err as Error).message}` }, tab.id);
       }
+      return;
+    }
+    if (msg.cmd === "mygrace_skill_run") {
+      if (!tab.runtime) {
+        emit(
+          { type: "$error", message: "Not configured yet — paste your DeepSeek API key first." },
+          tab.id,
+        );
+        return;
+      }
+      void (async () => {
+        try {
+          const payload = await buildMyGraceSkillPayload(tab, msg.command, msg.args);
+          if (!payload) {
+            emit({ type: "$error", message: `MyGRACE command not found: ${msg.command}` }, tab.id);
+            return;
+          }
+          void runTurn(tab, payload);
+        } catch (err) {
+          emit({ type: "$error", message: `mygrace_skill_run: ${(err as Error).message}` }, tab.id);
+        }
+      })();
       return;
     }
     if (msg.cmd === "session_list") {

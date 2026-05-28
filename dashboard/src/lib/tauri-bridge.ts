@@ -881,6 +881,14 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
       } catch {}
       break;
     }
+    case "mygrace_skill_run": {
+      const body: Record<string, any> = { command: payload.command };
+      if (payload.args) body.args = payload.args;
+      try {
+        await apiFetch("skills/run", { method: "POST", body: JSON.stringify(body) });
+      } catch {}
+      break;
+    }
     case "mcp_specs_get": {
       await loadAndEmitMcp();
       break;

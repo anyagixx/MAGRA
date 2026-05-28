@@ -1,4 +1,4 @@
-<Phase-3 NAME="WebMyGraceInterface" STATUS="pending">
+<Phase-3 NAME="WebMyGraceInterface" STATUS="done">
   <purpose>Expose full MyGRACE invocation in the MAGRA web chat interface.</purpose>
   <modules>
     <module-1>M-WEB-MYGRACE-COMMANDS</module-1>

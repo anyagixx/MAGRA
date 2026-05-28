@@ -539,6 +539,7 @@ export type OutgoingCommand = { tabId?: string } & (
   | { cmd: "mcp_specs_remove"; spec: string }
   | { cmd: "skills_get" }
   | { cmd: "skill_run"; name: string; args?: string }
+  | { cmd: "mygrace_skill_run"; command: string; args?: string }
   | { cmd: "jobs_list" }
   | { cmd: "jobs_stop"; jobId: number }
   | { cmd: "jobs_stop_all" }

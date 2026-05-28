@@ -1,4 +1,4 @@
-/** `/api/skills` — edits files only; loop reloads on /new or restart. `builtin` scope is read-only. */
+/** `/api/skills` — lists, edits, and dispatches skill packets. `builtin` scope is read-only. */
 
 import {
   closeSync,
@@ -17,20 +17,24 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { loadResolvedSkillPaths, loadSubagentModels } from "../../config.js";
 import { parseFrontmatter } from "../../frontmatter.js";
+import { resolveMyGraceCommand, runMyGraceSkill } from "../../mygrace/skills.js";
 import { SKILLS_DIRNAME, SKILL_FILE, SkillStore, validateSkillFrontmatter } from "../../skills.js";
 import { readUsageLog } from "../../telemetry/usage.js";
 import type { DashboardContext } from "../context.js";
 import type { ApiResult } from "../router.js";
 
-interface WriteBody {
+interface SkillsBody {
   body?: unknown;
+  name?: unknown;
+  command?: unknown;
+  args?: unknown;
 }
 
-function parseBody(raw: string): WriteBody {
+function parseBody(raw: string): SkillsBody {
   if (!raw) return {};
   try {
     const parsed = JSON.parse(raw);
-    return typeof parsed === "object" && parsed !== null ? (parsed as WriteBody) : {};
+    return typeof parsed === "object" && parsed !== null ? (parsed as SkillsBody) : {};
   } catch {
     return {};
   }
@@ -166,6 +170,82 @@ function countSubagentRuns(usageLogPath: string): Map<string, number> {
   return counts;
 }
 
+function buildSkillPrompt(
+  ctx: DashboardContext,
+  cwd: string | undefined,
+  name: string,
+  args: string,
+): string | null {
+  const store = new SkillStore({
+    projectRoot: cwd,
+    customSkillPaths: loadResolvedSkillPaths(cwd ?? process.cwd(), ctx.configPath),
+    subagentModels: loadSubagentModels(ctx.configPath),
+  });
+  const found = store.read(name);
+  if (!found) return null;
+  const header = `# Skill: ${found.name}${found.description ? `\n> ${found.description}` : ""}`;
+  const argsLine = args ? `\n\nArguments: ${args}` : "";
+  return `${header}\n\n${found.body}${argsLine}`;
+}
+
+async function buildMyGraceSkillPrompt(
+  command: string,
+  args: string,
+  cwd: string | undefined,
+): Promise<string | null> {
+  const merged = args ? `${command.trim()} ${args}` : command.trim();
+  const result = await runMyGraceSkill(resolveMyGraceCommand(merged), {
+    rootDir: cwd ?? process.cwd(),
+  });
+  if (!result.ok) return null;
+  const rootLine = result.rootDir ? `\n> Root: ${result.rootDir}` : "";
+  const argsLine = result.args ? `\n\nArguments: ${result.args}` : "";
+  const header = `# Skill: ${result.skill.sourceSkillName}\n> ${result.skill.description}${rootLine}`;
+  return `${header}\n\n${result.body}${argsLine}`;
+}
+
+async function handleSkillRun(
+  body: string,
+  ctx: DashboardContext,
+  cwd: string | undefined,
+): Promise<ApiResult> {
+  if (!ctx.submitPrompt) {
+    return {
+      status: 503,
+      body: {
+        error:
+          "skill run requires an attached dashboard session — open `/dashboard` from inside `magra code` or `magra chat`.",
+      },
+    };
+  }
+
+  const parsed = parseBody(body);
+  const args = typeof parsed.args === "string" ? parsed.args.trim() : "";
+  const prompt =
+    typeof parsed.command === "string" && parsed.command.trim()
+      ? await buildMyGraceSkillPrompt(parsed.command, args, cwd)
+      : typeof parsed.name === "string" && parsed.name.trim()
+        ? buildSkillPrompt(ctx, cwd, parsed.name.trim(), args)
+        : null;
+
+  if (!prompt) return { status: 404, body: { error: "skill not found" } };
+
+  const result = ctx.submitPrompt(prompt);
+  if (!result.accepted) {
+    return { status: 409, body: { accepted: false, reason: result.reason ?? "loop is busy" } };
+  }
+
+  ctx.audit?.({
+    ts: Date.now(),
+    action: "run-skill",
+    payload: {
+      name: typeof parsed.name === "string" ? parsed.name : undefined,
+      command: typeof parsed.command === "string" ? parsed.command : undefined,
+    },
+  });
+  return { status: 202, body: { accepted: true } };
+}
+
 export async function handleSkills(
   method: string,
   rest: string[],
@@ -173,6 +253,10 @@ export async function handleSkills(
   ctx: DashboardContext,
 ): Promise<ApiResult> {
   const cwd = ctx.getCurrentCwd?.();
+
+  if (method === "POST" && rest.length === 1 && rest[0] === "run") {
+    return await handleSkillRun(body, ctx, cwd);
+  }
 
   if (method === "GET" && rest.length === 0) {
     const runs7d = countSubagentRuns(ctx.usageLogPath);
