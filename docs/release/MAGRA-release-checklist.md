@@ -18,6 +18,7 @@ Sections: Preflight, Verification, Runtime Smoke, Rollback
 <!-- === CHANGE_SUMMARY ===
 Initial MAGRA release readiness checklist.
 Added Phase-10 governance metadata for release checklist linting.
+Updated Phase-11 MAGRA-first package metadata and release surface checks.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Release Checklist
@@ -25,8 +26,11 @@ Added Phase-10 governance metadata for release checklist linting.
 ## Preflight
 
 - Confirm `package.json` name is `magra` and binaries include `magra`.
-- Confirm `NOTICE.md` is included in package files.
-- Confirm `README.md` begins with MAGRA product context and keeps Reasonix attribution.
+- Confirm `package.json` repository, bugs, and homepage point to MAGRA release surfaces.
+- Confirm `reasonix` and `dsnix` bins are documented only as compatibility aliases.
+- Confirm `NOTICE.md` and `CHANGELOG.md` are included in package files.
+- Confirm `README.md` install and quickstart commands use `magra`.
+- Confirm `README.md` keeps upstream Reasonix attribution.
 - Confirm MyGRACE indexes show Phase-6 as done before release tagging.
 
 ## Verification

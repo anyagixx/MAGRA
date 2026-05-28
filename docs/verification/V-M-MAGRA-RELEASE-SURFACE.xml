@@ -1,4 +1,4 @@
-<V-M-MAGRA-RELEASE-SURFACE MODULE="M-MAGRA-RELEASE-SURFACE" PRIORITY="medium" STATUS="pending">
+<V-M-MAGRA-RELEASE-SURFACE MODULE="M-MAGRA-RELEASE-SURFACE" PRIORITY="medium" STATUS="done">
   <test-files>
     <file-1>tests/magra-release-surface.test.ts</file-1>
     <file-2>docs/release/verification-report.md</file-2>
@@ -7,6 +7,7 @@
     <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
     <check-2>rtk mygrace lint --path .</check-2>
     <check-3>rtk npm run build</check-3>
+    <check-4>rtk npm pack --dry-run</check-4>
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">README quickstart and install commands are MAGRA-first.</scenario-1>
@@ -34,4 +35,13 @@
   <required-log-markers>
     <marker-1>[ObservabilityVerification][listVerificationCommands][BLOCK_FILTER_COMMANDS]</marker-1>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+    <command-3 RESULT="passed">rtk npm run lint</command-3>
+    <command-4 RESULT="passed">rtk npm run typecheck</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm test</command-6>
+    <command-7 RESULT="passed">rtk npm pack --dry-run</command-7>
+  </evidence>
 </V-M-MAGRA-RELEASE-SURFACE>

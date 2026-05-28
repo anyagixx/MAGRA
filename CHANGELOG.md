@@ -1,7 +1,35 @@
+<!-- === MODULE_CONTRACT ===
+FILE: CHANGELOG.md
+VERSION: 1.0.0
+PURPOSE: Record MAGRA release-facing changes while preserving upstream Reasonix history.
+SCOPE: MAGRA integration entries and inherited upstream changelog history.
+DEPENDS: M-MAGRA-RELEASE-SURFACE,M-RELEASE-HARDENING
+LINKS: docs/plans/Phase-11.xml
+ROLE: RELEASE
+MAP_MODE: DOCUMENT
+START_MODULE_CONTRACT
+END_MODULE_CONTRACT
+=== END_MODULE_CONTRACT === -->
+
+<!-- === MODULE_MAP ===
+Sections: MAGRA integration entries, inherited upstream release history, upstream version links
+=== END_MODULE_MAP === -->
+
+<!-- === CHANGE_SUMMARY ===
+Initial MAGRA changelog wrapper around upstream Reasonix history.
+Added Phase-11 MAGRA release-surface documentation entry.
+=== END_CHANGE_SUMMARY === -->
+
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [MAGRA release surface] - 2026-05-29
+
+**MAGRA-first release surface.** README install, quickstart, command tables, package metadata, release docs, and verification tests now treat `magra` as the primary product and command.
+
+**Compatibility preserved.** `reasonix` and `dsnix` remain documented compatibility aliases, and upstream Reasonix attribution stays in README and NOTICE.
 
 ## [MAGRA integration] — 2026-05-28
 

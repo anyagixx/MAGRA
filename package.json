@@ -1,7 +1,7 @@
 {
   "name": "magra",
   "version": "0.52.0",
-  "description": "MAGRA: Reasonix-based coding agent with MyGRACE workflows, RTK shell compression, and SNARC memory.",
+  "description": "MAGRA: AI coding agent with MyGRACE workflows, RTK shell compression, SNARC memory, and Reasonix compatibility.",
   "type": "module",
   "bin": {
     "magra": "dist/cli/index.js",
@@ -26,6 +26,7 @@
     "patches",
     "scripts/postinstall.mjs",
     "README.md",
+    "CHANGELOG.md",
     "NOTICE.md",
     "LICENSE"
   ],
@@ -76,12 +77,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/esengine/DeepSeek-Reasonix.git"
+    "url": "git+https://github.com/esengine/MAGRA.git"
   },
   "bugs": {
-    "url": "https://github.com/esengine/DeepSeek-Reasonix/issues"
+    "url": "https://github.com/esengine/MAGRA/issues"
   },
-  "homepage": "https://github.com/esengine/DeepSeek-Reasonix#readme",
+  "homepage": "https://github.com/esengine/MAGRA#readme",
   "engines": {
     "node": ">=22"
   },

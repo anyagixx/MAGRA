@@ -11,6 +11,15 @@ START_MODULE_CONTRACT
 END_MODULE_CONTRACT
 === END_MODULE_CONTRACT === -->
 
+<!-- === MODULE_MAP ===
+Sections: Start, MyGRACE, RTK, SNARC, MCP And Native Tools, Dashboard
+=== END_MODULE_MAP === -->
+
+<!-- === CHANGE_SUMMARY ===
+Initial MAGRA operator flow guide.
+Updated Phase-11 release wording and SNARC SQLite memory path.
+=== END_CHANGE_SUMMARY === -->
+
 # MAGRA Operator Flows
 
 ## Start
@@ -38,7 +47,7 @@ The legacy `reasonix` and `dsnix` binaries remain aliases for compatibility, but
 
 ## SNARC
 
-- SNARC memory is project-scoped under `.magra/snarc/memory.json`.
+- SNARC memory is project-scoped under `.magra/snarc/memory.sqlite`.
 - Prompt submission injects provenance-labeled related memory when useful.
 - Tool results are captured after tool execution.
 - Compaction capture runs before history folding.

@@ -1,4 +1,4 @@
-<M-MAGRA-RELEASE-SURFACE NAME="MagraReleaseSurface" TYPE="UTILITY" STATUS="pending">
+<M-MAGRA-RELEASE-SURFACE NAME="MagraReleaseSurface" TYPE="UTILITY" STATUS="done">
   <contract>
     <purpose>Make the public release surface consistently MAGRA-first while preserving upstream Reasonix attribution.</purpose>
     <scope>README, package metadata, badges, release checklist, changelog, NOTICE, install commands, and user-facing docs.</scope>
@@ -22,4 +22,8 @@
   </invariants>
   <CrossLink from="M-MAGRA-RELEASE-SURFACE" to="M-MAGRA-RUNTIME-IDENTITY" relation="documents" />
   <CrossLink from="M-MAGRA-RELEASE-SURFACE" to="M-RELEASE-HARDENING" relation="extends" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
 </M-MAGRA-RELEASE-SURFACE>
