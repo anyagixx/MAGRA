@@ -56,8 +56,8 @@ const DEFAULT_COMPONENT_HEALTH: Record<MagraComponentName, MagraComponentHealth>
     detail: "Reasonix base runtime is imported and available.",
   },
   mygrace: {
-    status: "degraded",
-    detail: "MyGRACE docs are initialized; runtime adapter work starts in Phase-2.",
+    status: "ok",
+    detail: "MyGRACE docs, CLI adapter, and canonical skill registry are available.",
   },
   rtk: {
     status: "degraded",

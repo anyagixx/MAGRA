@@ -1,4 +1,4 @@
-<V-M-MYGRACE-CLI-ADAPTER MODULE="M-MYGRACE-CLI-ADAPTER" PRIORITY="high" STATUS="pending">
+<V-M-MYGRACE-CLI-ADAPTER MODULE="M-MYGRACE-CLI-ADAPTER" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/mygrace-cli-adapter.test.ts</file-1>
   </test-files>
@@ -14,4 +14,8 @@
     <marker-1>[MyGraceCliAdapter][mygraceLint][BLOCK_RUN_LINT]</marker-1>
     <marker-2>[MyGraceCliAdapter][mygraceModuleShow][BLOCK_READ_ENTITY]</marker-2>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-cli-adapter.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace module index</command-2>
+  </evidence>
 </V-M-MYGRACE-CLI-ADAPTER>

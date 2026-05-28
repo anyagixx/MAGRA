@@ -1,4 +1,4 @@
-<M-MYGRACE-CLI-ADAPTER NAME="MyGraceCliAdapter" TYPE="INTEGRATION" STATUS="pending">
+<M-MYGRACE-CLI-ADAPTER NAME="MyGraceCliAdapter" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Provide Node-compatible MyGRACE CLI and MCP-equivalent operations inside the Reasonix runtime.</purpose>
     <scope>Implement init, lint, module, phase, verification, and file markup operations without requiring Bun on the critical path.</scope>

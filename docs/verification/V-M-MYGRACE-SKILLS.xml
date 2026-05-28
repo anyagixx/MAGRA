@@ -1,4 +1,4 @@
-<V-M-MYGRACE-SKILLS MODULE="M-MYGRACE-SKILLS" PRIORITY="high" STATUS="pending">
+<V-M-MYGRACE-SKILLS MODULE="M-MYGRACE-SKILLS" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/mygrace-skills.test.ts</file-1>
   </test-files>
@@ -13,4 +13,7 @@
     <marker-1>[MyGraceSkills][listMyGraceSkills][BLOCK_LOAD_METADATA]</marker-1>
     <marker-2>[MyGraceSkills][runMyGraceSkill][BLOCK_DISPATCH_SKILL]</marker-2>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-skills.test.ts</command-1>
+  </evidence>
 </V-M-MYGRACE-SKILLS>

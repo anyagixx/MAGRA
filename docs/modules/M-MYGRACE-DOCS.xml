@@ -1,4 +1,4 @@
-<M-MYGRACE-DOCS NAME="MyGraceDocs" TYPE="DATA_LAYER" STATUS="pending">
+<M-MYGRACE-DOCS NAME="MyGraceDocs" TYPE="DATA_LAYER" STATUS="done">
   <contract>
     <purpose>Read, validate, and update MyGRACE index-first documentation artifacts for MAGRA.</purpose>
     <scope>Manage graph, plan, verification, source-analysis, proposal, module, phase, and per-verification XML files without monolithic artifacts.</scope>

@@ -1,4 +1,4 @@
-<V-M-MYGRACE-DOCS MODULE="M-MYGRACE-DOCS" PRIORITY="high" STATUS="pending">
+<V-M-MYGRACE-DOCS MODULE="M-MYGRACE-DOCS" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/mygrace-docs.test.ts</file-1>
   </test-files>
@@ -14,4 +14,8 @@
     <marker-1>[MyGraceDocs][loadGraphIndex][BLOCK_READ_INDEX]</marker-1>
     <marker-2>[MyGraceDocs][writeModuleDelta][BLOCK_SYNC_INDEX]</marker-2>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-docs.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
 </V-M-MYGRACE-DOCS>

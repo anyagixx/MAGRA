@@ -34,7 +34,7 @@
   "scripts": {
     "postinstall": "node scripts/postinstall.mjs",
     "build:dashboard": "npm --prefix dashboard run build",
-    "build": "npm run build:dashboard && tsup && node scripts/copy-dashboard-vendor-css.mjs && node scripts/copy-tree-sitter-grammars.mjs",
+    "build": "npm run build:dashboard && tsup && node scripts/copy-dashboard-vendor-css.mjs && node scripts/copy-tree-sitter-grammars.mjs && node scripts/copy-mygrace-skill-bodies.mjs",
     "dev": "tsx src/cli/index.ts",
     "chat": "tsx src/cli/index.ts chat",
     "test": "vitest run",

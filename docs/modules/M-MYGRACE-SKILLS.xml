@@ -1,4 +1,4 @@
-<M-MYGRACE-SKILLS NAME="MyGraceSkills" TYPE="CORE_LOGIC" STATUS="pending">
+<M-MYGRACE-SKILLS NAME="MyGraceSkills" TYPE="CORE_LOGIC" STATUS="done">
   <contract>
     <purpose>Expose the full canonical MyGRACE skill set as deterministic MAGRA commands and runnable playbooks.</purpose>
     <scope>Register all 14 MyGRACE skills, map slash names, load skill bodies lazily, and dispatch inline or service-backed workflows.</scope>

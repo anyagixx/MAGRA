@@ -372,3 +372,61 @@ export type {
   ResolvedHook,
   RunHooksOptions,
 } from "./hooks.js";
+
+export {
+  findMyGraceProjectRoot,
+  lintMyGraceArtifacts,
+  loadGraphIndex,
+  loadModule,
+  loadPhase,
+  loadPlanIndex,
+  loadVerification,
+  loadVerificationIndex,
+  resolveMyGracePath,
+  writeModuleDelta,
+} from "./mygrace/docs.js";
+export type {
+  GraphIndex,
+  LintIssue,
+  LintReport,
+  ModuleContract,
+  ModuleDelta,
+  MyGraceEntity,
+  MyGraceIndex,
+  MyGraceIndexEntry,
+  PhaseContract,
+  PlanIndex,
+  VerificationContract,
+  VerificationIndex,
+  WriteResult,
+} from "./mygrace/docs.js";
+export {
+  mygraceFileShow,
+  mygraceLint,
+  mygraceModuleFind,
+  mygraceModuleIndex,
+  mygraceModuleList,
+  mygraceModuleShow,
+  mygracePhaseIndex,
+  mygracePhaseShow,
+  mygraceVerificationIndex,
+  renderMyGraceLintReport,
+} from "./mygrace/cli-adapter.js";
+export type {
+  MyGraceFileShowOptions,
+  MyGraceListOptions,
+  MyGraceModuleShowOptions,
+} from "./mygrace/cli-adapter.js";
+export {
+  listMyGraceSkills,
+  loadMyGraceSkillBody,
+  resolveMyGraceCommand,
+  runMyGraceSkill,
+} from "./mygrace/skills.js";
+export type {
+  MyGraceInvocation,
+  MyGraceSkillId,
+  MyGraceSkillMeta,
+  MyGraceSkillRunContext,
+  SkillResult,
+} from "./mygrace/skills.js";

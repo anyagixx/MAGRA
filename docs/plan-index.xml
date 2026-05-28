@@ -1,7 +1,7 @@
 <PlanIndex project="MAGRA" product="MAGRA" version="1.0.0">
   <Phase-0 NAME="PlanningApproval" STATUS="done" STEPS="4" />
   <Phase-1 NAME="ReasonixBaseImport" STATUS="done" STEPS="5" />
-  <Phase-2 NAME="MyGraceCore" STATUS="pending" STEPS="5" />
+  <Phase-2 NAME="MyGraceCore" STATUS="done" STEPS="5" />
   <Phase-3 NAME="WebMyGraceInterface" STATUS="pending" STEPS="5" />
   <Phase-4 NAME="RtkShellIntegration" STATUS="pending" STEPS="4" />
   <Phase-5 NAME="SnarcMemoryIntegration" STATUS="pending" STEPS="6" />

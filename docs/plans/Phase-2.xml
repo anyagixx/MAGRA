@@ -1,4 +1,4 @@
-<Phase-2 NAME="MyGraceCore" STATUS="pending">
+<Phase-2 NAME="MyGraceCore" STATUS="done">
   <purpose>Integrate MyGRACE docs, CLI-equivalent operations, and canonical skills into the Reasonix runtime.</purpose>
   <modules>
     <module-1>M-MYGRACE-DOCS</module-1>
@@ -6,12 +6,19 @@
     <module-3>M-MYGRACE-SKILLS</module-3>
   </modules>
   <steps>
-    <step-1>Port index parsing, per-entity lookup, lint, and file markup inspection into Node-compatible TypeScript.</step-1>
-    <step-2>Register the 14 canonical MyGRACE skill bodies and metadata.</step-2>
-    <step-3>Create `/mygrace:*` command resolver independent of Reasonix skill filename limits.</step-3>
-    <step-4>Add deterministic tests for init, status, ask, lint, module show, phase show, and file show flows.</step-4>
-    <step-5>Run MyGRACE lint against MAGRA after every generated docs change.</step-5>
+    <step-1 STATUS="done">Port index parsing, per-entity lookup, lint, and file markup inspection into Node-compatible TypeScript.</step-1>
+    <step-2 STATUS="done">Register the 14 canonical MyGRACE skill bodies and metadata.</step-2>
+    <step-3 STATUS="done">Create `/mygrace:*` command resolver independent of Reasonix skill filename limits.</step-3>
+    <step-4 STATUS="done">Add deterministic tests for init, status, ask, lint, module show, phase show, and file show flows.</step-4>
+    <step-5 STATUS="done">Run MyGRACE lint against MAGRA after every generated docs change.</step-5>
   </steps>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-docs.test.ts tests/mygrace-cli-adapter.test.ts tests/mygrace-skills.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm run lint</command-2>
+    <command-3 RESULT="passed">rtk npm run typecheck</command-3>
+    <command-4 RESULT="passed">rtk mygrace lint --path .</command-4>
+    <note-1>MyGRACE skill bodies are bundled as lazy runtime assets under src/mygrace/skill-bodies and copied to dist during build.</note-1>
+  </evidence>
   <verification-refs>
     <verification-1>V-M-MYGRACE-DOCS</verification-1>
     <verification-2>V-M-MYGRACE-CLI-ADAPTER</verification-2>
