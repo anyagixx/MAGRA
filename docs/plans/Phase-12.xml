@@ -1,4 +1,4 @@
-<Phase-12 NAME="Dogfooding" STATUS="pending">
+<Phase-12 NAME="Dogfooding" STATUS="done">
   <purpose>Validate MAGRA comfort and reliability through real pet-project development workflows before beta readiness is claimed.</purpose>
   <modules>
     <module-1>M-MAGRA-DOGFOODING-HARNESS</module-1>
@@ -8,13 +8,22 @@
     <module-5>M-MCP-UNIFIED-BRIDGE</module-5>
   </modules>
   <steps>
-    <step-1>Create dogfooding report template with exact scenario, command, outcome, and friction sections.</step-1>
-    <step-2>Run a small Node CLI pet-project scenario through MAGRA web chat and CLI.</step-2>
-    <step-3>Run a small React/Vite pet-project scenario through MAGRA web chat and CLI.</step-3>
-    <step-4>Run a docs/tooling project scenario focused on MyGRACE planning, reviewer, and release checks.</step-4>
-    <step-5>Verify SNARC recall across restart, RTK shell behavior, MyGRACE slash flows, and dashboard SNARC endpoints.</step-5>
-    <step-6>Summarize beta readiness, blocker list, and follow-up backlog in the dogfooding report.</step-6>
+    <step-1 STATUS="done">Create dogfooding report template with exact scenario, command, outcome, and friction sections.</step-1>
+    <step-2 STATUS="done">Run a small Node CLI pet-project scenario through MAGRA web chat and CLI.</step-2>
+    <step-3 STATUS="done">Run a small React/Vite pet-project scenario through MAGRA web chat and CLI.</step-3>
+    <step-4 STATUS="done">Run a docs/tooling project scenario focused on MyGRACE planning, reviewer, and release checks.</step-4>
+    <step-5 STATUS="done">Verify SNARC recall across restart, RTK shell behavior, MyGRACE slash flows, and dashboard SNARC endpoints.</step-5>
+    <step-6 STATUS="done">Summarize beta readiness, blocker list, and follow-up backlog in the dogfooding report.</step-6>
   </steps>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-dogfooding-smoke.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm test -- tests/dashboard-mygrace-commands.test.tsx tests/rtk-shell-policy.test.ts tests/snarc-sqlite-store.test.ts tests/dashboard-snarc-server.test.ts tests/mcp-unified-bridge.test.ts</command-2>
+    <command-3 RESULT="passed">rtk mygrace lint --path .</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run typecheck</command-5>
+    <command-6 RESULT="passed">rtk npm run build</command-6>
+    <command-7 RESULT="passed">rtk npm test</command-7>
+  </evidence>
   <verification-refs>
     <verification-1>V-M-MAGRA-DOGFOODING-HARNESS</verification-1>
     <verification-2>V-M-WEB-MYGRACE-COMMANDS</verification-2>

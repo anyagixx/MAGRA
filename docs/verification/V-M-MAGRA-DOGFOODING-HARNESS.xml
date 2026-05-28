@@ -1,4 +1,4 @@
-<V-M-MAGRA-DOGFOODING-HARNESS MODULE="M-MAGRA-DOGFOODING-HARNESS" PRIORITY="high" STATUS="pending">
+<V-M-MAGRA-DOGFOODING-HARNESS MODULE="M-MAGRA-DOGFOODING-HARNESS" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/magra-dogfooding-smoke.test.ts</file-1>
     <file-2>docs/dogfooding/MAGRA-dogfooding-report.md</file-2>
@@ -35,4 +35,13 @@
   <required-log-markers>
     <marker-1>[MagraDogfoodingHarness][runScenario][BLOCK_RECORD_OUTCOME]</marker-1>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-dogfooding-smoke.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm test -- tests/dashboard-mygrace-commands.test.tsx tests/rtk-shell-policy.test.ts tests/snarc-sqlite-store.test.ts tests/dashboard-snarc-server.test.ts tests/mcp-unified-bridge.test.ts</command-2>
+    <command-3 RESULT="passed">rtk mygrace lint --path .</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run typecheck</command-5>
+    <command-6 RESULT="passed">rtk npm run build</command-6>
+    <command-7 RESULT="passed">rtk npm test</command-7>
+  </evidence>
 </V-M-MAGRA-DOGFOODING-HARNESS>

@@ -1,4 +1,4 @@
-<M-MAGRA-DOGFOODING-HARNESS NAME="MagraDogfoodingHarness" TYPE="UTILITY" STATUS="pending">
+<M-MAGRA-DOGFOODING-HARNESS NAME="MagraDogfoodingHarness" TYPE="UTILITY" STATUS="done">
   <contract>
     <purpose>Validate MAGRA as a comfortable beta tool for real pet-project development workflows.</purpose>
     <scope>Disposable project scenarios, runtime smoke, web chat MyGRACE calls, RTK shell behavior, SNARC recall across restart, and friction reporting.</scope>
@@ -23,4 +23,8 @@
     <invariant-3>Failed or awkward workflows become tracked follow-up items.</invariant-3>
   </invariants>
   <CrossLink from="M-MAGRA-DOGFOODING-HARNESS" to="M-MAGRA-RELEASE-SURFACE" relation="validates" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-dogfooding-smoke.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
 </M-MAGRA-DOGFOODING-HARNESS>
