@@ -11,6 +11,15 @@ START_MODULE_CONTRACT
 END_MODULE_CONTRACT
 === END_MODULE_CONTRACT === -->
 
+<!-- === MODULE_MAP ===
+Sections: MAGRA overview, upstream Reasonix guide, install, configuration, usage, architecture links
+=== END_MODULE_MAP === -->
+
+<!-- === CHANGE_SUMMARY ===
+Initial MAGRA top-level documentation identity with upstream Reasonix attribution.
+Added Phase-10 governance metadata so release surface drift is linted.
+=== END_CHANGE_SUMMARY === -->
+
 # MAGRA
 
 MAGRA is a Reasonix-based coding agent that integrates MyGRACE workflows, RTK shell compression, SNARC salience-gated memory, unified native/MCP tools, and a web chat surface for MyGRACE skills.

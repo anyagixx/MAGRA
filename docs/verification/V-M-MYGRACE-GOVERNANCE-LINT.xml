@@ -1,4 +1,4 @@
-<V-M-MYGRACE-GOVERNANCE-LINT MODULE="M-MYGRACE-GOVERNANCE-LINT" PRIORITY="high" STATUS="pending">
+<V-M-MYGRACE-GOVERNANCE-LINT MODULE="M-MYGRACE-GOVERNANCE-LINT" PRIORITY="high" STATUS="done">
   <test-files>
     <file-1>tests/mygrace-governance-lint.test.ts</file-1>
     <file-2>tests/mygrace-docs.test.ts</file-2>
@@ -34,4 +34,12 @@
   <required-log-markers>
     <marker-1>[MyGraceDocs][lintMyGraceArtifacts][BLOCK_RUN_LINT]</marker-1>
   </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts tests/mygrace-cli-adapter.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+    <command-3 RESULT="passed">rtk npm run typecheck</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm test</command-6>
+  </evidence>
 </V-M-MYGRACE-GOVERNANCE-LINT>

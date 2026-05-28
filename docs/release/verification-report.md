@@ -11,6 +11,15 @@ START_MODULE_CONTRACT
 END_MODULE_CONTRACT
 === END_MODULE_CONTRACT === -->
 
+<!-- === MODULE_MAP ===
+Sections: Commands, Results, Known Warning
+=== END_MODULE_MAP === -->
+
+<!-- === CHANGE_SUMMARY ===
+Initial Phase-6 MAGRA verification evidence.
+Added Phase-10 governance metadata for release verification linting.
+=== END_CHANGE_SUMMARY === -->
+
 # MAGRA Verification Report
 
 Date: 2026-05-28

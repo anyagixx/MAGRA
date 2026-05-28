@@ -374,7 +374,9 @@ export type {
 } from "./hooks.js";
 
 export {
+  discoverManagedFiles,
   findMyGraceProjectRoot,
+  lintManagedFileMarkup,
   lintMyGraceArtifacts,
   loadGraphIndex,
   loadModule,
@@ -389,6 +391,8 @@ export type {
   GraphIndex,
   LintIssue,
   LintReport,
+  ManagedFile,
+  ManagedFileRole,
   ModuleContract,
   ModuleDelta,
   MyGraceEntity,

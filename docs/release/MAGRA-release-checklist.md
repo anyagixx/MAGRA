@@ -11,6 +11,15 @@ START_MODULE_CONTRACT
 END_MODULE_CONTRACT
 === END_MODULE_CONTRACT === -->
 
+<!-- === MODULE_MAP ===
+Sections: Preflight, Verification, Runtime Smoke, Rollback
+=== END_MODULE_MAP === -->
+
+<!-- === CHANGE_SUMMARY ===
+Initial MAGRA release readiness checklist.
+Added Phase-10 governance metadata for release checklist linting.
+=== END_CHANGE_SUMMARY === -->
+
 # MAGRA Release Checklist
 
 ## Preflight

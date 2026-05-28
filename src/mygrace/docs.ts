@@ -1,10 +1,10 @@
 // === MODULE_CONTRACT ===
 // FILE: src/mygrace/docs.ts
 // VERSION: 1.0.0
-// PURPOSE: Read, validate, and update index-first MyGRACE artifacts for MAGRA.
-// SCOPE: Graph, plan, verification, per-module, per-phase, and per-verification XML helpers.
+// PURPOSE: Read, validate, and update index-first MyGRACE artifacts and managed-file governance for MAGRA.
+// SCOPE: Graph, plan, verification, per-entity XML helpers, managed-file discovery, and semantic markup linting.
 // DEPENDS: M-REASONIX-BASE
-// LINKS: docs/modules/M-MYGRACE-DOCS.xml
+// LINKS: docs/modules/M-MYGRACE-DOCS.xml,docs/modules/M-MYGRACE-GOVERNANCE-LINT.xml
 // ROLE: RUNTIME
 // MAP_MODE: EXPORTS
 // START_MODULE_CONTRACT
@@ -12,12 +12,13 @@
 // === END_MODULE_CONTRACT ===
 //
 // === MODULE_MAP ===
-// Exports: findMyGraceProjectRoot, loadGraphIndex, loadPlanIndex, loadVerificationIndex, loadModule, loadPhase, loadVerification, lintMyGraceArtifacts, writeModuleDelta
-// Locals: loadIndex, parseIndexEntries, parseXmlAttributes, lintIndexSync, lintVerificationRefs, lintMarkup, lintXmlTags
+// Exports: findMyGraceProjectRoot, loadGraphIndex, loadPlanIndex, loadVerificationIndex, loadModule, loadPhase, loadVerification, discoverManagedFiles, lintManagedFileMarkup, lintMyGraceArtifacts, writeModuleDelta
+// Locals: loadIndex, parseIndexEntries, parseXmlAttributes, lintIndexSync, lintVerificationRefs, addManagedFile, parseSemanticBlockTokens, lintMarkup, lintXmlTags
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
 // Initial MAGRA MyGRACE artifact reader, linter, and module delta writer.
+// Added graph-index managed file discovery and exact semantic block governance linting.
 // === END_CHANGE_SUMMARY ===
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -92,6 +93,18 @@ export interface LintReport {
   issues: LintIssue[];
 }
 
+export type ManagedFileRole = "source" | "dashboard" | "release" | "documentation";
+
+export interface ManagedFile {
+  path: string;
+  absolutePath: string;
+  role: ManagedFileRole;
+  source: string;
+  requireContract: boolean;
+  requireMap: boolean;
+  requireChangeSummary: boolean;
+}
+
 interface IndexSpec {
   kind: MyGraceIndexKind;
   file: string;
@@ -125,6 +138,10 @@ const INDEX_SPECS: Record<MyGraceIndexKind, IndexSpec> = {
 };
 
 const MONOLITHIC_FILES = ["knowledge-graph.xml", "development-plan.xml", "verification-plan.xml"];
+const APPROVED_MANAGED_DOC_DIRS: Array<{ dir: string; role: ManagedFileRole }> = [
+  { dir: "docs/release", role: "release" },
+];
+const REQUIRED_MARKERS = ["MODULE_CONTRACT", "MODULE_MAP", "CHANGE_SUMMARY"] as const;
 
 // === START_CONTRACT: findMyGraceProjectRoot ===
 // PURPOSE: Resolve the nearest parent directory containing docs/graph-index.xml.
@@ -248,6 +265,76 @@ export function writeModuleDelta(root: string, delta: ModuleDelta): WriteResult 
   // === END_BLOCK_SYNC_MODULE_FILE ===
 
   return { changedFiles, moduleId: delta.moduleId };
+}
+
+// === START_CONTRACT: discoverManagedFiles ===
+// PURPOSE: Discover existing files governed by graph-index PATH entries and approved docs directories.
+// INPUTS: root: string - project root or child path
+// OUTPUTS: ManagedFile[]
+// SIDE_EFFECTS: reads indexes and directory metadata
+// === END_CONTRACT: discoverManagedFiles ===
+export function discoverManagedFiles(root: string): ManagedFile[] {
+  // === START_BLOCK_DISCOVER_MANAGED_FILES ===
+  const resolvedRoot = findMyGraceProjectRoot(root);
+  const graph = loadGraphIndex(resolvedRoot);
+  const managedByPath = new Map<string, ManagedFile>();
+
+  for (const entry of graph.entries) {
+    const entryPath = entry.attrs.PATH;
+    if (!entryPath || !isGovernedManagedPath(entryPath)) continue;
+    addManagedFile(managedByPath, resolvedRoot, entryPath, {
+      role: inferManagedFileRole(entryPath),
+      source: `graph-index:${entry.id}`,
+    });
+  }
+
+  for (const docDir of APPROVED_MANAGED_DOC_DIRS) {
+    const absoluteDir = join(resolvedRoot, docDir.dir);
+    if (!existsSync(absoluteDir)) continue;
+    for (const absolutePath of walkManagedFiles(absoluteDir)) {
+      const managedPath = normalizePath(relative(resolvedRoot, absolutePath));
+      addManagedFile(managedByPath, resolvedRoot, managedPath, {
+        role: docDir.role,
+        source: `approved-docs:${docDir.dir}`,
+      });
+    }
+  }
+
+  return Array.from(managedByPath.values()).sort((left, right) =>
+    left.path.localeCompare(right.path),
+  );
+  // === END_BLOCK_DISCOVER_MANAGED_FILES ===
+}
+
+// === START_CONTRACT: lintManagedFileMarkup ===
+// PURPOSE: Validate required MyGRACE metadata and exact semantic block pairing in one managed file.
+// INPUTS: file: ManagedFile - discovered managed file descriptor
+// OUTPUTS: LintIssue[]
+// SIDE_EFFECTS: reads one file
+// === END_CONTRACT: lintManagedFileMarkup ===
+export function lintManagedFileMarkup(file: ManagedFile): LintIssue[] {
+  // === START_BLOCK_LINT_MANAGED_FILE_MARKUP ===
+  const issues: LintIssue[] = [];
+  const content = readFileSync(file.absolutePath, "utf8");
+  const required: Array<(typeof REQUIRED_MARKERS)[number]> = [];
+
+  if (file.requireContract) required.push("MODULE_CONTRACT");
+  if (file.requireMap) required.push("MODULE_MAP");
+  if (file.requireChangeSummary) required.push("CHANGE_SUMMARY");
+
+  for (const marker of required) {
+    if (!hasMarkupPair(content, marker)) {
+      issues.push({
+        severity: "error",
+        message: `Managed file missing ${marker} markup from ${file.source}`,
+        file: file.path,
+      });
+    }
+  }
+
+  issues.push(...lintSemanticBlockPairs(content, file));
+  return issues;
+  // === END_BLOCK_LINT_MANAGED_FILE_MARKUP ===
 }
 
 // === START_CONTRACT: lintMyGraceArtifacts ===
@@ -442,28 +529,8 @@ function lintVerificationRefs(root: string): LintIssue[] {
 
 function lintMarkup(root: string): LintIssue[] {
   const issues: LintIssue[] = [];
-  for (const base of ["src", "packages"]) {
-    const full = join(root, base);
-    if (!existsSync(full)) continue;
-    for (const path of walkSourceFiles(full)) {
-      const content = readFileSync(path, "utf8");
-      const starts = content.match(/START_BLOCK_\w+/g) ?? [];
-      const ends = content.match(/END_BLOCK_\w+/g) ?? [];
-      if (starts.length !== ends.length && starts.length > 0) {
-        issues.push({
-          severity: "error",
-          message: `Unpaired semantic blocks: ${starts.length} START vs ${ends.length} END`,
-          file: relative(root, path),
-        });
-      }
-      if (starts.length > 2 && !content.includes("START_MODULE_CONTRACT")) {
-        issues.push({
-          severity: "warning",
-          message: `File has ${starts.length} semantic blocks but no MODULE_CONTRACT`,
-          file: relative(root, path),
-        });
-      }
-    }
+  for (const file of discoverManagedFiles(root)) {
+    issues.push(...lintManagedFileMarkup(file));
   }
   return issues;
 }
@@ -510,7 +577,7 @@ function lintMonolithicFiles(root: string): LintIssue[] {
   });
 }
 
-function walkSourceFiles(root: string): string[] {
+function walkManagedFiles(root: string): string[] {
   const out: string[] = [];
   const stack = [root];
   while (stack.length > 0) {
@@ -522,10 +589,129 @@ function walkSourceFiles(root: string): string[] {
         if (!["node_modules", "dist", ".git"].includes(entry.name)) stack.push(full);
         continue;
       }
-      if (/\.(ts|js|py|go|java|rs|rb)$/.test(entry.name)) out.push(full);
+      if (isGovernedManagedPath(full)) out.push(full);
     }
   }
   return out;
+}
+
+function addManagedFile(
+  managedByPath: Map<string, ManagedFile>,
+  root: string,
+  filePath: string,
+  metadata: { role: ManagedFileRole; source: string },
+): void {
+  const absolutePath = isAbsolute(filePath) ? resolve(filePath) : resolve(root, filePath);
+  if (!existsSync(absolutePath) || statSync(absolutePath).isDirectory()) return;
+  const path = normalizePath(relative(root, absolutePath));
+  if (path.startsWith("..") || isAbsolute(path)) return;
+  const existing = managedByPath.get(path);
+  if (existing) {
+    const sources = new Set(existing.source.split(",").map((source) => source.trim()));
+    sources.add(metadata.source);
+    existing.source = Array.from(sources).join(",");
+    if (existing.role !== metadata.role && metadata.role === "release") existing.role = "release";
+    return;
+  }
+  managedByPath.set(path, {
+    path,
+    absolutePath,
+    role: metadata.role,
+    source: metadata.source,
+    requireContract: true,
+    requireMap: true,
+    requireChangeSummary: true,
+  });
+}
+
+function inferManagedFileRole(path: string): ManagedFileRole {
+  const normalized = normalizePath(path);
+  if (normalized.startsWith("dashboard/")) return "dashboard";
+  if (normalized.startsWith("docs/release/") || normalized === "README.md") return "release";
+  if (normalized.startsWith("docs/")) return "documentation";
+  return "source";
+}
+
+function isGovernedManagedPath(path: string): boolean {
+  return /\.(?:ts|tsx|js|jsx|mjs|cjs|mts|cts|md|mdx)$/i.test(path);
+}
+
+function hasMarkupPair(content: string, marker: (typeof REQUIRED_MARKERS)[number]): boolean {
+  const start = new RegExp(`(?:^|\\n)\\s*(?://|<!--)?\\s*===\\s*${marker}\\s*===`);
+  const end = new RegExp(`(?:^|\\n)\\s*(?://|<!--)?\\s*===\\s*END_${marker}\\s*===`);
+  return start.test(content) && end.test(content);
+}
+
+interface SemanticBlockToken {
+  kind: "START" | "END";
+  name: string;
+  line: number;
+}
+
+function lintSemanticBlockPairs(content: string, file: ManagedFile): LintIssue[] {
+  const issues: LintIssue[] = [];
+  const stack: SemanticBlockToken[] = [];
+  for (const token of parseSemanticBlockTokens(content)) {
+    if (token.kind === "START") {
+      stack.push(token);
+      continue;
+    }
+
+    const open = stack.pop();
+    if (!open) {
+      issues.push({
+        severity: "error",
+        message: `Orphan semantic block END_BLOCK_${token.name} at line ${token.line} from ${file.source}`,
+        file: file.path,
+      });
+      continue;
+    }
+
+    if (open.name !== token.name) {
+      issues.push({
+        severity: "error",
+        message: `Mismatched semantic block START_BLOCK_${open.name} at line ${open.line} closed by END_BLOCK_${token.name} at line ${token.line} from ${file.source}`,
+        file: file.path,
+      });
+    }
+  }
+
+  for (const open of stack) {
+    issues.push({
+      severity: "error",
+      message: `Unclosed semantic block START_BLOCK_${open.name} at line ${open.line} from ${file.source}`,
+      file: file.path,
+    });
+  }
+  return issues;
+}
+
+function parseSemanticBlockTokens(content: string): SemanticBlockToken[] {
+  const tokens: SemanticBlockToken[] = [];
+  const regex =
+    /^\s*(?:(?:\/\/|#|<!--)\s*)?===\s*(START|END)_BLOCK_([A-Za-z0-9][A-Za-z0-9_-]*)\s*===/gm;
+  let match = regex.exec(content);
+  while (match !== null) {
+    const kind = match[1];
+    const name = match[2];
+    if ((kind === "START" || kind === "END") && name) {
+      tokens.push({ kind, name, line: lineNumberAt(content, match.index) });
+    }
+    match = regex.exec(content);
+  }
+  return tokens;
+}
+
+function lineNumberAt(content: string, index: number): number {
+  let line = 1;
+  for (let cursor = 0; cursor < index; cursor += 1) {
+    if (content.charCodeAt(cursor) === 10) line += 1;
+  }
+  return line;
+}
+
+function normalizePath(path: string): string {
+  return path.replace(/\\/g, "/");
 }
 
 function replaceTagAttributes(

@@ -1,4 +1,4 @@
-<M-MYGRACE-GOVERNANCE-LINT NAME="MyGraceGovernanceLint" TYPE="UTILITY" STATUS="pending">
+<M-MYGRACE-GOVERNANCE-LINT NAME="MyGraceGovernanceLint" TYPE="UTILITY" STATUS="done">
   <contract>
     <purpose>Strengthen MyGRACE lint so managed files across src, dashboard, docs, and release surfaces cannot drift from contract rules.</purpose>
     <scope>Managed-file discovery, MODULE_CONTRACT/MODULE_MAP/CHANGE_SUMMARY enforcement, semantic block pairing, and negative drift tests.</scope>
@@ -20,4 +20,8 @@
     <invariant-3>Semantic block START/END tags are paired by name, not only by count.</invariant-3>
   </invariants>
   <CrossLink from="M-MYGRACE-GOVERNANCE-LINT" to="M-MYGRACE-DOCS" relation="hardens" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts tests/mygrace-cli-adapter.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
 </M-MYGRACE-GOVERNANCE-LINT>

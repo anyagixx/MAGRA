@@ -9,7 +9,7 @@
   <Phase-7 NAME="SnarcContextIsolation" STATUS="done" STEPS="5" />
   <Phase-8 NAME="SnarcSqliteStore" STATUS="done" STEPS="6" />
   <Phase-9 NAME="MagraRuntimeIdentity" STATUS="done" STEPS="5" />
-  <Phase-10 NAME="MyGraceGovernanceLint" STATUS="pending" STEPS="5" />
+  <Phase-10 NAME="MyGraceGovernanceLint" STATUS="done" STEPS="5" />
   <Phase-11 NAME="MagraReleaseSurface" STATUS="pending" STEPS="5" />
   <Phase-12 NAME="Dogfooding" STATUS="pending" STEPS="6" />
 </PlanIndex>

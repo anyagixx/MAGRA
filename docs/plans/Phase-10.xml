@@ -1,16 +1,24 @@
-<Phase-10 NAME="MyGraceGovernanceLint" STATUS="pending">
+<Phase-10 NAME="MyGraceGovernanceLint" STATUS="done">
   <purpose>Strengthen MyGRACE governance so managed source, dashboard, docs, and release files obey contract and markup rules.</purpose>
   <modules>
     <module-1>M-MYGRACE-GOVERNANCE-LINT</module-1>
     <module-2>M-MYGRACE-DOCS</module-2>
   </modules>
   <steps>
-    <step-1>Define managed-file discovery rules from graph-index PATH entries and approved docs directories.</step-1>
-    <step-2>Require MODULE_CONTRACT, MODULE_MAP, and CHANGE_SUMMARY in managed files where the role requires them.</step-2>
-    <step-3>Change semantic block linting to pair START/END tags by exact block name.</step-3>
-    <step-4>Add negative tests for missing maps, missing change summaries, orphan blocks, and dashboard/docs drift.</step-4>
-    <step-5>Run MyGRACE lint, targeted MyGRACE tests, lint, and typecheck.</step-5>
+    <step-1 STATUS="done">Define managed-file discovery rules from graph-index PATH entries and approved docs directories.</step-1>
+    <step-2 STATUS="done">Require MODULE_CONTRACT, MODULE_MAP, and CHANGE_SUMMARY in managed files where the role requires them.</step-2>
+    <step-3 STATUS="done">Change semantic block linting to pair START/END tags by exact block name.</step-3>
+    <step-4 STATUS="done">Add negative tests for missing maps, missing change summaries, orphan blocks, and dashboard/docs drift.</step-4>
+    <step-5 STATUS="done">Run MyGRACE lint, targeted MyGRACE tests, lint, and typecheck.</step-5>
   </steps>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts tests/mygrace-cli-adapter.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+    <command-3 RESULT="passed">rtk npm run typecheck</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm test</command-6>
+  </evidence>
   <verification-refs>
     <verification-1>V-M-MYGRACE-GOVERNANCE-LINT</verification-1>
     <verification-2>V-M-MYGRACE-DOCS</verification-2>
