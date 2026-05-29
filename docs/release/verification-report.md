@@ -24,6 +24,7 @@ Added Phase-15 v0.1.0 installer and release verification evidence.
 Added v0.1.1 MyGRACE skill asset hotfix verification evidence.
 Added v0.1.2 MyGRACE web dispatch hotfix verification evidence.
 Added Phase-19 localized README, package README gate, docs-site surface, and verification hygiene evidence.
+Added v0.1.3 release packaging verification evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -62,7 +63,7 @@ rtk npm pack --dry-run --json
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
 - `rtk npm test`: passed, 320 test files, 3979 tests passed, 9 skipped.
-- `rtk npm pack --dry-run --json`: passed, package preview includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
+- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.3` / `magra-0.1.3.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
 
 ## Known Warning
 

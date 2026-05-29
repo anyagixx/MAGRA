@@ -19,6 +19,7 @@ Sections: Repository, Release Target, Install URL, Publication Commands, Rollbac
 Initial MAGRA v0.1.0 GitHub release publication plan.
 Updated current release target to v0.1.1 for the MyGRACE skill asset hotfix.
 Updated current release target to v0.1.2 for the MyGRACE web dispatch hotfix.
+Updated current release target to v0.1.3 for release-surface hardening.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA GitHub Release
@@ -33,11 +34,11 @@ Local reference-only source imports under `SOURCES/` are not release artifacts a
 
 ## Release Target
 
-Version: `0.1.2`
+Version: `0.1.3`
 
-Tag: `v0.1.2`
+Tag: `v0.1.3`
 
-Package preview: `magra-0.1.2.tgz`
+Package preview: `magra-0.1.3.tgz`
 
 ## Install URL
 
@@ -48,7 +49,7 @@ curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install
 Pinned release install:
 
 ```bash
-MAGRA_REF=v0.1.2 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+MAGRA_REF=v0.1.3 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
 ```
 
 ## Publication Commands
@@ -57,13 +58,13 @@ MAGRA_REF=v0.1.2 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/mai
 rtk git branch -M main
 rtk git remote add origin https://github.com/anyagixx/MAGRA.git
 rtk git push -u origin main
-rtk git tag -a v0.1.2 -m "MAGRA v0.1.2"
-rtk git push origin v0.1.2
+rtk git tag -a v0.1.3 -m "MAGRA v0.1.3"
+rtk git push origin v0.1.3
 ```
 
 ## Rollback
 
 ```bash
-rtk git push origin :refs/tags/v0.1.2
-rtk git tag -d v0.1.2
+rtk git push origin :refs/tags/v0.1.3
+rtk git tag -d v0.1.3
 ```
