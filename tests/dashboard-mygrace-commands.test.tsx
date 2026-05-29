@@ -16,6 +16,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial verification for MAGRA web MyGRACE command invocation.
+// Added web routing coverage for underscore and hyphen MyGRACE aliases.
 // === END_CHANGE_SUMMARY ===
 
 import { readFileSync } from "node:fs";
@@ -137,6 +138,39 @@ describe("dashboard MyGRACE commands", () => {
       `${WEB_MYGRACE_LOG_MARKERS.routeSubmission} command=/mygrace:multiagent`,
     );
     // === END_BLOCK_ASSERT_SUBMIT_ROUTING ===
+  });
+
+  it("routes underscore and hyphen MyGRACE aliases to canonical commands", () => {
+    // === START_BLOCK_ASSERT_ALIAS_ROUTING ===
+    const startSkill = vi.fn();
+    const runSkill = vi.fn();
+
+    const underscore = submitMyGraceSlash("/mygrace_init build docs", {
+      startSkill,
+      runSkill,
+      clientIdFactory: () => "alias-client",
+    });
+
+    expect(underscore).toEqual({
+      handled: true,
+      command: "/mygrace:init",
+      args: "build docs",
+      skillName: "mygrace:init",
+      clientId: "alias-client",
+    });
+    expect(runSkill).toHaveBeenCalledWith("/mygrace:init", "build docs");
+
+    const hyphen = submitMyGraceSlash("/mygrace-setup_subagents", {
+      clientIdFactory: () => "hyphen-client",
+    });
+    expect(hyphen).toEqual({
+      handled: true,
+      command: "/mygrace:setup-subagents",
+      args: "",
+      skillName: "mygrace:setup-subagents",
+      clientId: "hyphen-client",
+    });
+    // === END_BLOCK_ASSERT_ALIAS_ROUTING ===
   });
 
   it("adds command palette actions for common MyGRACE workflows", () => {

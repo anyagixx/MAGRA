@@ -199,4 +199,32 @@ describe("dashboard server bridge refresh", () => {
       }),
     );
   });
+
+  it("surfaces MyGRACE skill run API errors instead of swallowing them", async () => {
+    const { bridge, events, fetchMock } = await loadBridge();
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url.includes("/api/settings")) return jsonResponse(settingsResponse);
+      if (url.includes("/api/sessions")) return jsonResponse({ currentSession: "", sessions: [] });
+      if (url.includes("/api/overview")) return jsonResponse({ cwd: "E:/proj", stats: {} });
+      if (url.includes("/api/skills/run")) {
+        return {
+          status: 409,
+          text: async () => JSON.stringify({ accepted: false, reason: "loop is busy" }),
+        } as Response;
+      }
+      return jsonResponse({});
+    });
+    events.length = 0;
+
+    await bridge.invoke("rpc_send", {
+      line: JSON.stringify({ cmd: "mygrace_skill_run", command: "/mygrace:init" }),
+    });
+
+    expect(events).toContainEqual(
+      expect.objectContaining({
+        type: "$error",
+        message: "mygrace_skill_run: loop is busy",
+      }),
+    );
+  });
 });

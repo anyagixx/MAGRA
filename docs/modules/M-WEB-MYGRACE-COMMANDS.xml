@@ -21,6 +21,7 @@
     <rule-1>Do not create a separate MyGRACE page before chat command invocation works.</rule-1>
     <rule-2>Commands must be discoverable by typing `/mygrace` in the composer.</rule-2>
     <rule-3>Long flows reuse existing plan, checkpoint, choice, and revision modals.</rule-3>
+    <rule-4>Compatibility aliases such as `/mygrace_init` route to canonical `/mygrace:init` instead of becoming plain chat text.</rule-4>
   </ux-rules>
   <CrossLink from="M-WEB-MYGRACE-COMMANDS" to="M-MYGRACE-SKILLS" relation="invokes" />
 </M-WEB-MYGRACE-COMMANDS>

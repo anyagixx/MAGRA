@@ -319,6 +319,16 @@ async function apiFetch(endpoint: string, options?: RequestInit): Promise<any> {
   }
 }
 
+function emitRpcFailure(action: string, result: any): void {
+  const message =
+    result?.error ??
+    result?.reason ??
+    (result?.accepted === false ? "request was not accepted" : undefined);
+  if (message) {
+    emitEvent({ type: "$error", tabId: "tab-1", message: `${action}: ${message}` });
+  }
+}
+
 function emitServerSettings(settings: any, overview?: any): void {
   emitEvent({
     type: "$settings",
@@ -877,7 +887,8 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
       const body: Record<string, any> = { name: payload.name };
       if (payload.args) body.args = payload.args;
       try {
-        await apiFetch("skills/run", { method: "POST", body: JSON.stringify(body) });
+        const result = await apiFetch("skills/run", { method: "POST", body: JSON.stringify(body) });
+        emitRpcFailure("skill_run", result);
       } catch {}
       break;
     }
@@ -885,7 +896,8 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
       const body: Record<string, any> = { command: payload.command };
       if (payload.args) body.args = payload.args;
       try {
-        await apiFetch("skills/run", { method: "POST", body: JSON.stringify(body) });
+        const result = await apiFetch("skills/run", { method: "POST", body: JSON.stringify(body) });
+        emitRpcFailure("mygrace_skill_run", result);
       } catch {}
       break;
     }

@@ -15,6 +15,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial tests for MAGRA MyGRACE skill registry.
+// Added compatibility alias coverage for underscore and hyphen MyGRACE command separators.
 // === END_CHANGE_SUMMARY ===
 
 import { describe, expect, it } from "vitest";
@@ -59,6 +60,15 @@ describe("MyGRACE skill registry", () => {
     const alias = resolveMyGraceCommand("$mygrace:multiagent-execute");
     expect(alias.ok).toBe(true);
     expect(alias.ok ? alias.skill.command : "").toBe("/mygrace:multiagent");
+
+    const underscore = resolveMyGraceCommand("/mygrace_init build docs");
+    expect(underscore.ok).toBe(true);
+    expect(underscore.ok ? underscore.skill.command : "").toBe("/mygrace:init");
+    expect(underscore.ok ? underscore.args : "").toBe("build docs");
+
+    const hyphen = resolveMyGraceCommand("/mygrace-setup_subagents");
+    expect(hyphen.ok).toBe(true);
+    expect(hyphen.ok ? hyphen.skill.command : "").toBe("/mygrace:setup-subagents");
 
     const unknown = resolveMyGraceCommand("/mygrace:missing");
     expect(unknown.ok).toBe(false);

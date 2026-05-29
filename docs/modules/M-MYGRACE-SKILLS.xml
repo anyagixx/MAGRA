@@ -22,6 +22,7 @@
   <invariants>
     <invariant-1>Slash names use `/mygrace:*` even when underlying Reasonix skill IDs cannot contain colon.</invariant-1>
     <invariant-2>Skill bodies load on demand to preserve cache-first context discipline.</invariant-2>
+    <invariant-3>Operator aliases `/mygrace_*` and `/mygrace-*` resolve to canonical `/mygrace:*` commands.</invariant-3>
   </invariants>
   <CrossLink from="M-MYGRACE-SKILLS" to="M-MYGRACE-DOCS" relation="uses" />
 </M-MYGRACE-SKILLS>

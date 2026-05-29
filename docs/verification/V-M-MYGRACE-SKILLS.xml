@@ -7,7 +7,8 @@
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">All 14 MyGRACE skills resolve from `/mygrace:*` command names.</scenario-1>
-    <scenario-2 kind="failure">Unknown command returns available MyGRACE commands without throwing.</scenario-2>
+    <scenario-2 kind="success">Compatibility aliases `/mygrace_*` and `/mygrace-*` resolve to canonical commands.</scenario-2>
+    <scenario-3 kind="failure">Unknown command returns available MyGRACE commands without throwing.</scenario-3>
   </scenarios>
   <required-log-markers>
     <marker-1>[MyGraceSkills][listMyGraceSkills][BLOCK_LOAD_METADATA]</marker-1>

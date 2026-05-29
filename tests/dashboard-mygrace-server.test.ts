@@ -15,6 +15,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial verification for server-side MyGRACE skill dispatch.
+// Added server-side compatibility alias coverage for /mygrace_init.
 // === END_CHANGE_SUMMARY ===
 
 import { describe, expect, it } from "vitest";
@@ -45,5 +46,30 @@ describe("dashboard server MyGRACE routing", () => {
     expect(submitted[0]).toContain("# Skill: mygrace-status");
     expect(submitted[0]).toContain("LAZY REPORT");
     // === END_BLOCK_ASSERT_SERVER_RESOLVER ===
+  });
+
+  it("accepts underscore MyGRACE aliases from the dashboard bridge", async () => {
+    // === START_BLOCK_ASSERT_SERVER_ALIAS_RESOLVER ===
+    const submitted: string[] = [];
+    const response = await handleSkills(
+      "POST",
+      ["run"],
+      JSON.stringify({ command: "/mygrace_init", args: "new project" }),
+      {
+        configPath: "",
+        usageLogPath: "",
+        mode: "attached",
+        getCurrentCwd: () => process.cwd(),
+        submitPrompt: (prompt) => {
+          submitted.push(prompt);
+          return { accepted: true };
+        },
+      },
+    );
+
+    expect(response.status).toBe(202);
+    expect(submitted[0]).toContain("# Skill: mygrace-init");
+    expect(submitted[0]).toContain("Arguments: new project");
+    // === END_BLOCK_ASSERT_SERVER_ALIAS_RESOLVER ===
   });
 });

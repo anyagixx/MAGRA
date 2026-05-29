@@ -16,6 +16,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial MAGRA web command adapter for canonical MyGRACE skills.
+// Added compatibility routing for /mygrace_init and /mygrace-init operator input.
 // === END_CHANGE_SUMMARY ===
 
 import { ClipboardCopy, FileText, Info, Search, Settings } from "lucide-react";
@@ -179,8 +180,11 @@ export const MYGRACE_DASHBOARD_COMMANDS: readonly MyGraceDashboardCommand[] = Ob
 ]);
 
 const MYGRACE_ALIAS_TO_ID = new Map<string, MyGraceDashboardCommandId>([
+  ["multiagent_execute", "multiagent"],
   ["multiagent-execute", "multiagent"],
   ["multiagent", "multiagent"],
+  ["setup_subagent", "setup-subagents"],
+  ["setup_subagents", "setup-subagents"],
   ["setup-subagent", "setup-subagents"],
 ]);
 
@@ -323,8 +327,8 @@ export function submitMyGraceSlash(
 }
 
 function parseMyGraceSlash(text: string): { id: string; args: string } | null {
-  const match = text.trim().match(/^(?:\/|\$)mygrace:([a-z0-9-]+)(?:\s+([\s\S]*))?$/i);
-  const id = match?.[1]?.toLowerCase();
+  const match = text.trim().match(/^(?:\/|\$)mygrace(?::|_|-)([a-z0-9_-]+)(?:\s+([\s\S]*))?$/i);
+  const id = match?.[1]?.toLowerCase().replace(/_/g, "-");
   if (!id) return null;
   return { id, args: match?.[2]?.trim() ?? "" };
 }

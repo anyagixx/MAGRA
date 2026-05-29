@@ -18,6 +18,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial canonical MyGRACE skill registry and lazy skill body loader.
+// Added compatibility parsing for /mygrace_init and /mygrace-init operator input.
 // === END_CHANGE_SUMMARY ===
 
 import { readFileSync } from "node:fs";
@@ -212,8 +213,11 @@ const MYGRACE_SKILLS: readonly MyGraceSkillMeta[] = Object.freeze([
 
 const MYGRACE_SKILL_BY_ID = new Map(MYGRACE_SKILLS.map((skill) => [skill.id, skill]));
 const MYGRACE_ALIAS_TO_ID = new Map<string, MyGraceSkillId>([
+  ["multiagent_execute", "multiagent"],
   ["multiagent-execute", "multiagent"],
   ["multiagent", "multiagent"],
+  ["setup_subagent", "setup-subagents"],
+  ["setup_subagents", "setup-subagents"],
   ["setup-subagent", "setup-subagents"],
 ]);
 
@@ -307,8 +311,8 @@ export async function runMyGraceSkill(
 
 function parseMyGraceCommand(command: string): { id: string; args: string } | null {
   const trimmed = command.trim();
-  const match = trimmed.match(/^(?:\/|\$)?mygrace:([a-z0-9-]+)(?:\s+([\s\S]*))?$/i);
-  const id = match?.[1]?.toLowerCase();
+  const match = trimmed.match(/^(?:\/|\$)?mygrace(?::|_|-)([a-z0-9_-]+)(?:\s+([\s\S]*))?$/i);
+  const id = match?.[1]?.toLowerCase().replace(/_/g, "-");
   if (!id) return null;
   return { id, args: match?.[2]?.trim() ?? "" };
 }

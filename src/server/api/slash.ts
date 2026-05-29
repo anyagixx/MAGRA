@@ -15,8 +15,25 @@ const MYGRACE_ARGS_HINT: Partial<Record<MyGraceSkillId, string>> = {
 };
 
 const MYGRACE_ALIASES: Partial<Record<MyGraceSkillId, readonly string[]>> = {
-  multiagent: ["mygrace:multiagent-execute"],
-  "setup-subagents": ["mygrace:setup-subagent"],
+  init: ["mygrace_init", "mygrace-init"],
+  plan: ["mygrace_plan", "mygrace-plan"],
+  verification: ["mygrace_verification", "mygrace-verification"],
+  execute: ["mygrace_execute", "mygrace-execute"],
+  multiagent: ["mygrace_multiagent", "mygrace-multiagent", "mygrace:multiagent-execute"],
+  refactor: ["mygrace_refactor", "mygrace-refactor"],
+  refresh: ["mygrace_refresh", "mygrace-refresh"],
+  fix: ["mygrace_fix", "mygrace-fix"],
+  reviewer: ["mygrace_reviewer", "mygrace-reviewer"],
+  status: ["mygrace_status", "mygrace-status"],
+  ask: ["mygrace_ask", "mygrace-ask"],
+  explainer: ["mygrace_explainer", "mygrace-explainer"],
+  cli: ["mygrace_cli", "mygrace-cli"],
+  "setup-subagents": [
+    "mygrace_setup-subagents",
+    "mygrace_setup_subagents",
+    "mygrace-setup-subagents",
+    "mygrace:setup-subagent",
+  ],
 };
 
 export async function handleSlash(
