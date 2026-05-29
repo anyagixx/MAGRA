@@ -20,12 +20,19 @@ Initial MAGRA changelog wrapper around upstream Reasonix history.
 Added Phase-11 MAGRA release-surface documentation entry.
 Added MAGRA v0.1.0 GitHub installer and release publication entry.
 Added MAGRA v0.1.1 MyGRACE skill asset hotfix entry.
+Added MAGRA v0.1.2 MyGRACE web dispatch hotfix entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.2] - 2026-05-29
+
+**MyGRACE web dispatch hotfix.** Server-generated MyGRACE skill prompts no longer start with `#`, so `/mygrace:init ...` is submitted to the model instead of being intercepted as a project-memory note and appended to the project memory file.
+
+**Regression guard.** Added coverage that checks dashboard MyGRACE skill prompts are not parsed by hash-memory routing before they reach the LLM turn.
 
 ## [0.1.1] - 2026-05-29
 

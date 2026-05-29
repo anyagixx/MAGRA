@@ -64,7 +64,7 @@ describe("MAGRA release surface", () => {
     expect(readme).toContain(
       "curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash",
     );
-    expect(readme).toContain("MAGRA_REF=v0.1.1");
+    expect(readme).toContain("MAGRA_REF=v0.1.2");
     expect(readme).toContain("npm install -g magra");
     expect(readme).toContain("magra code my-project");
     expect(readme).toContain("npx magra@latest code");
@@ -79,7 +79,7 @@ describe("MAGRA release surface", () => {
     // === START_BLOCK_ASSERT_PACKAGE_METADATA ===
     const pkg = readPackage();
     expect(pkg.name).toBe("magra");
-    expect(pkg.version).toBe("0.1.1");
+    expect(pkg.version).toBe("0.1.2");
     expect(pkg.description).toMatch(/^MAGRA:/);
     expect(pkg.repository.url).toBe("git+https://github.com/anyagixx/MAGRA.git");
     expect(pkg.bugs.url).toBe("https://github.com/anyagixx/MAGRA/issues");
@@ -130,7 +130,7 @@ describe("MAGRA release surface", () => {
     expect(checklist).toContain("scripts/install.sh --dry-run");
     expect(operatorFlows).toContain(".magra/snarc/memory.sqlite");
     expect(notice).toContain("DeepSeek-Reasonix / Reasonix base runtime");
-    expect(changelog).toContain("## [0.1.1] - 2026-05-29");
+    expect(changelog).toContain("## [0.1.2] - 2026-05-29");
     // === END_BLOCK_ASSERT_RELEASE_DOCS ===
   });
 });

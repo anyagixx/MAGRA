@@ -16,9 +16,11 @@
 // === CHANGE_SUMMARY ===
 // Initial verification for server-side MyGRACE skill dispatch.
 // Added server-side compatibility alias coverage for /mygrace_init.
+// Added guard against hash-memory interception of server-generated skill prompts.
 // === END_CHANGE_SUMMARY ===
 
 import { describe, expect, it } from "vitest";
+import { detectHashMemory } from "../src/cli/ui/hash-memory.js";
 import { handleSkills } from "../src/server/api/skills.js";
 
 describe("dashboard server MyGRACE routing", () => {
@@ -43,7 +45,9 @@ describe("dashboard server MyGRACE routing", () => {
 
     expect(response.status).toBe(202);
     expect(submitted).toHaveLength(1);
-    expect(submitted[0]).toContain("# Skill: mygrace-status");
+    expect(submitted[0]).toContain("Skill: mygrace-status");
+    expect(submitted[0]).not.toMatch(/^#/);
+    expect(detectHashMemory(submitted[0] ?? "")).toBeNull();
     expect(submitted[0]).toContain("LAZY REPORT");
     // === END_BLOCK_ASSERT_SERVER_RESOLVER ===
   });
@@ -68,7 +72,9 @@ describe("dashboard server MyGRACE routing", () => {
     );
 
     expect(response.status).toBe(202);
-    expect(submitted[0]).toContain("# Skill: mygrace-init");
+    expect(submitted[0]).toContain("Skill: mygrace-init");
+    expect(submitted[0]).not.toMatch(/^#/);
+    expect(detectHashMemory(submitted[0] ?? "")).toBeNull();
     expect(submitted[0]).toContain("Arguments: new project");
     // === END_BLOCK_ASSERT_SERVER_ALIAS_RESOLVER ===
   });

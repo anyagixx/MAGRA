@@ -22,6 +22,12 @@
     <rule-2>Commands must be discoverable by typing `/mygrace` in the composer.</rule-2>
     <rule-3>Long flows reuse existing plan, checkpoint, choice, and revision modals.</rule-3>
     <rule-4>Compatibility aliases such as `/mygrace_init` route to canonical `/mygrace:init` instead of becoming plain chat text.</rule-4>
+    <rule-5>Server-generated MyGRACE skill prompts must not begin with `#`, because hash-memory routing treats leading hash text as a memory write.</rule-5>
   </ux-rules>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-commands.test.tsx tests/hash-memory.test.ts tests/server-dashboard.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm run lint</command-2>
+    <command-3 RESULT="passed">rtk npm run typecheck</command-3>
+  </evidence>
   <CrossLink from="M-WEB-MYGRACE-COMMANDS" to="M-MYGRACE-SKILLS" relation="invokes" />
 </M-WEB-MYGRACE-COMMANDS>

@@ -22,6 +22,7 @@ Updated Phase-11 release surface verification evidence.
 Updated Phase-12 dogfooding verification evidence.
 Added Phase-15 v0.1.0 installer and release verification evidence.
 Added v0.1.1 MyGRACE skill asset hotfix verification evidence.
+Added v0.1.2 MyGRACE web dispatch hotfix verification evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -32,6 +33,7 @@ Date: 2026-05-29
 
 ```bash
 rtk bash scripts/install.sh --dry-run
+rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-commands.test.tsx tests/hash-memory.test.ts tests/server-dashboard.test.ts
 rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts
 rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts
 rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts
@@ -47,6 +49,7 @@ rtk npm pack --dry-run
 ## Results
 
 - `rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts`: passed.
+- `rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-commands.test.tsx tests/hash-memory.test.ts tests/server-dashboard.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 6 test files and 116 tests passed.
 - `rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 5 test files and 18 tests passed.
 - `rtk bash scripts/install.sh --dry-run`: passed.
 - `rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 2 test files and 9 tests passed.
@@ -56,7 +59,7 @@ rtk npm pack --dry-run
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
 - `rtk npm test`: passed, 320 test files, 3975 tests passed, 9 skipped.
-- `rtk npm pack --dry-run`: passed, package artifact preview `magra-0.1.1.tgz`.
+- `rtk npm pack --dry-run`: passed, package artifact preview `magra-0.1.2.tgz`.
 
 ## Known Warning
 

@@ -183,7 +183,7 @@ function buildSkillPrompt(
   });
   const found = store.read(name);
   if (!found) return null;
-  const header = `# Skill: ${found.name}${found.description ? `\n> ${found.description}` : ""}`;
+  const header = `Skill: ${found.name}${found.description ? `\n> ${found.description}` : ""}`;
   const argsLine = args ? `\n\nArguments: ${args}` : "";
   return `${header}\n\n${found.body}${argsLine}`;
 }
@@ -200,7 +200,7 @@ async function buildMyGraceSkillPrompt(
   if (!result.ok) return null;
   const rootLine = result.rootDir ? `\n> Root: ${result.rootDir}` : "";
   const argsLine = result.args ? `\n\nArguments: ${result.args}` : "";
-  const header = `# Skill: ${result.skill.sourceSkillName}\n> ${result.skill.description}${rootLine}`;
+  const header = `Skill: ${result.skill.sourceSkillName}\n> ${result.skill.description}${rootLine}`;
   return `${header}\n\n${result.body}${argsLine}`;
 }
 

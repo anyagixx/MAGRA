@@ -1,0 +1,17 @@
+<Phase-18 NAME="MyGraceWebDispatchHotfix" STATUS="done">
+  <purpose>Fix dashboard MyGRACE skill submissions being intercepted as project-memory notes before reaching the model.</purpose>
+  <modules>
+    <module-1>M-WEB-MYGRACE-COMMANDS</module-1>
+    <module-2>M-MYGRACE-SKILLS</module-2>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Reproduce accepted `/api/skills/run` calls appending generated skill prompts to REASONIX.md.</step-1>
+    <step-2 STATUS="done">Remove leading hash heading from server and desktop skill prompt builders.</step-2>
+    <step-3 STATUS="done">Add regression coverage proving generated MyGRACE prompts bypass hash-memory routing.</step-3>
+    <step-4 STATUS="done">Run focused MyGRACE dashboard, hash-memory, lint, and typecheck verification.</step-4>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-WEB-MYGRACE-COMMANDS</verification-1>
+    <verification-2>V-M-MYGRACE-SKILLS</verification-2>
+  </verification-refs>
+</Phase-18>
