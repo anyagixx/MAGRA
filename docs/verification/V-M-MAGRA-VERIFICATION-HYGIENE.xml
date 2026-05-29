@@ -1,0 +1,22 @@
+<V-M-MAGRA-VERIFICATION-HYGIENE MODULE="M-MAGRA-VERIFICATION-HYGIENE" PRIORITY="medium" STATUS="done">
+  <test-files>
+    <file-1>tests/mygrace-governance-lint.test.ts</file-1>
+    <file-2>src/mygrace/docs.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts</check-1>
+    <check-2>rtk mygrace lint --path .</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">`docs/verification/` contains only indexed `V-M-*.xml` verification files.</scenario-1>
+    <scenario-2 kind="success">Supporting matrix docs live under `docs/release/` with full MyGRACE document markup.</scenario-2>
+    <scenario-3 kind="failure">A markdown or stray XML file under `docs/verification/` fails MyGRACE lint.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MyGraceDocs][lintMyGraceArtifacts][BLOCK_RUN_LINT]</marker-1>
+  </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
+</V-M-MAGRA-VERIFICATION-HYGIENE>

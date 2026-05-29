@@ -1,0 +1,29 @@
+<M-MAGRA-LOCALIZED-READMES NAME="MagraLocalizedReadmes" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Keep translated README files MAGRA-first while preserving Reasonix only as compatibility or upstream attribution.</purpose>
+    <scope>Chinese and Japanese README overview, install commands, feature summary, compatibility aliases, and upstream attribution.</scope>
+    <source-path>README.zh-CN.md</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-LOCALIZED-READMES</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-RELEASE-SURFACE</dependency-1>
+    <dependency-2>M-MAGRA-INSTALL-DOCS</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>README.zh-CN.md MAGRA install and usage sections</interface-1>
+    <interface-2>README.ja-JP.md MAGRA install and usage sections</interface-2>
+    <interface-3>Localized upstream attribution sections</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Localized primary install examples use `magra` and the MAGRA GitHub installer.</invariant-1>
+    <invariant-2>No localized README presents `reasonix` as the primary product or primary install path.</invariant-2>
+    <invariant-3>Reasonix mentions are limited to compatibility aliases, base runtime, migration, or upstream attribution.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-LOCALIZED-READMES" to="M-MAGRA-RELEASE-SURFACE" relation="extends" />
+  <CrossLink from="M-MAGRA-LOCALIZED-READMES" to="M-MAGRA-INSTALL-DOCS" relation="localizes" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
+</M-MAGRA-LOCALIZED-READMES>

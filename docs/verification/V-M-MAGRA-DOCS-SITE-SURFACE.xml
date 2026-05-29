@@ -1,0 +1,23 @@
+<V-M-MAGRA-DOCS-SITE-SURFACE MODULE="M-MAGRA-DOCS-SITE-SURFACE" PRIORITY="medium" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+    <file-2>docs/index.html</file-2>
+    <file-3>docs/src/install.jsx</file-3>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk npm run build</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Docs-site title, schema, nav, footer, hero, and install tabs are MAGRA-first.</scenario-1>
+    <scenario-2 kind="success">Docs-site install commands point to MAGRA GitHub installer, npm package, and repository.</scenario-2>
+    <scenario-3 kind="failure">Public entry docs with `npx reasonix code` or old Reasonix repository install commands fail release-surface tests.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseSurface][docsSiteSurface][BLOCK_ASSERT_DOCS_ENTRY]</marker-1>
+  </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm run build</command-2>
+  </evidence>
+</V-M-MAGRA-DOCS-SITE-SURFACE>

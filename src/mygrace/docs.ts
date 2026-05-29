@@ -4,7 +4,7 @@
 // PURPOSE: Read, validate, and update index-first MyGRACE artifacts and managed-file governance for MAGRA.
 // SCOPE: Graph, plan, verification, per-entity XML helpers, managed-file discovery, and semantic markup linting.
 // DEPENDS: M-REASONIX-BASE
-// LINKS: docs/modules/M-MYGRACE-DOCS.xml,docs/modules/M-MYGRACE-GOVERNANCE-LINT.xml
+// LINKS: docs/modules/M-MYGRACE-DOCS.xml,docs/modules/M-MYGRACE-GOVERNANCE-LINT.xml,docs/modules/M-MAGRA-VERIFICATION-HYGIENE.xml
 // ROLE: RUNTIME
 // MAP_MODE: EXPORTS
 // START_MODULE_CONTRACT
@@ -13,12 +13,13 @@
 //
 // === MODULE_MAP ===
 // Exports: findMyGraceProjectRoot, loadGraphIndex, loadPlanIndex, loadVerificationIndex, loadModule, loadPhase, loadVerification, discoverManagedFiles, lintManagedFileMarkup, lintMyGraceArtifacts, writeModuleDelta
-// Locals: loadIndex, parseIndexEntries, parseXmlAttributes, lintIndexSync, lintVerificationRefs, addManagedFile, parseSemanticBlockTokens, lintMarkup, lintXmlTags
+// Locals: loadIndex, parseIndexEntries, parseXmlAttributes, lintIndexSync, lintVerificationRefs, lintVerificationDirectoryHygiene, addManagedFile, parseSemanticBlockTokens, lintMarkup, lintXmlTags
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
 // Initial MAGRA MyGRACE artifact reader, linter, and module delta writer.
 // Added graph-index managed file discovery and exact semantic block governance linting.
+// Added verification directory hygiene linting for release supporting artifacts.
 // === END_CHANGE_SUMMARY ===
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -354,6 +355,7 @@ export function lintMyGraceArtifacts(root: string): LintReport {
     issues.push(...lintIndexSync(resolvedRoot, INDEX_SPECS.plan));
     issues.push(...lintIndexSync(resolvedRoot, INDEX_SPECS.verification));
     issues.push(...lintVerificationRefs(resolvedRoot));
+    issues.push(...lintVerificationDirectoryHygiene(resolvedRoot));
     issues.push(...lintMarkup(resolvedRoot));
     issues.push(...lintXmlTags(resolvedRoot));
   } catch (error) {
@@ -523,6 +525,22 @@ function lintVerificationRefs(root: string): LintIssue[] {
         file: `docs/modules/${file}`,
       });
     }
+  }
+  return issues;
+}
+
+function lintVerificationDirectoryHygiene(root: string): LintIssue[] {
+  const verificationDir = join(root, "docs", "verification");
+  if (!existsSync(verificationDir)) return [];
+  const issues: LintIssue[] = [];
+  for (const entry of readdirSync(verificationDir, { withFileTypes: true })) {
+    if (entry.isDirectory()) continue;
+    if (/^V-M-[A-Za-z0-9-]+\.xml$/.test(entry.name)) continue;
+    issues.push({
+      severity: "error",
+      message: `Non-indexed verification artifact is not allowed in docs/verification/: ${entry.name}; move supporting docs to docs/release/`,
+      file: `docs/verification/${entry.name}`,
+    });
   }
   return issues;
 }

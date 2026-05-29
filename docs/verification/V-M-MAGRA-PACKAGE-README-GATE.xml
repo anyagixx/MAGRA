@@ -1,0 +1,21 @@
+<V-M-MAGRA-PACKAGE-README-GATE MODULE="M-MAGRA-PACKAGE-README-GATE" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk npm pack --dry-run --json</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">The package README set includes README.md, README.zh-CN.md, and README.ja-JP.md and all pass MAGRA-first assertions.</scenario-1>
+    <scenario-2 kind="failure">Any packaged README containing old Reasonix npm/npx install instructions fails.</scenario-2>
+    <scenario-3 kind="failure">A package preview that omits expected MAGRA runtime skill assets fails package smoke verification.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseSurface][packageReadmeGate][BLOCK_PARSE_PACKLIST]</marker-1>
+  </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm pack --dry-run --json</command-2>
+  </evidence>
+</V-M-MAGRA-PACKAGE-README-GATE>

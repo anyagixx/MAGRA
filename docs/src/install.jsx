@@ -1,3 +1,23 @@
+// === MODULE_CONTRACT ===
+// FILE: docs/src/install.jsx
+// VERSION: 1.0.0
+// PURPOSE: Render MAGRA-first install commands on the docs-site entry surface.
+// SCOPE: Install tabs, quickstart cards, copy commands, and API key setup notes.
+// DEPENDS: M-MAGRA-DOCS-SITE-SURFACE,M-MAGRA-INSTALL-DOCS
+// LINKS: docs/modules/M-MAGRA-DOCS-SITE-SURFACE.xml
+// ROLE: RELEASE
+// MAP_MODE: EXPORTS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: window.Install, window.CopyCmd
+// Locals: CopyCmd, INSTALL_TABS, Install
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// v1.0.0 - Switched public docs install surface from Reasonix to MAGRA commands.
+// === END_CHANGE_SUMMARY ===
+
 // CLI install + verification
 
 function CopyCmd({ cmd }) {
@@ -22,22 +42,22 @@ function CopyCmd({ cmd }) {
 }
 
 const INSTALL_TABS = [
-  { id: 'npx',  label: { zh: 'npx (推荐)', en: 'npx (recommended)' },
-    cmd: 'npx reasonix code',
-    note: { zh: '无需全局安装，进入项目目录即用', en: 'No global install — runs in your project dir' } },
+  { id: 'github',  label: { zh: 'GitHub (推荐)', en: 'GitHub (recommended)' },
+    cmd: 'curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash',
+    note: { zh: '从 MAGRA 仓库安装到 ~/.magra/repo', en: 'Installs MAGRA from GitHub into ~/.magra/repo' } },
   { id: 'npm',  label: { zh: 'npm', en: 'npm' },
-    cmd: 'npm install -g reasonix && reasonix code',
+    cmd: 'npm install -g magra && magra code',
     note: { zh: '需要 Node ≥ 22 (或 ≥ 20.10)', en: 'Requires Node ≥ 22 (or ≥ 20.10)' } },
-  { id: 'pnpm', label: { zh: 'pnpm', en: 'pnpm' },
-    cmd: 'pnpm add -g reasonix && reasonix code',
-    note: { zh: '全局安装速度更快', en: 'Faster global install' } },
+  { id: 'npx',  label: { zh: 'npx', en: 'npx' },
+    cmd: 'npx magra@latest code',
+    note: { zh: '无需全局安装，进入项目目录即用', en: 'No global install — runs in your project dir' } },
   { id: 'src',  label: { zh: 'from source', en: 'from source' },
-    cmd: 'git clone https://github.com/esengine/DeepSeek-Reasonix && cd DeepSeek-Reasonix && npm install && npm run dev code',
-    note: { zh: '需要参与开发请走源码', en: 'Go via source if you want to contribute' } },
+    cmd: 'git clone https://github.com/anyagixx/MAGRA && cd MAGRA && npm install && npm run dev code',
+    note: { zh: '需要参与 MAGRA 开发请走源码', en: 'Go via source if you want to contribute to MAGRA' } },
 ];
 
 function Install() {
-  const [tab, setTab] = React.useState('npx');
+  const [tab, setTab] = React.useState('github');
   const { lang } = useLang();
   const active = INSTALL_TABS.find(it => it.id === tab) || INSTALL_TABS[0];
 
@@ -100,7 +120,7 @@ function Install() {
             {t({ zh: '启动 TUI 会话', en: 'Launch the TUI' }, lang)}
           </h3>
           <div className="copy-block" style={{fontSize:13, maxWidth:'none'}}>
-            <span className="cmd"><span className="tok-cmt">$ </span>npx reasonix code</span>
+            <span className="cmd"><span className="tok-cmt">$ </span>magra code</span>
           </div>
           <p style={{color:'var(--cream-mute)', fontSize:11.5, marginTop:14, marginBottom:0, fontFamily:'var(--mono)', letterSpacing:'0.04em'}}>
             {t({ zh: '// 首次启动向导自动注入 Key', en: '// first-launch wizard wires up the key' }, lang)}

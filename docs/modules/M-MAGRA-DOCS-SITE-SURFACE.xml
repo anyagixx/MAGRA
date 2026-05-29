@@ -1,0 +1,29 @@
+<M-MAGRA-DOCS-SITE-SURFACE NAME="MagraDocsSiteSurface" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Make the public docs-site entry and install surfaces identify MAGRA as the product.</purpose>
+    <scope>Docs landing metadata, install commands, top navigation, footer, and hero terminal examples.</scope>
+    <source-path>docs/src/install.jsx</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-DOCS-SITE-SURFACE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-RELEASE-SURFACE</dependency-1>
+    <dependency-2>M-MAGRA-INSTALL-DOCS</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>docs/index.html metadata and schema.org fields</interface-1>
+    <interface-2>docs/src/install.jsx install command tabs</interface-2>
+    <interface-3>docs/src/nav.jsx, docs/src/footer.jsx, and docs/src/hero.jsx visible product signals</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Docs entry title, metadata, and install commands are MAGRA-first.</invariant-1>
+    <invariant-2>Primary docs links point to `anyagixx/MAGRA` or MAGRA release surfaces.</invariant-2>
+    <invariant-3>Deep upstream docs can remain only when clearly labeled as upstream compatibility/history.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-DOCS-SITE-SURFACE" to="M-MAGRA-RELEASE-SURFACE" relation="extends" />
+  <CrossLink from="M-MAGRA-DOCS-SITE-SURFACE" to="M-MAGRA-INSTALL-DOCS" relation="mirrors-install" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm run build</command-2>
+  </evidence>
+</M-MAGRA-DOCS-SITE-SURFACE>

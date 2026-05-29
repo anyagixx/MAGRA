@@ -2,11 +2,11 @@
 
 function Footer() {
   const { lang } = useLang();
-  const { version: rxVersion, status: rxStatus } = useVersion();
-  const rxLabel =
-    rxStatus === "ok" && rxVersion
-      ? `v${rxVersion} · stable`
-      : rxStatus === "failed"
+  const { version: magraVersion, status: magraStatus } = useVersion();
+  const magraLabel =
+    magraStatus === "ok" && magraVersion
+      ? `v${magraVersion} · stable`
+      : magraStatus === "failed"
         ? t({ zh: "版本获取失败", en: "version unavailable" }, lang)
         : t({ zh: "正在获取版本…", en: "fetching version…" }, lang);
   return (
@@ -16,18 +16,18 @@ function Footer() {
           <a className="brand" href="#top" style={{textDecoration:'none', color:'inherit'}}>
             <span className="brand-mark"></span>
             <span className="brand-name">
-              <b>DeepSeek-Reasonix</b>
+              <b>MAGRA</b>
             </span>
           </a>
           <p style={{color:'var(--cream-mute)', fontSize:13, marginTop:14, lineHeight:1.65, maxWidth:340}}>
             {t({
-              zh: 'DeepSeek 原生的终端编程 Agent · 围绕 prefix-cache 稳定性设计 · 长会话长期跑。',
-              en: 'DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.',
+              zh: 'MyGRACE 工作流 · RTK shell 压缩 · SNARC SQLite 记忆 · Reasonix-compatible base runtime。',
+              en: 'MyGRACE workflows, RTK shell compression, SNARC SQLite memory, and a Reasonix-compatible base runtime.',
             }, lang)}
           </p>
           <div style={{display:'flex', gap:10, marginTop:18}}>
-            <a className="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer" aria-label="GitHub"><Ic.Github size={14}/></a>
-            <a className="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix/discussions" target="_blank" rel="noreferrer">Discussions</a>
+            <a className="btn btn-ghost btn-sm" href="https://github.com/anyagixx/MAGRA" target="_blank" rel="noreferrer" aria-label="GitHub"><Ic.Github size={14}/></a>
+            <a className="btn btn-ghost btn-sm" href="https://github.com/anyagixx/MAGRA/issues" target="_blank" rel="noreferrer">Issues</a>
           </div>
         </div>
         <div>
@@ -42,30 +42,30 @@ function Footer() {
         <div>
           <h5>Community</h5>
           <ul>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer">GitHub</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/discussions" target="_blank" rel="noreferrer">Discussions</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/issues" target="_blank" rel="noreferrer">Issues</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">Contributing</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA" target="_blank" rel="noreferrer">GitHub</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA/issues" target="_blank" rel="noreferrer">Issues</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA/releases" target="_blank" rel="noreferrer">Releases</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA#readme" target="_blank" rel="noreferrer">README</a></li>
           </ul>
         </div>
         <div>
           <h5>Resources</h5>
           <ul>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix#readme" target="_blank" rel="noreferrer">README</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA#readme" target="_blank" rel="noreferrer">README</a></li>
             <li><a href="index.html#roadmap">Roadmap</a></li>
-            <li><a href="https://github.com/esengine/DeepSeek-Reasonix/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">Changelog</a></li>
+            <li><a href="https://github.com/anyagixx/MAGRA/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">Changelog</a></li>
             <li><a href="https://platform.deepseek.com" target="_blank" rel="noreferrer">DeepSeek Platform</a></li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 esengine · MIT License</span>
+        <span>© 2026 MAGRA Contributors · MIT License</span>
         <span className="spacer"></span>
         <span>{t({
           zh: 'Independent open-source project · 与 DeepSeek 官方无关',
           en: 'Independent open-source project · not affiliated with DeepSeek',
         }, lang)}</span>
-        <span style={{marginLeft:18}}>{rxLabel}</span>
+        <span style={{marginLeft:18}}>{magraLabel}</span>
       </div>
     </footer>
   );

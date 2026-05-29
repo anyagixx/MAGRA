@@ -1,290 +1,107 @@
-<p align="center">
-  <img src="docs/logo.svg" alt="Reasonix" width="640"/>
-</p>
+<!-- === MODULE_CONTRACT ===
+FILE: README.zh-CN.md
+VERSION: 1.0.0
+PURPOSE: Present MAGRA release usage and installation in Simplified Chinese.
+SCOPE: MAGRA overview, install commands, web workflow, MyGRACE skills, RTK, SNARC, compatibility aliases, and upstream attribution.
+DEPENDS: M-MAGRA-LOCALIZED-READMES,M-MAGRA-RELEASE-SURFACE,M-MAGRA-INSTALL-DOCS
+LINKS: docs/modules/M-MAGRA-LOCALIZED-READMES.xml
+ROLE: RELEASE
+MAP_MODE: DOCUMENT
+START_MODULE_CONTRACT
+END_MODULE_CONTRACT
+=== END_MODULE_CONTRACT === -->
 
-<p align="center">
-  <a href="./README.md">English</a>
-  &nbsp;·&nbsp;
-  <strong>简体中文</strong>
-  &nbsp;·&nbsp;
-  <a href="./README.ja-JP.md">日本語</a>
-  &nbsp;·&nbsp;
-  <a href="https://esengine.github.io/DeepSeek-Reasonix/">官方网站</a>
-  &nbsp;·&nbsp;
-  <a href="https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh">配置指南</a>
-  &nbsp;·&nbsp;
-  <a href="./docs/ARCHITECTURE.md">架构文档</a>
-  &nbsp;·&nbsp;
-  <a href="./benchmarks/">基准测试</a>
-  &nbsp;·&nbsp;
-  <strong><a href="https://discord.gg/XF78rEME2D">Discord</a></strong>
-</p>
+<!-- === MODULE_MAP ===
+Sections: Overview, Install, Commands, Web workflow, Storage, Upstream attribution
+=== END_MODULE_MAP === -->
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/reasonix"><img src="https://img.shields.io/npm/v/reasonix.svg?style=flat-square&color=cb3837&labelColor=161b22&logo=npm&logoColor=white" alt="npm version"/></a>
-  <a href="https://github.com/esengine/reasonix/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/esengine/reasonix/ci.yml?style=flat-square&label=ci&labelColor=161b22&logo=githubactions&logoColor=white" alt="CI"/></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/reasonix.svg?style=flat-square&color=8b949e&labelColor=161b22" alt="license"/></a>
-  <a href="https://www.npmjs.com/package/reasonix"><img src="https://img.shields.io/npm/dm/reasonix.svg?style=flat-square&color=3fb950&labelColor=161b22&label=downloads" alt="downloads"/></a>
-  <a href="./package.json"><img src="https://img.shields.io/node/v/reasonix.svg?style=flat-square&color=5fa04e&labelColor=161b22&logo=nodedotjs&logoColor=white" alt="node"/></a>
-  <a href="https://github.com/esengine/reasonix/stargazers"><img src="https://img.shields.io/github/stars/esengine/reasonix.svg?style=flat-square&color=dbab09&labelColor=161b22&logo=github&logoColor=white" alt="GitHub stars"/></a>
-  <a href="https://atomgit.com/esengine/DeepSeek-Reasonix"><img src="https://atomgit.com/esengine/DeepSeek-Reasonix/star/badge.svg" alt="AtomGit stars"/></a>
-  <a href="https://github.com/esengine/reasonix/graphs/contributors"><img src="https://img.shields.io/github/contributors/esengine/reasonix.svg?style=flat-square&color=bc8cff&labelColor=161b22&logo=github&logoColor=white" alt="contributors"/></a>
-  <a href="https://github.com/esengine/reasonix/discussions"><img src="https://img.shields.io/github/discussions/esengine/reasonix.svg?style=flat-square&color=58a6ff&labelColor=161b22&logo=github&logoColor=white" alt="Discussions"/></a>
-  <a href="https://discord.gg/XF78rEME2D"><img src="https://img.shields.io/badge/discord-join-5865F2.svg?style=flat-square&labelColor=161b22&logo=discord&logoColor=white" alt="Discord"/></a>
-</p>
+<!-- === CHANGE_SUMMARY ===
+v1.0.0 - Replaced upstream Reasonix README with MAGRA-first localized release documentation.
+=== END_CHANGE_SUMMARY === -->
 
-<p align="center">
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/9e931d80-2050-4b10-902e-44970cc133ad.svg" alt="oosmetrics — Agents 速度榜 Top 2"/></a>
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/556d94b3-61b7-486b-baf2-888b9327deab.svg" alt="oosmetrics — LLMs 速度榜 Top 3"/></a>
-  <a href="https://oosmetrics.com/repo/esengine/reasonix"><img src="https://api.oosmetrics.com/api/v1/badge/achievement/0f457d4c-efca-4d15-ad2b-139691ff342c.svg" alt="oosmetrics — CLI 速度榜 Top 3"/></a>
-</p>
+# MAGRA
 
-<br/>
+MAGRA 是本地优先的 AI 编程代理，面向 pet projects、实验项目和需要长期上下文的日常开发。它把 Reasonix base runtime 作为兼容基础，并集成 MyGRACE 方法论、RTK shell 压缩、SNARC SQLite 记忆和 Web chat 工作流。
 
-<h3 align="center">DeepSeek 原生的终端 AI 编程代理。</h3>
-<p align="center">围绕前缀缓存稳定性设计 —— 长会话下 token 成本始终低位运行，可以一直开着。</p>
-
-<br/>
-
-<p align="center">
-  <img src="docs/assets/hero-terminal.zh-CN.svg" alt="Reasonix code 模式预览 — 助手提出 SEARCH/REPLACE 编辑，未 /apply 不落盘" width="860"/>
-</p>
-
-<br/>
-
-> [!TIP]
-> **缓存稳定不是开关，而是循环要围绕设计的不变量。** 这就是 Reasonix 只支持 DeepSeek 的根本原因 —— 每一层都为 DeepSeek 字节稳定的前缀缓存机制调过。
-
-> [!IMPORTANT]
-> **加入社区 · Community** — 中英双语 Discord，频道包括 `#求助` / `#help`、`#分享` / `#showcase`、`#想法反馈`、贡献者专属 PR 协调区。在群内绑定 GitHub 后自动识别贡献者身份。→ **<https://discord.gg/XF78rEME2D>**
-
-<br/>
+`magra` 是主命令。`reasonix` 和 `dsnix` 只作为 compatibility aliases 保留，方便旧脚本和迁移路径继续工作。
 
 ## 安装
 
-~~~bash
+需要 Node 22 或更新版本、git 和 npm。推荐直接从 MAGRA GitHub 仓库安装：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+```
+
+安装固定版本：
+
+```bash
+MAGRA_REF=v0.1.2 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+```
+
+脚本会把仓库克隆或更新到 `~/.magra/repo`，构建项目，并在 `~/.local/bin` 创建 `magra` shim。脚本不使用 `sudo`。
+
+如果 npm 包已经发布，也可以使用：
+
+```bash
+npm install -g magra
+magra code my-project
+```
+
+或者不做全局安装：
+
+```bash
 cd my-project
-npx reasonix code   # 首次运行粘贴 DeepSeek API Key，之后会记住
-~~~
+npx magra@latest code
+```
 
-要求 Node ≥ 22。在 macOS · Linux · Windows（PowerShell · Git Bash · Windows Terminal）都跑得顺。[去拿 DeepSeek API Key →](https://platform.deepseek.com/api_keys) · 完整 flag 看 `reasonix code --help`。
+首次运行会要求 DeepSeek API Key。可以在 <https://platform.deepseek.com/api_keys> 创建。
 
-`npx` 是推荐路径 —— 不用全局安装，每次都拿最新版。如果你天天用、想把 `reasonix` 装到 `PATH`，跑一次 `reasonix update`。
+## 常用命令
 
-| 命令 | 何时用 |
+| 命令 | 用途 |
 |---|---|
-| `reasonix code [dir]` | 编码 agent。**先用这个。** |
-| `reasonix chat` | 纯聊天 —— 不挂文件系统 / shell 工具。 |
-| `reasonix run "task"` | 一次性，结果流到 stdout。适合 shell 管道。 |
-| `reasonix doctor` | 体检：Node 版本、API Key、MCP 接线。 |
-| `reasonix update` | 升级 Reasonix 本身。 |
+| `magra` / `magra code [dir]` | 编程代理，包含文件系统、shell、MCP、MyGRACE 和 SNARC 工具。 |
+| `magra chat` | 轻量聊天模式。 |
+| `magra run "task"` | 一次性任务执行，适合脚本和管道。 |
+| `magra doctor` | 检查 Node、API key、dashboard、RTK 和 SNARC。 |
+| `magra stats` | 查看 token、费用和用量统计。 |
 
-其他子命令（`replay` · `diff` · `events` · `stats` · `index` · `mcp` · `prune-sessions`）在 `reasonix --help` 和 [CLI 参考](https://esengine.github.io/DeepSeek-Reasonix/#cli)。
+兼容入口仍然存在：
 
-### QQ 通道
+```bash
+reasonix code my-project  # compatibility alias
+dsnix code my-project     # compatibility alias
+```
 
-Reasonix 可以把现有的 `chat`、`code` 或桌面端会话延伸到 QQ 上，作为远程通道使用；它扩展的是当前会话，不是独立的新运行模式。
+## Web Chat 与 MyGRACE
 
-- CLI：先启动会话，再执行 `/qq connect`
-- 桌面端：打开 `设置 -> 通用 -> QQ通道`
+启动 `magra code` 后，打开 CLI 打印出来的 dashboard URL。聊天框里可以直接调用 MyGRACE skill：
 
-连接成功后，QQ 消息可以进入当前会话，助手回复会回到 QQ，后续确认和跟进交互也可以继续在 QQ 上完成。
+- `/mygrace:status` 只读取 MyGRACE index 文件，快速查看项目状态。
+- `/mygrace:plan` 为需求生成模块、阶段和验证计划。
+- `/mygrace:execute` 执行当前阶段。
+- `/mygrace:reviewer` 检查 index、contract、verification 和 semantic block 是否漂移。
+- `/mygrace:ask ...` 通过懒加载 index 回答架构问题。
 
-完整配置、桌面端快速上手与排障说明见：[QQ 连接指南](./docs/qq-connect.zh-CN.md)。
+MAGRA 还提供 `mygrace_*` 和 `snarc_*` native/MCP tools，用于模块导航、lint、SNARC 搜索、上下文和统计。
 
-<details>
-<summary><strong>切换工作区 · chat vs. code · 写第一个 Skill</strong></summary>
+## RTK 与 SNARC
 
-**切换工作区。** Reasonix 把文件系统工具作用域绑定在启动目录，传 `--dir` 可以指别处。中途切换是有意不支持的（消息日志和 memory 路径会和旧根目录混在一起）—— 退出再启动。
+- RTK：合适的 shell、build、lint、test 命令会通过 `rtk` 执行，以减少工具输出 token，同时保持原始退出码语义。
+- SNARC：项目记忆存储在 `<project>/.magra/snarc/memory.sqlite`，用于保存高显著性观察、模式和项目事实。
 
-~~~bash
-npx reasonix code --dir /path/to/project
-~~~
+## 配置与存储
 
-**`chat` 还是 `code`？** `code` 是默认入口、唯一带文件系统 / shell 工具和 SEARCH/REPLACE 审阅的模式。`chat` 是更轻量的纯对话壳——想要一个挂着 MCP 但没有磁盘权限的“思路助手”时用它。
+- 全局 compatibility settings path：`~/.reasonix/config.json`
+- 项目 compatibility directory：`<project>/.reasonix/`
+- MAGRA SNARC 记忆：`<project>/.magra/snarc/memory.sqlite`
+- MyGRACE index：`docs/graph-index.xml`、`docs/plan-index.xml`、`docs/verification-index.xml`
 
-| 你拿到什么 | `code` | `chat` |
-|---|---|---|
-| 文件系统工具 + `edit_file` | ✓ | — |
-| SEARCH/REPLACE → `/apply` 审阅 | ✓ | — |
-| Shell 工具（带 gate） | ✓ | — |
-| Plan 模式 · `/todo` · `/skill new` · `/mcp add` | ✓ | — |
-| Memory（`remember` / `recall_memory`） | 项目 + 全局 | 仅全局 |
-| 配置里的 MCP · web 搜索 · `ask_choice` | ✓ | ✓ |
-| 编码导向系统提示词 | ✓ | 通用 |
-| Session 作用域 | 按目录 | 共享默认 |
+## Upstream Attribution
 
-**写第一个 Skill。** 暂无在线市场——自己写。编辑文件（`description:` frontmatter + 正文），然后 `/skill list` 就能看到。frontmatter 加 `runAs: subagent` 会以隔离 subagent 跑，而不是把正文内联进父 prompt。
+MAGRA is built from and remains compatible with the upstream DeepSeek-Reasonix / Reasonix base runtime. Upstream attribution is preserved in [NOTICE.md](./NOTICE.md).
 
-~~~bash
-/skill new my-skill              # <project>/.reasonix/skills/my-skill.md
-/skill new my-skill --global     # ~/.reasonix/skills，跨项目共用
-~~~
+## 许可证
 
-</details>
-
-<br/>
-
-## 配置
-
-一个全局 JSON 文件 `~/.reasonix/config.json`，加上项目级 `<project>/.reasonix/` 下的覆盖。完整的双语参考 —— 每一个 key、每一条斜杠命令、skills / memory / hooks 在磁盘上的形状 —— 都在这里：
-
-> 📘 **[配置指南](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh)** · [English](https://esengine.github.io/DeepSeek-Reasonix/configuration.html)
-
-| 主题 | 速读 |
-|---|---|
-| [MCP 服务器](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#mcp) | stdio · SSE · Streamable HTTP。`config.json` 和 `--mcp` 共用同一种 spec 格式。 |
-| [Skills](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#skills) | 模型可以调用的 markdown 剧本。`inline` 或 `subagent` 两种模式。 |
-| [Memory](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#memory) | 用户私有的知识，钉进前缀。`user` / `feedback` / `project` / `reference` 四类。 |
-| [Hooks](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#hooks) | 生命周期事件触发的 shell 命令。`PreToolUse`（拦截）· `PostToolUse` · `UserPromptSubmit` · `Stop`。 |
-| [权限](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#permissions) | 按工作区的 shell 白名单，精确前缀匹配。 |
-| [Web 搜索](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#search) | 默认 Bing；可用 `/search-engine` 切到百度 AI Search、自托管 SearXNG、Metaso、Tavily、Perplexity、Exa、Brave 或 Ollama。 |
-| [语义索引](https://esengine.github.io/DeepSeek-Reasonix/configuration.html?lang=zh#index) | `reasonix index` —— 本地 Ollama，或任何 OpenAI 兼容的 embedding 接口。 |
-
-<br/>
-
-## Reasonix 的不同之处
-
-整个循环围绕三根支柱组织。每一根解决的都是通用 agent 框架根本看不见的问题 —— 因为它们是为另一种缓存机制设计的。
-
-<sub align="center">
-
-各支柱完整说明 → [Pillar 1 — 缓存优先循环](./docs/ARCHITECTURE.md#pillar-1--cache-first-loop) · [Pillar 2 — 工具调用修复](./docs/ARCHITECTURE.md#pillar-2--tool-call-repair) · [Pillar 3 — 成本控制](./docs/ARCHITECTURE.md#pillar-3--cost-control-v06)
-
-</sub>
-
-<br/>
-
-## 能力一览
-
-<p align="center">
-  <img src="docs/assets/feature-grid.zh-CN.svg" alt="Reasonix 能力一览 — cell-diff 渲染器、MCP、计划模式、权限、仪表盘、持久化会话、Hooks/Skills/Memory、语义检索、自动 checkpoint、/effort 旋钮、transcript 重放、事件日志" width="880"/>
-</p>
-
-<br/>
-
-## 横向对比
-
-|                            | Reasonix          | Claude Code       | Cursor              | Aider              |
-|----------------------------|-------------------|-------------------|---------------------|--------------------|
-| 后端                       | DeepSeek          | Anthropic         | OpenAI / Anthropic  | 任意（OpenRouter） |
-| 协议                       | **MIT**           | 闭源              | 闭源                | Apache 2           |
-| 单任务成本                 | **低**            | 高                | 订阅 + 用量         | 不一               |
-| DeepSeek 前缀缓存          | **专门工程化**    | 不适用            | 不适用              | 偶发命中           |
-| 内嵌 web 仪表盘            | 支持              | —                 | 不适用 (IDE)        | —                  |
-| 持久化的工作区会话         | 支持              | 部分              | 不适用              | —                  |
-| 计划模式 · MCP · Hooks     | 支持              | 支持              | 支持                | 部分               |
-| 开放社区共建               | 支持              | —                 | —                   | 支持               |
-
-实测缓存命中率、成本、方法论看 [`benchmarks/`](./benchmarks/) —— 这些数会随模型定价变化，所以归在 harness 里，不进 README。
-
-<br/>
-
-## 文档
-
-- [**架构**](./docs/ARCHITECTURE.md) —— 四大支柱、缓存优先循环、思维提取、脚手架
-- [**CLI 参考**](./docs/CLI-REFERENCE.md) —— 每个 shell 子命令、每个 slash 命令、每个快捷键
-- [**QQ 连接指南**](./docs/qq-connect.zh-CN.md) —— CLI 首次连接流程、桌面端入口和 QQ 开放平台凭据
-- [**基准测试**](./benchmarks/) —— τ-bench-lite harness、transcript、成本方法论
-- [**官方网站**](https://esengine.github.io/DeepSeek-Reasonix/) —— 入门、Dashboard 设计稿、TUI 设计稿
-- [**贡献指南**](./CONTRIBUTING.md) —— 注释规则、错误处理、用现成库不手写
-- [**行为准则**](./CODE_OF_CONDUCT.md) · [**安全策略**](./SECURITY.md)
-
-<br/>
-
-## 社区
-
-> [!NOTE]
-> Reasonix 是开源、社区共建的项目。文末"致谢"那面贡献者墙上的每一个头像，都对应一次真实合并的 PR。
-
-给新手准备的入门 issue —— 每个都带背景说明、代码定位、验收标准、提示 —— 全部挂在 [`good first issue`](https://github.com/esengine/reasonix/labels/good%20first%20issue) 标签下。挑任意一个还没人认领的就行。
-
-**正在征集意见的 Discussions：**
-
-- [#20 · CLI / TUI 设计](https://github.com/esengine/reasonix/discussions/20) —— 哪里坏了、哪里少东西、哪里你会怎么改？
-- [#21 · Dashboard 设计](https://github.com/esengine/reasonix/discussions/21) —— 对着[设计稿](https://esengine.github.io/DeepSeek-Reasonix/design/agent-dashboard.html)拍砖
-- [#22 · 未来功能愿望单](https://github.com/esengine/reasonix/discussions/22) —— 你希望 Reasonix 长出什么功能？
-
-**正在使用 Reasonix，愿意让更多人了解它？** 欢迎将相关博客、文章、截图、演讲或视频发布到 [**Show and tell**](https://github.com/esengine/reasonix/discussions/categories/show-and-tell)。项目没有营销预算，新用户主要通过社区口碑找到这里。持续参与传播的用户将获得下方这枚徽章，颁发后会展示在贡献者墙旁：
-
-<p align="center">
-  <a href="https://github.com/esengine/reasonix/discussions/categories/show-and-tell">
-    <img src="https://img.shields.io/badge/REASONIX-📣%20ADVOCATE-c4b5fd?style=for-the-badge&labelColor=0d1117" alt="Reasonix Advocate 徽章 —— 授予持续参与传播的用户"/>
-  </a>
-</p>
-
-**第一次提 PR 之前**：先读 [`CONTRIBUTING.md`](./CONTRIBUTING.md) —— 短小、严格的项目规则（注释、错误处理、用现成库不手写）。`tests/comment-policy.test.ts` 静态强制执行注释那部分，`npm run verify` 是 push 前的闸。参与本项目即同意 [行为准则](./CODE_OF_CONDUCT.md)。安全相关问题请走 [SECURITY.md](./SECURITY.md)。
-
-<br/>
-
-## 不做的事
-
-> [!IMPORTANT]
-> Reasonix 是有立场的。有些事它故意 *不做* —— 列在这里方便你为自己的工作挑对工具。
-
-- **多供应商灵活性。** 故意只做 DeepSeek。绑死一个后端是 feature，不是限制。
-- **IDE 集成。** 终端优先。diff 在 `git diff`，文件树在 `ls`。仪表盘是 TUI 的伴生，不是 Cursor 的替代。
-- **追最难的 reasoning 榜单。** Claude Opus 在某些榜单上还是赢家。DeepSeek 在编程任务上有竞争力；如果你的工作是"解一个 PhD 级证明"而不是"修个 auth bug"，先用 Claude。
-- **完全离线 / 永远免费。** Reasonix 需要付费的 DeepSeek API Key。要离线 / 零成本，看 Aider + Ollama 或 [Continue](https://continue.dev)。
-
-<br/>
-
-## Star 趋势
-
-<a href="https://www.star-history.com/?repos=esengine%2FDeepSeek-Reasonix&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=esengine/DeepSeek-Reasonix&type=date&legend=top-left" />
- </picture>
-</a>
-
-<br/>
-
-## 支持本项目
-
-如果 Reasonix 帮你省了时间或 token，欢迎请杯咖啡。捐助不会换来 feature 优先级，也不会影响 issue 的处理顺序——就是「谢谢」。
-
-- **国内** — 微信支付（扫下方二维码）
-- **海外** — PayPal: [paypal.me/yuhuahui](https://paypal.me/yuhuahui)
-
-<p align="center">
-  <img src=".github/sponsor/wechat-pay.jpg" alt="微信支付收款码" width="240"/>
-</p>
-
-<br/>
-
-## 致谢
-
-下面这些朋友的工作塑造了 Reasonix 今天的样子 —— 综合 commit 数和代码量两个维度。
-**按字母顺序排列，排名不分先后。** 完整贡献者列表在
-[GitHub](https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors)。
-
-- [**ctharvey**](https://github.com/ctharvey)
-- [**dimasd-angga**](https://github.com/dimasd-angga)（Dimas D. Angga）
-- [**Evan-Pycraft**](https://github.com/Evan-Pycraft)
-- [**ForeverYoungPp**](https://github.com/ForeverYoungPp)
-- [**GTC2080**](https://github.com/GTC2080)（TaoMu）
-- [**kabaka9527**](https://github.com/kabaka9527)
-- [**lisniuse**](https://github.com/lisniuse)（Richie）
-- [**wade19990814-hue**](https://github.com/wade19990814-hue)
-- [**wviana**](https://github.com/wviana)（Wesley Viana）
-
-另外特别感谢 [**Bernardxu123**](https://github.com/Bernardxu123) 设计的项目 logo
-（见 [`docs/brand/`](./docs/brand/)），以及 [AIGC Link](https://xhslink.com/m/80ngts127cA) 在小红书上的推广。
-
-<p align="center">
-  <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=esengine/DeepSeek-Reasonix&max=100&columns=12" alt="esengine/DeepSeek-Reasonix 贡献者" width="860"/>
-  </a>
-</p>
-
-<br/>
-
----
-
-<p align="center">
-  <sub>MIT —— 见 <a href="./LICENSE">LICENSE</a></sub>
-  <br/>
-  <sub>由 <a href="https://github.com/esengine/DeepSeek-Reasonix/graphs/contributors">esengine/DeepSeek-Reasonix</a> 社区共建</sub>
-</p>
+MIT。详见 [LICENSE](./LICENSE)。

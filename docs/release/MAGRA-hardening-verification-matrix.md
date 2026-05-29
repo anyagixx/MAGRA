@@ -1,10 +1,10 @@
 <!-- === MODULE_CONTRACT ===
-FILE: docs/verification/MAGRA-hardening-verification-matrix.md
+FILE: docs/release/MAGRA-hardening-verification-matrix.md
 VERSION: 1.0.0
 PURPOSE: Summarize verification strategy for MAGRA Phase-7 through Phase-12 hardening and dogfooding.
 SCOPE: Verification matrix, telemetry requirements, and autonomous execution safety overview for pending hardening modules.
 DEPENDS: M-SNARC-CONTEXT-ISOLATION,M-SNARC-SQLITE-STORE,M-MAGRA-RUNTIME-IDENTITY,M-MYGRACE-GOVERNANCE-LINT,M-MAGRA-RELEASE-SURFACE,M-MAGRA-DOGFOODING-HARNESS
-LINKS: docs/plan-index.xml
+LINKS: docs/plans/Phase-19.xml
 ROLE: VERIFICATION
 MAP_MODE: DOCUMENT
 START_MODULE_CONTRACT

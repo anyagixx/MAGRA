@@ -18,4 +18,5 @@
   <Phase-16 NAME="FirstGitHubRelease" STATUS="done" STEPS="5" />
   <Phase-17 NAME="MyGraceSkillAssetHotfix" STATUS="done" STEPS="4" />
   <Phase-18 NAME="MyGraceWebDispatchHotfix" STATUS="done" STEPS="4" />
+  <Phase-19 NAME="MagraReleaseSurfaceHardening" STATUS="done" STEPS="6" />
 </PlanIndex>

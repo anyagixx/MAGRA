@@ -15,6 +15,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial negative fixture coverage for Phase-10 MyGRACE governance lint.
+// Added verification directory hygiene coverage for supporting artifacts.
 // === END_CHANGE_SUMMARY ===
 
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -124,6 +125,33 @@ describe("MyGRACE governance lint", () => {
     expect(report.errors).toBeGreaterThan(0);
     expect(issue?.message).toContain("approved-docs:docs/release");
     // === END_BLOCK_ASSERT_RELEASE_CHANGE_FAILURE ===
+  });
+
+  it("fails non-indexed supporting artifacts inside docs/verification", () => {
+    // === START_BLOCK_ASSERT_VERIFICATION_HYGIENE_FAILURE ===
+    const root = createTempProject([
+      {
+        id: "M-TMP",
+        path: "src/managed.ts",
+        content: sourceMarkup("src/managed.ts"),
+      },
+    ]);
+    tempRoots.push(root);
+    writeProjectFile(
+      root,
+      "docs/verification/MAGRA-supporting-matrix.md",
+      releaseMarkup("docs/verification/MAGRA-supporting-matrix.md"),
+    );
+
+    const report = lintMyGraceArtifacts(root);
+    const issue = report.issues.find(
+      (candidate) =>
+        candidate.file === "docs/verification/MAGRA-supporting-matrix.md" &&
+        candidate.message.includes("Non-indexed verification artifact"),
+    );
+    expect(report.errors).toBeGreaterThan(0);
+    expect(issue).toBeDefined();
+    // === END_BLOCK_ASSERT_VERIFICATION_HYGIENE_FAILURE ===
   });
 
   it("fails mismatched semantic block names even when counts match", () => {

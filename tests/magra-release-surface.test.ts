@@ -2,22 +2,24 @@
 // FILE: tests/magra-release-surface.test.ts
 // VERSION: 1.0.0
 // PURPOSE: Verify MAGRA release docs and package metadata are MAGRA-first.
-// SCOPE: README install commands, package metadata, release docs, NOTICE, and current changelog entries.
-// DEPENDS: M-MAGRA-RELEASE-SURFACE
+// SCOPE: README install commands, localized READMEs, package metadata, docs-site entry surfaces, release docs, NOTICE, and current changelog entries.
+// DEPENDS: M-MAGRA-RELEASE-SURFACE,M-MAGRA-LOCALIZED-READMES,M-MAGRA-PACKAGE-README-GATE,M-MAGRA-DOCS-SITE-SURFACE
 // LINKS: docs/verification/V-M-MAGRA-RELEASE-SURFACE.xml
 // ROLE: TEST
 // MAP_MODE: LOCALS
 // === END_MODULE_CONTRACT ===
 //
 // === MODULE_MAP ===
-// Locals: release surface document readers, Reasonix context classifier, package metadata assertions
+// Locals: release surface document readers, Reasonix context classifier, package README parser, MAGRA-first assertions
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
 // Initial MAGRA release surface verification.
 // Updated expected release version for the MyGRACE skill asset hotfix.
+// Added localized README, package README set, and docs-site entry surface gates.
 // === END_CHANGE_SUMMARY ===
 
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -33,12 +35,30 @@ interface PackageMetadata {
   files: string[];
 }
 
+interface PackPreview {
+  files: Array<{ path: string }>;
+}
+
 const ROOT = process.cwd();
 const readText = (path: string) => readFileSync(join(ROOT, path), "utf8");
 const readPackage = (): PackageMetadata => JSON.parse(readText("package.json")) as PackageMetadata;
 
+const LOCALIZED_README_DOCS = [
+  { path: "README.zh-CN.md", content: readText("README.zh-CN.md") },
+  { path: "README.ja-JP.md", content: readText("README.ja-JP.md") },
+];
+
+const DOCS_SITE_ENTRY_DOCS = [
+  { path: "docs/index.html", content: readText("docs/index.html") },
+  { path: "docs/src/install.jsx", content: readText("docs/src/install.jsx") },
+  { path: "docs/src/nav.jsx", content: readText("docs/src/nav.jsx") },
+  { path: "docs/src/footer.jsx", content: readText("docs/src/footer.jsx") },
+  { path: "docs/src/hero.jsx", content: readText("docs/src/hero.jsx") },
+];
+
 const RELEASE_SURFACE_DOCS = [
   { path: "README.md", content: readText("README.md") },
+  ...LOCALIZED_README_DOCS,
   { path: "NOTICE.md", content: readText("NOTICE.md") },
   {
     path: "CHANGELOG.md",
@@ -104,6 +124,61 @@ describe("MAGRA release surface", () => {
     // === END_BLOCK_ASSERT_PACKAGE_METADATA ===
   });
 
+  it("keeps localized READMEs MAGRA-first", () => {
+    // === START_BLOCK_ASSERT_LOCALIZED_READMES ===
+    for (const doc of LOCALIZED_README_DOCS) {
+      assertMagraFirstReadme(doc.path, doc.content);
+      expect(doc.content).toContain("curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA");
+      expect(doc.content).toContain("MAGRA_REF=v0.1.2");
+      expect(doc.content).toContain("npm install -g magra");
+      expect(doc.content).toContain("npx magra@latest code");
+      expect(doc.content).toContain("/mygrace:status");
+      expect(doc.content).toContain("RTK");
+      expect(doc.content).toContain("SNARC");
+    }
+    // === END_BLOCK_ASSERT_LOCALIZED_READMES ===
+  });
+
+  it("checks every README included in the npm package preview", () => {
+    // === START_BLOCK_ASSERT_PACKAGED_READMES ===
+    const preview = readPackPreview();
+    const packageReadmes = preview.files
+      .map((file) => file.path)
+      .filter((path) => /^README(?:\..+)?\.md$/.test(path))
+      .sort();
+    expect(packageReadmes).toEqual(["README.ja-JP.md", "README.md", "README.zh-CN.md"]);
+    for (const path of packageReadmes) {
+      assertMagraFirstReadme(path, readText(path));
+    }
+    expect(preview.files.map((file) => file.path)).toEqual(
+      expect.arrayContaining([
+        "dist/cli/skill-bodies/init.md",
+        "dist/skill-bodies/init.md",
+        "scripts/install.sh",
+      ]),
+    );
+    // === END_BLOCK_ASSERT_PACKAGED_READMES ===
+  });
+
+  it("keeps docs-site entry and install surfaces MAGRA-first", () => {
+    // === START_BLOCK_ASSERT_DOCS_SITE_SURFACE ===
+    const docsIndex = readText("docs/index.html");
+    const docsInstall = readText("docs/src/install.jsx");
+    const combined = DOCS_SITE_ENTRY_DOCS.map((doc) => doc.content).join("\n");
+    expect(docsIndex).toContain("<title>MAGRA");
+    expect(docsIndex).toContain('"name": "MAGRA"');
+    expect(docsIndex).toContain("https://github.com/anyagixx/MAGRA");
+    expect(docsInstall).toContain(
+      "curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash",
+    );
+    expect(docsInstall).toContain("npm install -g magra && magra code");
+    expect(docsInstall).toContain("npx magra@latest code");
+    expect(combined).not.toContain("npx reasonix code");
+    expect(combined).not.toContain("npm install -g reasonix");
+    expect(combined).not.toContain("git clone https://github.com/esengine/DeepSeek-Reasonix");
+    // === END_BLOCK_ASSERT_DOCS_SITE_SURFACE ===
+  });
+
   it("allows Reasonix only as attribution, upstream, or compatibility context", () => {
     // === START_BLOCK_ASSERT_REASONIX_CONTEXT ===
     const offenders: string[] = [];
@@ -140,4 +215,35 @@ function currentMagraChangelog(changelog: string): string {
   const end = changelog.indexOf("## [0.52.0]");
   if (start === -1 || end === -1 || end <= start) return changelog;
   return changelog.slice(0, end);
+}
+
+function assertMagraFirstReadme(path: string, content: string): void {
+  expect(content, path).toContain("# MAGRA");
+  expect(content, path).toContain("magra code");
+  expect(content, path).toContain("MyGRACE");
+  expect(content, path).not.toMatch(/\bnpm\s+install\s+-g\s+reasonix\b/i);
+  expect(content, path).not.toMatch(/\bnpx\s+reasonix(?:@latest)?\s+code\b/i);
+  expect(content, path).not.toMatch(/npmjs\.com\/package\/reasonix/i);
+  expect(content, path).not.toMatch(/github\.com\/esengine\/reasonix\/actions/i);
+}
+
+function readPackPreview(): PackPreview {
+  const result = spawnSync("npm", ["pack", "--dry-run", "--json"], {
+    cwd: ROOT,
+    encoding: "utf8",
+    env: { ...process.env, npm_config_loglevel: "silent" },
+  });
+  if (result.status !== 0) {
+    throw new Error(
+      `npm pack preview failed with status ${result.status}:\n${result.stdout}\n${result.stderr}`,
+    );
+  }
+  const jsonStart = result.stdout.search(/\[\s*\{/);
+  if (jsonStart < 0) {
+    throw new Error(`npm pack preview did not emit JSON:\n${result.stdout}`);
+  }
+  const parsed = JSON.parse(result.stdout.slice(jsonStart)) as PackPreview[];
+  const first = parsed[0];
+  if (!first) throw new Error("npm pack preview was empty");
+  return first;
 }

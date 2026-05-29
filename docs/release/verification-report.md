@@ -3,8 +3,8 @@ FILE: docs/release/verification-report.md
 VERSION: 1.0.0
 PURPOSE: Record MAGRA release, installer, publication, and dogfooding verification evidence.
 SCOPE: Commands, outcomes, and known non-blocking warnings for release hardening, release surface checks, installer readiness, GitHub publication, and dogfooding readiness.
-DEPENDS: M-OBSERVABILITY-VERIFICATION,M-MAGRA-RELEASE-SURFACE,M-MAGRA-DOGFOODING-HARNESS,M-MAGRA-RELEASE-VERIFICATION
-LINKS: docs/plans/Phase-6.xml,docs/plans/Phase-11.xml,docs/plans/Phase-12.xml,docs/plans/Phase-15.xml
+DEPENDS: M-OBSERVABILITY-VERIFICATION,M-MAGRA-RELEASE-SURFACE,M-MAGRA-DOGFOODING-HARNESS,M-MAGRA-RELEASE-VERIFICATION,M-MAGRA-PACKAGE-README-GATE,M-MAGRA-DOCS-SITE-SURFACE
+LINKS: docs/plans/Phase-6.xml,docs/plans/Phase-11.xml,docs/plans/Phase-12.xml,docs/plans/Phase-15.xml,docs/plans/Phase-19.xml
 ROLE: VERIFICATION
 MAP_MODE: DOCUMENT
 START_MODULE_CONTRACT
@@ -23,6 +23,7 @@ Updated Phase-12 dogfooding verification evidence.
 Added Phase-15 v0.1.0 installer and release verification evidence.
 Added v0.1.1 MyGRACE skill asset hotfix verification evidence.
 Added v0.1.2 MyGRACE web dispatch hotfix verification evidence.
+Added Phase-19 localized README, package README gate, docs-site surface, and verification hygiene evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -37,18 +38,20 @@ rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-c
 rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts
 rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts
 rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts
+rtk npm test -- tests/magra-release-surface.test.ts tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts
 rtk npm test -- tests/magra-dogfooding-smoke.test.ts
 rtk mygrace lint --path .
 rtk npm run lint
 rtk npm run typecheck
 rtk npm run build
 rtk npm test
-rtk npm pack --dry-run
+rtk npm pack --dry-run --json
 ```
 
 ## Results
 
 - `rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts`: passed.
+- `rtk npm test -- tests/magra-release-surface.test.ts tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts`: passed, 3 test files and 16 tests passed.
 - `rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-commands.test.tsx tests/hash-memory.test.ts tests/server-dashboard.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 6 test files and 116 tests passed.
 - `rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 5 test files and 18 tests passed.
 - `rtk bash scripts/install.sh --dry-run`: passed.
@@ -58,8 +61,8 @@ rtk npm pack --dry-run
 - `rtk npm run lint`: passed.
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
-- `rtk npm test`: passed, 320 test files, 3975 tests passed, 9 skipped.
-- `rtk npm pack --dry-run`: passed, package artifact preview `magra-0.1.2.tgz`.
+- `rtk npm test`: passed, 320 test files, 3979 tests passed, 9 skipped.
+- `rtk npm pack --dry-run --json`: passed, package preview includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
 
 ## Known Warning
 

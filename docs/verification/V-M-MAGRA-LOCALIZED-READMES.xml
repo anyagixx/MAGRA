@@ -1,0 +1,23 @@
+<V-M-MAGRA-LOCALIZED-READMES MODULE="M-MAGRA-LOCALIZED-READMES" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+    <file-2>README.zh-CN.md</file-2>
+    <file-3>README.ja-JP.md</file-3>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk mygrace lint --path .</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Localized READMEs show MAGRA overview, GitHub installer, `magra` commands, MyGRACE, RTK, and SNARC.</scenario-1>
+    <scenario-2 kind="success">Reasonix appears only with compatibility, base runtime, upstream, migration, or attribution wording.</scenario-2>
+    <scenario-3 kind="failure">A localized README presenting `reasonix` as primary install path fails release-surface tests.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseSurface][localizedReadmes][BLOCK_ASSERT_MAGRA_FIRST]</marker-1>
+  </required-log-markers>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+  </evidence>
+</V-M-MAGRA-LOCALIZED-READMES>

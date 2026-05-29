@@ -1,0 +1,28 @@
+<M-MAGRA-PACKAGE-README-GATE NAME="MagraPackageReadmeGate" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Fail release verification when any README included by npm packaging leaks unqualified Reasonix release identity.</purpose>
+    <scope>Package readme discovery, forbidden command checks, allowed Reasonix-context classification, and package metadata assertions.</scope>
+    <source-path>tests/magra-release-surface.test.ts</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-PACKAGE-README-GATE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-LOCALIZED-READMES</dependency-1>
+    <dependency-2>M-MAGRA-RELEASE-SURFACE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>Packaged README file list from `npm pack --dry-run --json`</interface-1>
+    <interface-2>Reasonix context classifier shared by release-surface docs tests</interface-2>
+  </interfaces>
+  <invariants>
+    <invariant-1>Every packaged README is checked, including files npm auto-includes outside package.json `files`.</invariant-1>
+    <invariant-2>Old `npm install -g reasonix` and `npx reasonix code` primary install examples fail.</invariant-2>
+    <invariant-3>MAGRA README package set includes the current localized README files unless deliberately excluded by a future plan.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-PACKAGE-README-GATE" to="M-MAGRA-LOCALIZED-READMES" relation="gates" />
+  <CrossLink from="M-MAGRA-PACKAGE-README-GATE" to="M-MAGRA-RELEASE-SURFACE" relation="hardens" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm pack --dry-run --json</command-2>
+  </evidence>
+</M-MAGRA-PACKAGE-README-GATE>

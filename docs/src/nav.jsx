@@ -1,8 +1,8 @@
 // Top nav — single bar shared between index and download pages
 
 function Nav({ active }) {
-  const { version: rxVersion, status: rxStatus } = useVersion();
-  const rxLabel = rxStatus === "ok" && rxVersion ? `v${rxVersion}` : "…";
+  const { version: magraVersion, status: magraStatus } = useVersion();
+  const magraLabel = magraStatus === "ok" && magraVersion ? `v${magraVersion}` : "…";
   const [scrolled, setScrolled] = React.useState(false);
   const { lang, setLang } = useLang();
   React.useEffect(() => {
@@ -27,7 +27,7 @@ function Nav({ active }) {
         <a className="brand" href="index.html">
           <span className="brand-mark"></span>
           <span className="brand-name">
-            <b>Reasonix</b><span>DS · {rxLabel}</span>
+            <b>MAGRA</b><span>MyGRACE · {magraLabel}</span>
           </span>
         </a>
         <div className="nav-links" role="navigation">
@@ -60,7 +60,7 @@ function Nav({ active }) {
               onClick={() => setLang("zh")}
             >中文</button>
           </div>
-          <a className="btn btn-ghost btn-sm" href="https://github.com/esengine/DeepSeek-Reasonix" target="_blank" rel="noreferrer">
+          <a className="btn btn-ghost btn-sm" href="https://github.com/anyagixx/MAGRA" target="_blank" rel="noreferrer">
             <Ic.Github size={13}/> GitHub
           </a>
           <a className="btn btn-primary btn-sm" href="download.html">

@@ -1,0 +1,32 @@
+<Phase-19 NAME="MagraReleaseSurfaceHardening" STATUS="done">
+  <purpose>Close remaining MAGRA release-surface drift across localized READMEs, packaged docs, public docs-site entry points, and verification hygiene.</purpose>
+  <modules>
+    <module-1>M-MAGRA-LOCALIZED-READMES</module-1>
+    <module-2>M-MAGRA-PACKAGE-README-GATE</module-2>
+    <module-3>M-MAGRA-DOCS-SITE-SURFACE</module-3>
+    <module-4>M-MAGRA-VERIFICATION-HYGIENE</module-4>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Create MyGRACE module, phase, and verification artifacts for the release-surface hardening wave.</step-1>
+    <step-2 STATUS="done">Rewrite localized READMEs so MAGRA is the primary product and install surface.</step-2>
+    <step-3 STATUS="done">Extend release-surface tests to inspect translated READMEs and the actual npm package README set.</step-3>
+    <step-4 STATUS="done">Update docs-site metadata, install commands, navigation, footer, and hero entry surfaces to MAGRA.</step-4>
+    <step-5 STATUS="done">Relocate supporting verification matrix docs and add a MyGRACE lint guard for `docs/verification/` hygiene.</step-5>
+    <step-6 STATUS="done">Run MyGRACE lint, focused release/governance tests, build, typecheck, package smoke, and full test suite.</step-6>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MAGRA-LOCALIZED-READMES</verification-1>
+    <verification-2>V-M-MAGRA-PACKAGE-README-GATE</verification-2>
+    <verification-3>V-M-MAGRA-DOCS-SITE-SURFACE</verification-3>
+    <verification-4>V-M-MAGRA-VERIFICATION-HYGIENE</verification-4>
+  </verification-refs>
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-release-surface.test.ts tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts</command-1>
+    <command-2 RESULT="passed">rtk mygrace lint --path .</command-2>
+    <command-3 RESULT="passed">rtk npm run lint</command-3>
+    <command-4 RESULT="passed">rtk npm run typecheck</command-4>
+    <command-5 RESULT="passed">rtk npm run build</command-5>
+    <command-6 RESULT="passed">rtk npm pack --dry-run --json</command-6>
+    <command-7 RESULT="passed">rtk npm test</command-7>
+  </evidence>
+</Phase-19>
