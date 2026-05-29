@@ -1,6 +1,6 @@
 {
   "name": "magra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MAGRA: AI coding agent with MyGRACE workflows, RTK shell compression, SNARC memory, and Reasonix compatibility.",
   "type": "module",
   "bin": {

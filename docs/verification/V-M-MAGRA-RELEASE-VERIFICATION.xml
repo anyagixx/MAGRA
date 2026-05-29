@@ -16,7 +16,7 @@
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">All release commands pass before commit, tag, and push.</scenario-1>
-    <scenario-2 kind="success">Package preview is magra-0.1.0.tgz.</scenario-2>
+    <scenario-2 kind="success">Package preview matches the current MAGRA release version.</scenario-2>
     <scenario-3 kind="failure">Any installer, package, lint, typecheck, build, or test failure blocks the release tag.</scenario-3>
   </scenarios>
   <required-log-markers>

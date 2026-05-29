@@ -20,6 +20,7 @@ Initial MAGRA top-level documentation identity with upstream Reasonix attributio
 Added Phase-10 governance metadata so release surface drift is linted.
 Rewrote Phase-11 release surface so README is MAGRA-first and keeps Reasonix only as upstream/compatibility context.
 Added Phase-14 GitHub one-command installer and v0.1.0 release metadata.
+Updated pinned install guidance for the v0.1.1 MyGRACE skill asset hotfix.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA
@@ -60,7 +61,7 @@ curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install
 Install a pinned release:
 
 ```bash
-MAGRA_REF=v0.1.0 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+MAGRA_REF=v0.1.1 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
 ```
 
 The installer clones or updates MAGRA in `~/.magra/repo`, builds it, and creates a local `magra` shim in `~/.local/bin`. It does not use `sudo`.

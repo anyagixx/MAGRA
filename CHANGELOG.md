@@ -19,12 +19,19 @@ Sections: MAGRA integration entries, inherited upstream release history, upstrea
 Initial MAGRA changelog wrapper around upstream Reasonix history.
 Added Phase-11 MAGRA release-surface documentation entry.
 Added MAGRA v0.1.0 GitHub installer and release publication entry.
+Added MAGRA v0.1.1 MyGRACE skill asset hotfix entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.1] - 2026-05-29
+
+**MyGRACE web chat hotfix.** Bundled MyGRACE skill body markdown is now copied beside both the library bundle and CLI bundle, fixing installed dashboard calls such as `/mygrace:init ...` that previously failed with missing `dist/cli/skill-bodies/init.md`.
+
+**Release guard.** Added bundle smoke coverage that verifies all canonical MyGRACE skill bodies are present after build and that `loadMyGraceSkillBody("init")` works from compiled output.
 
 ## [0.1.0] - 2026-05-29
 

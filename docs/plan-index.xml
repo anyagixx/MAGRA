@@ -16,4 +16,5 @@
   <Phase-14 NAME="OneCommandInstall" STATUS="done" STEPS="5" />
   <Phase-15 NAME="ReleaseVerification" STATUS="done" STEPS="5" />
   <Phase-16 NAME="FirstGitHubRelease" STATUS="done" STEPS="5" />
+  <Phase-17 NAME="MyGraceSkillAssetHotfix" STATUS="done" STEPS="4" />
 </PlanIndex>

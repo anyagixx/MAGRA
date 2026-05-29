@@ -10,7 +10,7 @@
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">README shows the GitHub install command before npm install examples.</scenario-1>
-    <scenario-2 kind="success">package.json uses version 0.1.0 and anyagixx/MAGRA URLs.</scenario-2>
+    <scenario-2 kind="success">package.json uses the current MAGRA release version and anyagixx/MAGRA URLs.</scenario-2>
     <scenario-3 kind="failure">README documents an unqualified reasonix install command.</scenario-3>
   </scenarios>
   <required-log-markers>

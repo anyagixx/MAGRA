@@ -1,0 +1,21 @@
+<V-M-MYGRACE-SKILL-ASSETS MODULE="M-MYGRACE-SKILL-ASSETS" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/bundle-smoke.test.ts</file-1>
+    <file-2>tests/mygrace-skills.test.ts</file-2>
+    <file-3>tests/dashboard-mygrace-server.test.ts</file-3>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm run build</check-1>
+    <check-2>rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts</check-2>
+    <check-3>rtk mygrace lint --path .</check-3>
+    <check-4>rtk npm pack --dry-run --json</check-4>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">`dist/skill-bodies/init.md` is present after build.</scenario-1>
+    <scenario-2 kind="success">`dist/cli/skill-bodies/init.md` is present after build.</scenario-2>
+    <scenario-3 kind="failure">Bundled `loadMyGraceSkillBody("init")` throws ENOENT.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MyGraceSkillAssets][copy][BLOCK_COPY_SKILL_BODIES]</marker-1>
+  </required-log-markers>
+</V-M-MYGRACE-SKILL-ASSETS>

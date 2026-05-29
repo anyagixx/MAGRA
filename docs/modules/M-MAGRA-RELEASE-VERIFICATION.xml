@@ -1,6 +1,6 @@
 <M-MAGRA-RELEASE-VERIFICATION NAME="MagraReleaseVerification" TYPE="UTILITY" STATUS="done">
   <contract>
-    <purpose>Gate the v0.1.0 release on install, metadata, build, package, and full-suite verification.</purpose>
+    <purpose>Gate the current MAGRA release on install, metadata, build, package, and full-suite verification.</purpose>
     <scope>Release verification report, command evidence, known warnings, and publication readiness criteria.</scope>
     <source-path>docs/release/verification-report.md</source-path>
     <test-path>tests/magra-install-script.test.ts</test-path>

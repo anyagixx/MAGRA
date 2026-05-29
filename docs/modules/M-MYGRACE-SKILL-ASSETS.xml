@@ -1,0 +1,30 @@
+<M-MYGRACE-SKILL-ASSETS NAME="MyGraceSkillAssets" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Copy MyGRACE skill body markdown into bundled runtime asset directories.</purpose>
+    <scope>Build-time asset placement for dist/index.js and dist/cli/*.js relative file loading.</scope>
+    <source-path>scripts/copy-mygrace-skill-bodies.mjs</source-path>
+    <test-path>tests/bundle-smoke.test.ts</test-path>
+    <verification-ref>V-M-MYGRACE-SKILL-ASSETS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MYGRACE-SKILLS</dependency-1>
+  </dependencies>
+  <interfaces>
+    <interface-1>npm run build copies src/mygrace/skill-bodies to dist/skill-bodies</interface-1>
+    <interface-2>npm run build copies src/mygrace/skill-bodies to dist/cli/skill-bodies</interface-2>
+  </interfaces>
+  <invariants>
+    <invariant-1>Every canonical MyGRACE skill body exists beside the library bundle.</invariant-1>
+    <invariant-2>Every canonical MyGRACE skill body exists beside the CLI bundle.</invariant-2>
+    <invariant-3>Installed web chat can run `/mygrace:init` without ENOENT.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MYGRACE-SKILL-ASSETS" to="M-MYGRACE-SKILLS" relation="packages" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm run build</command-1>
+    <command-2 RESULT="passed">rtk npm test -- tests/bundle-smoke.test.ts tests/mygrace-skills.test.ts tests/dashboard-mygrace-server.test.ts</command-2>
+    <command-3 RESULT="passed">rtk mygrace lint --path .</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run typecheck</command-5>
+    <command-6 RESULT="passed">rtk npm pack --dry-run --json</command-6>
+  </evidence>
+</M-MYGRACE-SKILL-ASSETS>

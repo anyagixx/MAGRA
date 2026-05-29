@@ -10,7 +10,7 @@
   </module-checks>
   <scenarios>
     <scenario-1 kind="success">Canonical repository metadata points to anyagixx/MAGRA.</scenario-1>
-    <scenario-2 kind="success">Branch main and tag v0.1.0 are the release publication targets.</scenario-2>
+    <scenario-2 kind="success">Branch main and the current SemVer tag are the release publication targets.</scenario-2>
     <scenario-3 kind="failure">Release metadata points to esengine/MAGRA as the canonical MAGRA repository.</scenario-3>
   </scenarios>
   <required-log-markers>

@@ -13,7 +13,7 @@
   <interfaces>
     <interface-1>README.md Install section</interface-1>
     <interface-2>package.json repository, bugs, homepage, files, and version</interface-2>
-    <interface-3>CHANGELOG.md v0.1.0 entry</interface-3>
+    <interface-3>CHANGELOG.md current MAGRA release entry</interface-3>
   </interfaces>
   <invariants>
     <invariant-1>The one-command GitHub installer is the first documented install path.</invariant-1>

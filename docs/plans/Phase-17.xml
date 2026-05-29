@@ -1,0 +1,17 @@
+<Phase-17 NAME="MyGraceSkillAssetHotfix" STATUS="done">
+  <purpose>Fix installed web chat MyGRACE skill execution by packaging skill body markdown beside runtime bundles.</purpose>
+  <modules>
+    <module-1>M-MYGRACE-SKILL-ASSETS</module-1>
+    <module-2>M-MYGRACE-SKILLS</module-2>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Reproduce missing `dist/cli/skill-bodies/init.md` path from installed `/mygrace:init` error.</step-1>
+    <step-2 STATUS="done">Copy MyGRACE skill bodies to both library and CLI bundle-relative asset directories.</step-2>
+    <step-3 STATUS="done">Add bundle smoke coverage for skill body asset placement and runtime loading.</step-3>
+    <step-4 STATUS="done">Run build, focused tests, MyGRACE lint, lint, typecheck, and package dry-run.</step-4>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MYGRACE-SKILL-ASSETS</verification-1>
+    <verification-2>V-M-MYGRACE-SKILLS</verification-2>
+  </verification-refs>
+</Phase-17>

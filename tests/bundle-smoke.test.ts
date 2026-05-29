@@ -1,7 +1,24 @@
-/** Post-build smoke — confirm bundled `dist/{index,cli/index}.js` resolves the tokenizer data file at package-root. */
+// === MODULE_CONTRACT ===
+// FILE: tests/bundle-smoke.test.ts
+// VERSION: 1.0.0
+// PURPOSE: Verify compiled MAGRA bundles resolve runtime assets after build.
+// SCOPE: Tokenizer data, CLI runtime dependency inlining, and MyGRACE skill body asset placement.
+// DEPENDS: M-REASONIX-BASE,M-MYGRACE-SKILL-ASSETS
+// LINKS: docs/verification/V-M-MYGRACE-SKILL-ASSETS.xml
+// ROLE: TEST
+// MAP_MODE: LOCALS
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Locals: bundle path constants, tokenizer smoke checks, dependency inlining check, MyGRACE skill body asset check
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added MyGRACE governance metadata and bundled MyGRACE skill body asset coverage.
+// === END_CHANGE_SUMMARY ===
 
 import { spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -94,4 +111,49 @@ describe("bundled dist — tokenizer path resolution", () => {
     // ECONNREFUSED or fetch failure, never ENOENT).
     expect(combined).not.toMatch(/ENOENT.*tokenizer/i);
   });
+
+  (libExists && cliExists ? it : it.skip)(
+    "bundles MyGRACE skill bodies beside both library and CLI runtime files",
+    () => {
+      // === START_BLOCK_ASSERT_MYGRACE_SKILL_BODIES ===
+      const libSkillDir = resolve("dist/skill-bodies");
+      const cliSkillDir = resolve("dist/cli/skill-bodies");
+      const expected = [
+        "ask.md",
+        "cli.md",
+        "execute.md",
+        "explainer.md",
+        "fix.md",
+        "init.md",
+        "multiagent.md",
+        "plan.md",
+        "refactor.md",
+        "refresh.md",
+        "reviewer.md",
+        "setup-subagents.md",
+        "status.md",
+        "verification.md",
+      ];
+
+      expect(readdirSync(libSkillDir).sort()).toEqual(expected);
+      expect(readdirSync(cliSkillDir).sort()).toEqual(expected);
+
+      const libUrl = pathToFileURL(LIB_BUNDLE).href;
+      const result = spawnSync(
+        "node",
+        [
+          "--input-type=module",
+          "-e",
+          `import { loadMyGraceSkillBody } from "${libUrl}";
+           const body = loadMyGraceSkillBody("init");
+           console.log(body.includes("name: mygrace-init") ? "ok" : "missing");`,
+        ],
+        { encoding: "utf8", timeout: 30_000 },
+      );
+      expect(result.status).toBe(0);
+      expect(result.stderr).not.toMatch(/ENOENT/);
+      expect(result.stdout.trim()).toBe("ok");
+      // === END_BLOCK_ASSERT_MYGRACE_SKILL_BODIES ===
+    },
+  );
 });

@@ -20,6 +20,7 @@ Initial MAGRA release readiness checklist.
 Added Phase-10 governance metadata for release checklist linting.
 Updated Phase-11 MAGRA-first package metadata and release surface checks.
 Added Phase-14 GitHub installer checks for v0.1.0.
+Updated current release checks for the v0.1.1 MyGRACE skill asset hotfix.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Release Checklist
@@ -27,7 +28,7 @@ Added Phase-14 GitHub installer checks for v0.1.0.
 ## Preflight
 
 - Confirm `package.json` name is `magra` and binaries include `magra`.
-- Confirm `package.json` version is `0.1.0` for the first standalone MAGRA release.
+- Confirm `package.json` version matches the current MAGRA release tag.
 - Confirm `package.json` repository, bugs, and homepage point to MAGRA release surfaces.
 - Confirm `reasonix` and `dsnix` bins are documented only as compatibility aliases.
 - Confirm `NOTICE.md` and `CHANGELOG.md` are included in package files.
