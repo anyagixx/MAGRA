@@ -23,6 +23,7 @@ import { describe, expect, it } from "vitest";
 
 interface PackageMetadata {
   name: string;
+  version: string;
   description: string;
   bin: Record<string, string>;
   repository: { type: string; url: string };
@@ -59,6 +60,10 @@ describe("MAGRA release surface", () => {
   it("uses MAGRA-first install and quickstart commands in README", () => {
     // === START_BLOCK_ASSERT_README_INSTALL ===
     const readme = readText("README.md");
+    expect(readme).toContain(
+      "curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash",
+    );
+    expect(readme).toContain("MAGRA_REF=v0.1.0");
     expect(readme).toContain("npm install -g magra");
     expect(readme).toContain("magra code my-project");
     expect(readme).toContain("npx magra@latest code");
@@ -73,10 +78,11 @@ describe("MAGRA release surface", () => {
     // === START_BLOCK_ASSERT_PACKAGE_METADATA ===
     const pkg = readPackage();
     expect(pkg.name).toBe("magra");
+    expect(pkg.version).toBe("0.1.0");
     expect(pkg.description).toMatch(/^MAGRA:/);
-    expect(pkg.repository.url).toBe("git+https://github.com/esengine/MAGRA.git");
-    expect(pkg.bugs.url).toBe("https://github.com/esengine/MAGRA/issues");
-    expect(pkg.homepage).toBe("https://github.com/esengine/MAGRA#readme");
+    expect(pkg.repository.url).toBe("git+https://github.com/anyagixx/MAGRA.git");
+    expect(pkg.bugs.url).toBe("https://github.com/anyagixx/MAGRA/issues");
+    expect(pkg.homepage).toBe("https://github.com/anyagixx/MAGRA#readme");
     expect(pkg.repository.url).not.toMatch(/DeepSeek-Reasonix|reasonix/i);
     expect(pkg.bugs.url).not.toMatch(/DeepSeek-Reasonix|reasonix/i);
     expect(pkg.homepage).not.toMatch(/DeepSeek-Reasonix|reasonix/i);
@@ -86,7 +92,13 @@ describe("MAGRA release surface", () => {
       dsnix: "dist/cli/index.js",
     });
     expect(pkg.files).toEqual(
-      expect.arrayContaining(["README.md", "CHANGELOG.md", "NOTICE.md", "LICENSE"]),
+      expect.arrayContaining([
+        "README.md",
+        "CHANGELOG.md",
+        "NOTICE.md",
+        "LICENSE",
+        "scripts/install.sh",
+      ]),
     );
     // === END_BLOCK_ASSERT_PACKAGE_METADATA ===
   });
@@ -111,10 +123,13 @@ describe("MAGRA release surface", () => {
     const checklist = readText("docs/release/MAGRA-release-checklist.md");
     const operatorFlows = readText("docs/operations/MAGRA-operator-flows.md");
     const notice = readText("NOTICE.md");
+    const changelog = readText("CHANGELOG.md");
     expect(checklist).toContain("repository, bugs, and homepage point to MAGRA");
     expect(checklist).toContain("README.md` install and quickstart commands use `magra");
+    expect(checklist).toContain("scripts/install.sh --dry-run");
     expect(operatorFlows).toContain(".magra/snarc/memory.sqlite");
     expect(notice).toContain("DeepSeek-Reasonix / Reasonix base runtime");
+    expect(changelog).toContain("## [0.1.0] - 2026-05-29");
     // === END_BLOCK_ASSERT_RELEASE_DOCS ===
   });
 });

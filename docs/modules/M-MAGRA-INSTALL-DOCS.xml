@@ -1,0 +1,29 @@
+<M-MAGRA-INSTALL-DOCS NAME="MagraInstallDocs" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Document the GitHub-first MAGRA install path and release metadata.</purpose>
+    <scope>README install section, package repository metadata, badges, package files, and release notes.</scope>
+    <source-path>README.md</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-INSTALL-DOCS</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-INSTALL-SCRIPT</dependency-1>
+    <dependency-2>M-MAGRA-RELEASE-SURFACE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>README.md Install section</interface-1>
+    <interface-2>package.json repository, bugs, homepage, files, and version</interface-2>
+    <interface-3>CHANGELOG.md v0.1.0 entry</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>The one-command GitHub installer is the first documented install path.</invariant-1>
+    <invariant-2>npm usage remains secondary until an npm MAGRA publish is performed.</invariant-2>
+    <invariant-3>Release docs preserve upstream attribution while naming MAGRA as the product.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-INSTALL-DOCS" to="M-MAGRA-INSTALL-SCRIPT" relation="documents" />
+  <CrossLink from="M-MAGRA-INSTALL-DOCS" to="M-MAGRA-RELEASE-SURFACE" relation="extends" />
+  <evidence>
+    <command-1 RESULT="passed">rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts</command-1>
+    <command-2 RESULT="passed">rtk npm pack --dry-run</command-2>
+  </evidence>
+</M-MAGRA-INSTALL-DOCS>

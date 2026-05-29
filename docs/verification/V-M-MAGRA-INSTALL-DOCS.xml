@@ -1,0 +1,19 @@
+<V-M-MAGRA-INSTALL-DOCS MODULE="M-MAGRA-INSTALL-DOCS" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+    <file-2>README.md</file-2>
+    <file-3>CHANGELOG.md</file-3>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk npm pack --dry-run</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">README shows the GitHub install command before npm install examples.</scenario-1>
+    <scenario-2 kind="success">package.json uses version 0.1.0 and anyagixx/MAGRA URLs.</scenario-2>
+    <scenario-3 kind="failure">README documents an unqualified reasonix install command.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseVerification][installDocs][BLOCK_ASSERT_README]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-INSTALL-DOCS>

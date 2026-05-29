@@ -1,6 +1,6 @@
 {
   "name": "magra",
-  "version": "0.52.0",
+  "version": "0.1.0",
   "description": "MAGRA: AI coding agent with MyGRACE workflows, RTK shell compression, SNARC memory, and Reasonix compatibility.",
   "type": "module",
   "bin": {
@@ -24,6 +24,7 @@
     "dashboard/app.css",
     "dashboard/dist",
     "patches",
+    "scripts/install.sh",
     "scripts/postinstall.mjs",
     "README.md",
     "CHANGELOG.md",
@@ -77,12 +78,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/esengine/MAGRA.git"
+    "url": "git+https://github.com/anyagixx/MAGRA.git"
   },
   "bugs": {
-    "url": "https://github.com/esengine/MAGRA/issues"
+    "url": "https://github.com/anyagixx/MAGRA/issues"
   },
-  "homepage": "https://github.com/esengine/MAGRA#readme",
+  "homepage": "https://github.com/anyagixx/MAGRA#readme",
   "engines": {
     "node": ">=22"
   },

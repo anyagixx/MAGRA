@@ -12,4 +12,8 @@
   <Phase-10 NAME="MyGraceGovernanceLint" STATUS="done" STEPS="5" />
   <Phase-11 NAME="MagraReleaseSurface" STATUS="done" STEPS="5" />
   <Phase-12 NAME="Dogfooding" STATUS="done" STEPS="6" />
+  <Phase-13 NAME="GitHubReleasePrep" STATUS="done" STEPS="5" />
+  <Phase-14 NAME="OneCommandInstall" STATUS="done" STEPS="5" />
+  <Phase-15 NAME="ReleaseVerification" STATUS="done" STEPS="5" />
+  <Phase-16 NAME="FirstGitHubRelease" STATUS="done" STEPS="5" />
 </PlanIndex>

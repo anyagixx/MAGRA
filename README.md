@@ -19,6 +19,7 @@ Sections: MAGRA overview, install, command surface, web interface, configuration
 Initial MAGRA top-level documentation identity with upstream Reasonix attribution.
 Added Phase-10 governance metadata so release surface drift is linted.
 Rewrote Phase-11 release surface so README is MAGRA-first and keeps Reasonix only as upstream/compatibility context.
+Added Phase-14 GitHub one-command installer and v0.1.0 release metadata.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA
@@ -33,7 +34,7 @@ MAGRA is a local-first AI coding agent for pet projects and serious experiments.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/magra"><img src="https://img.shields.io/npm/v/magra.svg?style=flat-square&color=cb3837&labelColor=161b22&logo=npm&logoColor=white" alt="npm version"/></a>
-  <a href="https://github.com/esengine/MAGRA/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/esengine/MAGRA/ci.yml?style=flat-square&label=ci&labelColor=161b22&logo=githubactions&logoColor=white" alt="CI"/></a>
+  <a href="https://github.com/anyagixx/MAGRA/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/anyagixx/MAGRA/ci.yml?style=flat-square&label=ci&labelColor=161b22&logo=githubactions&logoColor=white" alt="CI"/></a>
   <a href="./LICENSE"><img src="https://img.shields.io/npm/l/magra.svg?style=flat-square&color=8b949e&labelColor=161b22" alt="license"/></a>
   <a href="./package.json"><img src="https://img.shields.io/node/v/magra.svg?style=flat-square&color=5fa04e&labelColor=161b22&logo=nodedotjs&logoColor=white" alt="node"/></a>
 </p>
@@ -48,14 +49,30 @@ MAGRA is a local-first AI coding agent for pet projects and serious experiments.
 
 ## Install
 
-Requires Node 22 or newer. Works on macOS, Linux, and Windows terminals.
+Requires Node 22 or newer, git, and npm. Works on macOS, Linux, and Windows terminals with Bash.
+
+Install directly from the MAGRA GitHub repository:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+```
+
+Install a pinned release:
+
+```bash
+MAGRA_REF=v0.1.0 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+```
+
+The installer clones or updates MAGRA in `~/.magra/repo`, builds it, and creates a local `magra` shim in `~/.local/bin`. It does not use `sudo`.
+
+For npm installs after the package is published:
 
 ```bash
 npm install -g magra
 magra code my-project
 ```
 
-Or run without a global install:
+Or run from npm without a global install:
 
 ```bash
 cd my-project

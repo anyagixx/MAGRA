@@ -1,0 +1,25 @@
+<V-M-MAGRA-RELEASE-VERIFICATION MODULE="M-MAGRA-RELEASE-VERIFICATION" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>docs/release/verification-report.md</file-1>
+    <file-2>tests/magra-install-script.test.ts</file-2>
+    <file-3>tests/magra-release-surface.test.ts</file-3>
+  </test-files>
+  <module-checks>
+    <check-1>rtk bash scripts/install.sh --dry-run</check-1>
+    <check-2>rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts</check-2>
+    <check-3>rtk mygrace lint --path .</check-3>
+    <check-4>rtk npm run lint</check-4>
+    <check-5>rtk npm run typecheck</check-5>
+    <check-6>rtk npm run build</check-6>
+    <check-7>rtk npm test</check-7>
+    <check-8>rtk npm pack --dry-run</check-8>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">All release commands pass before commit, tag, and push.</scenario-1>
+    <scenario-2 kind="success">Package preview is magra-0.1.0.tgz.</scenario-2>
+    <scenario-3 kind="failure">Any installer, package, lint, typecheck, build, or test failure blocks the release tag.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseVerification][fullSuite][BLOCK_RELEASE_GATE]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-RELEASE-VERIFICATION>

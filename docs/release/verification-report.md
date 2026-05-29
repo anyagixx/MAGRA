@@ -1,10 +1,10 @@
 <!-- === MODULE_CONTRACT ===
 FILE: docs/release/verification-report.md
 VERSION: 1.0.0
-PURPOSE: Record MAGRA release and dogfooding verification evidence.
-SCOPE: Commands, outcomes, and known non-blocking warnings for release hardening, release surface checks, and dogfooding readiness.
-DEPENDS: M-OBSERVABILITY-VERIFICATION,M-MAGRA-RELEASE-SURFACE,M-MAGRA-DOGFOODING-HARNESS
-LINKS: docs/plans/Phase-6.xml,docs/plans/Phase-11.xml,docs/plans/Phase-12.xml
+PURPOSE: Record MAGRA release, installer, publication, and dogfooding verification evidence.
+SCOPE: Commands, outcomes, and known non-blocking warnings for release hardening, release surface checks, installer readiness, GitHub publication, and dogfooding readiness.
+DEPENDS: M-OBSERVABILITY-VERIFICATION,M-MAGRA-RELEASE-SURFACE,M-MAGRA-DOGFOODING-HARNESS,M-MAGRA-RELEASE-VERIFICATION
+LINKS: docs/plans/Phase-6.xml,docs/plans/Phase-11.xml,docs/plans/Phase-12.xml,docs/plans/Phase-15.xml
 ROLE: VERIFICATION
 MAP_MODE: DOCUMENT
 START_MODULE_CONTRACT
@@ -20,6 +20,7 @@ Initial Phase-6 MAGRA verification evidence.
 Added Phase-10 governance metadata for release verification linting.
 Updated Phase-11 release surface verification evidence.
 Updated Phase-12 dogfooding verification evidence.
+Added Phase-15 v0.1.0 installer and release verification evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -29,6 +30,8 @@ Date: 2026-05-29
 ## Commands
 
 ```bash
+rtk bash scripts/install.sh --dry-run
+rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts
 rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts
 rtk npm test -- tests/magra-dogfooding-smoke.test.ts
 rtk mygrace lint --path .
@@ -42,13 +45,15 @@ rtk npm pack --dry-run
 ## Results
 
 - `rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts`: passed.
+- `rtk bash scripts/install.sh --dry-run`: passed.
+- `rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 2 test files and 9 tests passed.
 - `rtk npm test -- tests/magra-dogfooding-smoke.test.ts`: passed.
 - `rtk mygrace lint --path .`: passed with 0 errors and 0 warnings.
 - `rtk npm run lint`: passed.
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
-- `rtk npm test`: passed, 319 test files, 3966 tests passed, 9 skipped.
-- `rtk npm pack --dry-run`: passed, package artifact preview `magra-0.52.0.tgz`.
+- `rtk npm test`: passed, 320 test files, 3971 tests passed, 9 skipped.
+- `rtk npm pack --dry-run`: passed, package artifact preview `magra-0.1.0.tgz`.
 
 ## Known Warning
 

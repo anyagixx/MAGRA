@@ -18,12 +18,19 @@ Sections: MAGRA integration entries, inherited upstream release history, upstrea
 <!-- === CHANGE_SUMMARY ===
 Initial MAGRA changelog wrapper around upstream Reasonix history.
 Added Phase-11 MAGRA release-surface documentation entry.
+Added MAGRA v0.1.0 GitHub installer and release publication entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2026-05-29
+
+**First MAGRA release.** MAGRA now has a standalone `v0.1.0` release target, canonical GitHub repository metadata for `anyagixx/MAGRA`, and release documentation for the `main` branch plus annotated tag flow.
+
+**One-command GitHub install.** Added `scripts/install.sh` so MAGRA can be installed directly from the repository with `curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash`. The installer checks git, npm, Node 22, supports `MAGRA_REF`, updates existing clones, builds locally, and writes a user-local `magra` shim without sudo.
 
 ## [MAGRA release surface] - 2026-05-29
 

@@ -1,0 +1,19 @@
+<V-M-MAGRA-GITHUB-RELEASE MODULE="M-MAGRA-GITHUB-RELEASE" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-release-surface.test.ts</file-1>
+    <file-2>docs/release/MAGRA-github-release.md</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/magra-release-surface.test.ts</check-1>
+    <check-2>rtk git remote -v</check-2>
+    <check-3>rtk git ls-remote https://github.com/anyagixx/MAGRA.git</check-3>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Canonical repository metadata points to anyagixx/MAGRA.</scenario-1>
+    <scenario-2 kind="success">Branch main and tag v0.1.0 are the release publication targets.</scenario-2>
+    <scenario-3 kind="failure">Release metadata points to esengine/MAGRA as the canonical MAGRA repository.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[ReleaseVerification][githubRelease][BLOCK_VALIDATE_REMOTE]</marker-1>
+  </required-log-markers>
+</V-M-MAGRA-GITHUB-RELEASE>

@@ -1,0 +1,32 @@
+<M-MAGRA-GITHUB-RELEASE NAME="MagraGithubRelease" TYPE="INTEGRATION" STATUS="done">
+  <contract>
+    <purpose>Bind MAGRA release operations to the official anyagixx/MAGRA GitHub repository.</purpose>
+    <scope>Remote URL, main branch naming, v0.1.0 tag flow, release notes, and publication checklist.</scope>
+    <source-path>docs/release/MAGRA-github-release.md</source-path>
+    <test-path>tests/magra-release-surface.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-GITHUB-RELEASE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-RELEASE-SURFACE</dependency-1>
+    <dependency-2>M-RELEASE-HARDENING</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>https://github.com/anyagixx/MAGRA.git</interface-1>
+    <interface-2>main branch</interface-2>
+    <interface-3>v0.1.0 annotated tag</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Canonical MAGRA repository URLs point to anyagixx/MAGRA.</invariant-1>
+    <invariant-2>Release tags use SemVer with a leading v prefix.</invariant-2>
+    <invariant-3>SOURCES/ remains local reference material and is never part of release commits.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-GITHUB-RELEASE" to="M-MAGRA-RELEASE-SURFACE" relation="publishes" />
+  <CrossLink from="M-MAGRA-GITHUB-RELEASE" to="M-RELEASE-HARDENING" relation="uses" />
+  <evidence>
+    <command-1 RESULT="publication-step">rtk git remote add origin https://github.com/anyagixx/MAGRA.git</command-1>
+    <command-2 RESULT="publication-step">rtk git branch -M main</command-2>
+    <command-3 RESULT="publication-step">rtk git push -u origin main</command-3>
+    <command-4 RESULT="publication-step">rtk git tag -a v0.1.0 -m "MAGRA v0.1.0"</command-4>
+    <command-5 RESULT="publication-step">rtk git push origin v0.1.0</command-5>
+  </evidence>
+</M-MAGRA-GITHUB-RELEASE>

@@ -1,0 +1,19 @@
+<V-M-MAGRA-INSTALL-SCRIPT MODULE="M-MAGRA-INSTALL-SCRIPT" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/magra-install-script.test.ts</file-1>
+    <file-2>scripts/install.sh</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk bash scripts/install.sh --dry-run</check-1>
+    <check-2>rtk npm test -- tests/magra-install-script.test.ts</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Dry-run prints clone, checkout, npm ci, build, and shim actions without writing install files.</scenario-1>
+    <scenario-2 kind="success">Existing clone uses git fetch and ref checkout instead of duplicate clone.</scenario-2>
+    <scenario-3 kind="failure">Missing git, npm, or Node 22 exits before modifying the install directory.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[MagraInstallScript][main][BLOCK_VALIDATE_TOOLS]</marker-1>
+    <marker-2>[MagraInstallScript][installShim][BLOCK_WRITE_SHIM]</marker-2>
+  </required-log-markers>
+</V-M-MAGRA-INSTALL-SCRIPT>

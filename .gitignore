@@ -32,6 +32,8 @@ sessions/
 .reasonix/sessions/
 .reasonix/semantic-skip
 .reasonix/truncated-results/
+# Per-user MAGRA runtime state, including SNARC SQLite memory.
+.magra/
 # Scratch entry regenerated each time scripts/bundle-codemirror.mjs runs.
 scripts/.cm-entry.mjs
 # Personal bun lockfile — project uses npm officially.
@@ -48,6 +50,8 @@ desktop/src-tauri/binaries/
 
 # Design mock-up reference (local, not part of repo)
 .design-ref/
+# Integrated source-reference checkouts are local analysis inputs, not release artifacts.
+SOURCES/
 *.cpuprofile
 
 .probe-snapshots/

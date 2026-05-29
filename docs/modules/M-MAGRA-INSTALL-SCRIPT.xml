@@ -1,0 +1,29 @@
+<M-MAGRA-INSTALL-SCRIPT NAME="MagraInstallScript" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Install MAGRA from the GitHub repository with one auditable shell command.</purpose>
+    <scope>Dependency checks, clone/update, selected ref checkout, build, local bin shim, dry-run, and PATH guidance.</scope>
+    <source-path>scripts/install.sh</source-path>
+    <test-path>tests/magra-install-script.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-INSTALL-SCRIPT</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-GITHUB-RELEASE</dependency-1>
+    <dependency-2>M-MAGRA-RUNTIME-IDENTITY</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash</interface-1>
+    <interface-2>MAGRA_REF, MAGRA_INSTALL_DIR, MAGRA_BIN_DIR, MAGRA_REPO_URL environment overrides</interface-2>
+    <interface-3>scripts/install.sh --dry-run</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>The installer never requires sudo.</invariant-1>
+    <invariant-2>Node 22, npm, and git are checked before modifying the installation directory.</invariant-2>
+    <invariant-3>Repeated runs update the existing clone instead of creating duplicate installs.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-INSTALL-SCRIPT" to="M-MAGRA-GITHUB-RELEASE" relation="downloads-from" />
+  <CrossLink from="M-MAGRA-INSTALL-SCRIPT" to="M-MAGRA-RUNTIME-IDENTITY" relation="installs" />
+  <evidence>
+    <command-1 RESULT="passed">rtk bash scripts/install.sh --dry-run</command-1>
+    <command-2 RESULT="passed">rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts</command-2>
+  </evidence>
+</M-MAGRA-INSTALL-SCRIPT>

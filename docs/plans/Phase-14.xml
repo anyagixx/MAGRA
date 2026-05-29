@@ -1,0 +1,18 @@
+<Phase-14 NAME="OneCommandInstall" STATUS="done">
+  <purpose>Add a one-command GitHub installer for MAGRA.</purpose>
+  <modules>
+    <module-1>M-MAGRA-INSTALL-SCRIPT</module-1>
+    <module-2>M-MAGRA-INSTALL-DOCS</module-2>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Create scripts/install.sh with dependency checks for git, npm, and Node 22.</step-1>
+    <step-2 STATUS="done">Clone or update https://github.com/anyagixx/MAGRA.git into the local MAGRA install directory.</step-2>
+    <step-3 STATUS="done">Support MAGRA_REF, MAGRA_INSTALL_DIR, MAGRA_BIN_DIR, MAGRA_REPO_URL, and --dry-run.</step-3>
+    <step-4 STATUS="done">Build MAGRA and create a local magra command shim without sudo.</step-4>
+    <step-5 STATUS="done">Document the curl-to-bash installer as the first README install path.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MAGRA-INSTALL-SCRIPT</verification-1>
+    <verification-2>V-M-MAGRA-INSTALL-DOCS</verification-2>
+  </verification-refs>
+</Phase-14>

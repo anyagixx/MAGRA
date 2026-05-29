@@ -1,0 +1,18 @@
+<Phase-13 NAME="GitHubReleasePrep" STATUS="done">
+  <purpose>Prepare MAGRA for its first GitHub release from the official anyagixx/MAGRA repository.</purpose>
+  <modules>
+    <module-1>M-MAGRA-GITHUB-RELEASE</module-1>
+    <module-2>M-MAGRA-INSTALL-DOCS</module-2>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Set canonical repository, bugs, homepage, and README badge URLs to anyagixx/MAGRA.</step-1>
+    <step-2 STATUS="done">Set the MAGRA package version to 0.1.0 for the first standalone product release.</step-2>
+    <step-3 STATUS="done">Document branch main and annotated tag v0.1.0 as the release publication path.</step-3>
+    <step-4 STATUS="done">Preserve Reasonix links only as upstream attribution or compatibility context.</step-4>
+    <step-5 STATUS="done">Exclude SOURCES/ from release operations.</step-5>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MAGRA-GITHUB-RELEASE</verification-1>
+    <verification-2>V-M-MAGRA-INSTALL-DOCS</verification-2>
+  </verification-refs>
+</Phase-13>

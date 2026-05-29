@@ -1,0 +1,36 @@
+<M-MAGRA-RELEASE-VERIFICATION NAME="MagraReleaseVerification" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Gate the v0.1.0 release on install, metadata, build, package, and full-suite verification.</purpose>
+    <scope>Release verification report, command evidence, known warnings, and publication readiness criteria.</scope>
+    <source-path>docs/release/verification-report.md</source-path>
+    <test-path>tests/magra-install-script.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-RELEASE-VERIFICATION</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-GITHUB-RELEASE</dependency-1>
+    <dependency-2>M-MAGRA-INSTALL-SCRIPT</dependency-2>
+    <dependency-3>M-MAGRA-INSTALL-DOCS</dependency-3>
+  </dependencies>
+  <interfaces>
+    <interface-1>docs/release/verification-report.md command matrix</interface-1>
+    <interface-2>rtk npm test full-suite evidence</interface-2>
+    <interface-3>rtk npm pack --dry-run package preview</interface-3>
+  </interfaces>
+  <invariants>
+    <invariant-1>Release verification includes the install script dry-run.</invariant-1>
+    <invariant-2>Full tests pass before pushing the release tag.</invariant-2>
+    <invariant-3>Known build warnings are recorded and non-blocking only when unchanged.</invariant-3>
+  </invariants>
+  <CrossLink from="M-MAGRA-RELEASE-VERIFICATION" to="M-MAGRA-INSTALL-SCRIPT" relation="verifies" />
+  <CrossLink from="M-MAGRA-RELEASE-VERIFICATION" to="M-MAGRA-GITHUB-RELEASE" relation="gates" />
+  <evidence>
+    <command-1 RESULT="passed">rtk bash scripts/install.sh --dry-run</command-1>
+    <command-2 RESULT="passed">rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts</command-2>
+    <command-3 RESULT="passed">rtk mygrace lint --path .</command-3>
+    <command-4 RESULT="passed">rtk npm run lint</command-4>
+    <command-5 RESULT="passed">rtk npm run typecheck</command-5>
+    <command-6 RESULT="passed">rtk npm run build</command-6>
+    <command-7 RESULT="passed">rtk npm test</command-7>
+    <command-8 RESULT="passed">rtk npm pack --dry-run</command-8>
+  </evidence>
+</M-MAGRA-RELEASE-VERIFICATION>
