@@ -2134,11 +2134,12 @@ function TabRuntime({
     {
       cmd: "/feedback",
       desc: t("app.cmd.feedback"),
-      run: () => {
-        void openUrl("https://github.com/esengine/DeepSeek-Reasonix/issues/new/choose").catch(
-          () => undefined,
-        );
-      },
+        run: () => {
+          void openUrl("https://github.com/anyagixx/MAGRA/issues/new/choose").catch(
+            () => undefined,
+          );
+        },
+
     },
     {
       cmd: "/compact",

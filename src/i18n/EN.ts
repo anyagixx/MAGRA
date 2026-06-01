@@ -1,3 +1,25 @@
+// === MODULE_CONTRACT ===
+// FILE: src/i18n/EN.ts
+// VERSION: 1.0.0
+// PURPOSE: Define English runtime copy for MAGRA CLI, TUI, dashboard, slash help, and operator flows.
+// SCOPE: User-visible English strings for commands, prompts, warnings, memory/help flows, and product identity surfaces.
+// DEPENDS: M-MAGRA-BRANDING-CLEANUP,M-REASONIX-BASE
+// LINKS: docs/modules/M-MAGRA-BRANDING-CLEANUP.xml
+// ROLE: I18N
+// MAP_MODE: OBJECT
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: EN translation object
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Reworded primary English product identity strings from Reasonix-first to MAGRA-first copy.
+// Added memory/help wording updates for current attachment and cleanup waves.
+// === END_CHANGE_SUMMARY ===
+
 import type { TranslationSchema } from "./types.js";
 
 export const EN: TranslationSchema = {
@@ -30,8 +52,8 @@ export const EN: TranslationSchema = {
     replay: "Interactive Ink TUI to scrub through a transcript.",
     diff: "Compare two transcripts in a split-pane Ink TUI.",
     mcp: "Model Context Protocol helpers — discover servers, test your setup.",
-    version: "Print Reasonix version.",
-    update: "Check for a newer Reasonix and install it.",
+    version: "Print MAGRA version.",
+    update: "Check for a newer MAGRA and install it.",
     index: "Build (or incrementally refresh) a local semantic search index.",
   },
   stats: {
@@ -41,14 +63,14 @@ export const EN: TranslationSchema = {
   run: {
     missingApiKey:
       "DEEPSEEK_API_KEY is not set and stdin is not a TTY (cannot prompt).\n" +
-      "Set the env var, or run `reasonix chat` once interactively to save a key.\n",
+      "Set the env var, or run `magra chat` once interactively to save a key.\n",
   },
   sessions: {
     emptyHint:
-      "no saved sessions yet — run `reasonix chat` (sessions are auto-saved unless --no-session).",
-    listHeader: "Saved sessions (~/.reasonix/sessions/):",
-    inspectHint: "Inspect:  reasonix sessions <name>",
-    resumeHint: "Resume:   reasonix chat --session <name>",
+      "no saved sessions yet — run `magra chat` (sessions are auto-saved unless --no-session).",
+    listHeader: "Saved sessions (~/.magra/sessions/):",
+    inspectHint: "Inspect:  magra sessions <name>",
+    resumeHint: "Resume:   magra chat --session <name>",
     noSession: 'no session named "{name}" (or it\u2019s empty).',
     lookedAt: "looked at: {path}",
     noIdleSessions: "no sessions idle \u2265{days} days. Nothing pruned.",
@@ -58,7 +80,7 @@ export const EN: TranslationSchema = {
     daysInvalid: "--days must be a positive integer (got {days}).",
   },
   ui: {
-    welcome: "Run `reasonix` any time to start chatting — your settings are remembered.",
+    welcome: "Run `magra` any time to start chatting — your settings are remembered.",
     taglineChat: "DeepSeek-native agent",
     taglineCode: "DeepSeek-native coding agent",
     taglineSub: "cache-first · flash-first",
@@ -128,7 +150,7 @@ export const EN: TranslationSchema = {
       footer: "Run /keys for the full keyboard + mouse reference",
     },
     keysReference: {
-      topic: "Reasonix keys + mouse reference",
+      topic: "MAGRA keys + mouse reference",
       sections: [
         {
           title: "keyboard",
@@ -431,7 +453,7 @@ export const EN: TranslationSchema = {
   wizard: {
     languageTitle: "Choose your language",
     languageSubtitle: "Detected from your system locale. Switch later via /language.",
-    welcomeTitle: "Welcome to Reasonix.",
+    welcomeTitle: "Welcome to MAGRA.",
     apiKeyPrompt: "Paste your DeepSeek API key to get started.",
     apiKeyGetOne: "Get one at: https://platform.deepseek.com/api_keys",
     apiKeySavedLocally: "Saved locally to {path}",
@@ -455,7 +477,7 @@ export const EN: TranslationSchema = {
       "high-contrast": "Accessibility",
     },
     reviewLabelTheme: "Theme",
-    mcpTitle: "Which MCP servers should Reasonix wire up for you?",
+    mcpTitle: "Which MCP servers should MAGRA wire up for you?",
     mcpUserArgsHint: "(you'll provide {arg})",
     mcpFooterMulti:
       "[↑↓] navigate  ·  [Space] toggle  ·  [Enter] confirm  ·  [Esc] cancel  ·  empty = skip",
@@ -803,7 +825,7 @@ export const EN: TranslationSchema = {
       loopStarted:
         '▸ loop started — re-submitting "{prompt}" every {duration}. Type anything (or /loop stop) to cancel.',
       keysNeedsTui: "/keys needs a TUI context (postKeys wired).",
-      aboutHeader: "Reasonix v{version} — a cache-first DeepSeek coding agent",
+      aboutHeader: "MAGRA v{version} — a cache-first coding agent with MyGRACE, RTK, and SNARC",
       aboutWebsiteLabel: "Website",
       aboutRepoLabel: "GitHub ",
       aboutLicenseLabel: "License",
@@ -1133,9 +1155,9 @@ export const EN: TranslationSchema = {
     },
     memory: {
       disabled:
-        "memory is disabled (REASONIX_MEMORY=off in env). Unset the var to re-enable — no REASONIX.md or ~/.reasonix/memory content will be pinned in the meantime.",
+        "memory is disabled (MAGRA_MEMORY=off in env). Unset the var to re-enable — no MAGRA.md or ~/.reasonix/memory content will be pinned in the meantime.",
       noRoot:
-        "no working directory on this session — `/memory` needs a root to resolve REASONIX.md from. (Running in a test harness?)",
+        "no working directory on this session — `/memory` needs a root to resolve MAGRA.md from. (Running in a test harness?)",
       listEmpty:
         "no user memories yet. The model can call `remember` to save one, or you can create files by hand in ~/.reasonix/memory/global/ or the per-project subdir.",
       listHeader: "User memories ({count}):",
@@ -1191,11 +1213,11 @@ export const EN: TranslationSchema = {
     init: {
       codeOnly:
         "/init only works in code mode (it needs filesystem tools).\nRun `reasonix code [path]` to start a session rooted at the\nproject you want to initialize, then run /init.",
-      exists: "▸ REASONIX.md already exists at {path}",
+      exists: "▸ MAGRA.md already exists at {path}",
       existsForce: "  /init force   regenerate from scratch (overwrites)",
       existsEdit: "  Or edit it by hand — it's just markdown. The current file is",
       existsPinned: "  pinned into the system prompt every launch as-is.",
-      info: "▸ /init — model will scan the project and synthesize REASONIX.md.\n  The result lands as a pending edit; review with /apply or /walk.",
+      info: "▸ /init — model will scan the project and synthesize MAGRA.md.\n  The result lands as a pending edit; review with /apply or /walk.",
     },
     webSearchEngine: {
       currentEngine: "Current web search engine: {engine}",

@@ -1,4 +1,4 @@
-/** Reasonix — DeepSeek-native agent framework. Library entry point. */
+/** MAGRA — local-first AI coding agent runtime. Library entry point. */
 
 export { DeepSeekClient, Usage } from "./client.js";
 export type { ChatResponse, StreamChunk, DeepSeekClientOptions } from "./client.js";

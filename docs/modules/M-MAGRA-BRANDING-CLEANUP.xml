@@ -1,0 +1,18 @@
+<M-MAGRA-BRANDING-CLEANUP NAME="MagraBrandingCleanup" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Remove accidental Reasonix branding drift from MAGRA user-facing runtime and dashboard surfaces.</purpose>
+    <scope>CLI text, dashboard about/feedback links, source banners, and related release-surface tests.</scope>
+    <source-path>src/i18n/EN.ts</source-path>
+    <test-path>tests/feedback.test.ts</test-path>
+    <verification-ref>V-M-MAGRA-BRANDING-CLEANUP</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-MAGRA-RUNTIME-IDENTITY</dependency-1>
+    <dependency-2>M-MAGRA-RELEASE-SURFACE</dependency-2>
+    <dependency-3>M-REASONIX-BASE</dependency-3>
+  </dependencies>
+  <invariants>
+    <invariant-1>MAGRA is primary name in user-facing help, dashboard about, and feedback surfaces.</invariant-1>
+    <invariant-2>Reasonix remains only in explicit attribution or compatibility contexts.</invariant-2>
+  </invariants>
+</M-MAGRA-BRANDING-CLEANUP>

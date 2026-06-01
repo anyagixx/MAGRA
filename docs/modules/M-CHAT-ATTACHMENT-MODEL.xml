@@ -1,0 +1,16 @@
+<M-CHAT-ATTACHMENT-MODEL NAME="ChatAttachmentModel" TYPE="DATA_LAYER" STATUS="done">
+  <contract>
+    <purpose>Define attachment metadata shape that round-trips between dashboard protocol, server context, session messages, and model payload assembly.</purpose>
+    <scope>Attachment kinds, preview/excerpt metadata, workspace relativity, and user-message attachment fields.</scope>
+    <source-path>src/types.ts</source-path>
+    <test-path>tests/client-models.test.ts</test-path>
+    <verification-ref>V-M-CHAT-ATTACHMENT-MODEL</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-REASONIX-BASE</dependency-1>
+  </dependencies>
+  <invariants>
+    <invariant-1>Attachment metadata remains structured on user messages until final provider payload mapping stage.</invariant-1>
+    <invariant-2>Local-only attachment fields are not emitted as raw `attachments` in provider API payloads.</invariant-2>
+  </invariants>
+</M-CHAT-ATTACHMENT-MODEL>

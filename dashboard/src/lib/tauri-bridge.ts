@@ -339,6 +339,7 @@ function emitServerSettings(settings: any, overview?: any): void {
     workspaceDir: overview?.cwd ?? "",
     recentWorkspaces: [],
     model: overview?.model ?? settings?.model ?? "deepseek-v4-flash",
+    modelSupportsImageInput: settings?.modelSupportsImageInput ?? false,
     editor: "code",
     webSearchEngine: settings?.webSearchEngine ?? "bing",
     webSearchApiKeys: settings?.webSearchApiKeys ?? {},
@@ -570,7 +571,7 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
     case "user_input": {
       const result = await apiFetch("submit", {
         method: "POST",
-        body: JSON.stringify({ prompt: payload.text }),
+        body: JSON.stringify({ prompt: payload.text, attachments: payload.attachments ?? [] }),
       }).catch((err) => {
         console.warn("[tauri-bridge] submit failed:", err);
         return null;
@@ -628,7 +629,7 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
         const messages: any[] = [];
         for (const m of raw) {
           if (m?.role === "user") {
-            messages.push({ kind: "user" as const, text: m.content ?? "" });
+            messages.push({ kind: "user" as const, text: m.content ?? "", attachments: m.attachments ?? [] });
             continue;
           }
           if (m?.role === "assistant") {
@@ -1120,20 +1121,34 @@ const mockSettings = {
 };
 
 const mockMessages: any[] = [
-  { kind: "user", text: "你好 Reasonix，帮我列出这个项目的主要技术栈以及前端架构体系。" },
+  {
+    kind: "user",
+    text: "Привет MAGRA, покажи стек проекта и архитектуру фронтенда.",
+    attachments: [
+      {
+        id: "att-mock-1",
+        kind: "file",
+        name: "README.md",
+        path: "README.md",
+        size: 512,
+        excerpt: "# MAGRA",
+        relativeToWorkspace: true,
+      },
+    ],
+  },
   {
     kind: "assistant",
     turn: 1,
     segments: [
-      { kind: "reasoning", text: "用户询问项目的技术栈和前端架构。" },
-      { kind: "text", text: "你好！**DeepSeek-Reasonix** 是一个以 DeepSeek 为内核的智能代码助手…" },
+      { kind: "reasoning", text: "Пользователь просит обзор стека и фронтенд-архитектуры." },
+      { kind: "text", text: "MAGRA построен вокруг cache-first runtime, MyGRACE governance, RTK shell policy и SNARC memory." },
     ],
     pending: false,
   },
 ];
 
 function mockAssistantTurn(_promptText: string) {
-  emitEvent({ type: "status", text: "DeepSeek R1 思考中...", tabId: "tab-1" });
+  emitEvent({ type: "status", text: "MAGRA 正在思考...", tabId: "tab-1" });
   setTimeout(() => {
     emitEvent({
       type: "model.turn.started",

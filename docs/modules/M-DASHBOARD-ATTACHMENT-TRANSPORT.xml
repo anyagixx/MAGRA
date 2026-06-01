@@ -1,0 +1,19 @@
+<M-DASHBOARD-ATTACHMENT-TRANSPORT NAME="DashboardAttachmentTransport" TYPE="INTEGRATION" STATUS="done">
+  <contract>
+    <purpose>Carry structured dashboard file and image attachments from web composer submit paths into server prompt submission.</purpose>
+    <scope>Dashboard submit payloads, tauri bridge transport, server attachment parsing, and submit routing.</scope>
+    <source-path>dashboard/src/App.tsx</source-path>
+    <test-path>tests/server-dashboard.test.ts</test-path>
+    <verification-ref>V-M-DASHBOARD-ATTACHMENT-TRANSPORT</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-WEB-COMPOSER-ATTACHMENTS</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <invariants>
+    <invariant-1>Chat submit preserves attachment arrays alongside prompt text instead of flattening them into mentions.</invariant-1>
+    <invariant-2>Invalid attachment payload shapes fail request parsing with explicit 400 responses.</invariant-2>
+    <invariant-3>Settings/bootstrap surfaces expose current model image-input support so web composer can prewarn before send-time downgrade.</invariant-3>
+    <invariant-4>`/api/models` exposes per-model image-input capability flags alongside legacy model-id lists.</invariant-4>
+  </invariants>
+</M-DASHBOARD-ATTACHMENT-TRANSPORT>

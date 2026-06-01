@@ -74,6 +74,15 @@ export const conversation: Reducer<ConversationView> = (v, ev) => {
   switch (ev.type) {
     case "user.message": {
       const msg: ChatMessage = { role: "user", content: ev.text };
+      if (ev.attachments && ev.attachments.length > 0) {
+        msg.attachments = ev.attachments.map((attachment) => ({
+          id: attachment.ref,
+          kind: attachment.kind === "url" ? "file" : attachment.kind,
+          name: attachment.ref,
+          path: attachment.ref,
+          size: 0,
+        }));
+      }
       return { ...v, messages: [...v.messages, msg] };
     }
     case "model.final": {

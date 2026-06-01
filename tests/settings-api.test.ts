@@ -171,6 +171,25 @@ describe("settings API — combined POST persistence (#274)", () => {
     }
   });
 
+  it("GET surfaces current model image-input support from live loop client", async () => {
+    const res = await handleSettings("GET", [], "", {
+      ...makeCtx(configPath),
+      loop: {
+        model: "deepseek-chat",
+        client: { supportsImageInput: () => false },
+        budgetUsd: null,
+      } as unknown as DashboardContext["loop"],
+    });
+    expect(res.status).toBe(200);
+    expect((res.body as { modelSupportsImageInput?: boolean }).modelSupportsImageInput).toBe(false);
+  });
+
+  it("GET defaults model image-input support to false without live loop", async () => {
+    const res = await handleSettings("GET", [], "", makeCtx(configPath));
+    expect(res.status).toBe(200);
+    expect((res.body as { modelSupportsImageInput?: boolean }).modelSupportsImageInput).toBe(false);
+  });
+
   it("clears baiduApiKey when posted as null", async () => {
     writeFileSync(configPath, JSON.stringify({ baiduApiKey: "old-key" }), "utf8");
     const res = await handleSettings(

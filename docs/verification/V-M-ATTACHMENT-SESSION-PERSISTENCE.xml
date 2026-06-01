@@ -1,0 +1,14 @@
+<V-M-ATTACHMENT-SESSION-PERSISTENCE MODULE="M-ATTACHMENT-SESSION-PERSISTENCE" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/loop-user-persist.test.ts</file-1>
+    <file-2>tests/desktop-session-load.test.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/loop-user-persist.test.ts tests/desktop-session-load.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Persisted session JSONL keeps attachment metadata without raw binary payload fields.</scenario-1>
+    <scenario-2 kind="success">Desktop replay loads persisted attachments without restoring transient image data URLs.</scenario-2>
+  </scenarios>
+</V-M-ATTACHMENT-SESSION-PERSISTENCE>

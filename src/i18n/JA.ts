@@ -32,25 +32,25 @@ export const JA: TranslationSchema = {
     replay: "トランスクリプトをスクラブする対話型 Ink TUI。",
     diff: "2つのトランスクリプトを分割ペインの Ink TUI で比較します。",
     mcp: "Model Context Protocol ヘルパー — サーバーの検出、セットアップのテスト。",
-    version: "Reasonix のバージョンを表示します。",
-    update: "新しい Reasonix をチェックしてインストールします。",
+    version: "MAGRA のバージョンを表示します。",
+    update: "新しい MAGRA をチェックしてインストールします。",
     index: "ローカルのセマンティック検索インデックスを構築（または増分更新）します。",
   },
   stats: {
     usageHint: "`magra chat`、`magra code`、または `magra run <task>` を実行するたびに",
-    usageDetail: "ログに1行追加され、`reasonix stats` で集計されます。",
+    usageDetail: "ログに1行追加され、`magra stats` で集計されます。",
   },
   run: {
     missingApiKey:
       "DEEPSEEK_API_KEY が設定されておらず、stdin が TTY ではありません（プロンプトを表示できません）。\n" +
-      "環境変数を設定するか、`reasonix chat` を一度対話的に実行してキーを保存してください。\n",
+      "環境変数を設定するか、`magra chat` を一度対話的に実行してキーを保存してください。\n",
   },
   sessions: {
     emptyHint:
-      "保存されたセッションはまだありません — `reasonix chat` を実行してください（--no-session を付けない限り自動保存されます）。",
-    listHeader: "保存されたセッション (~/.reasonix/sessions/):",
-    inspectHint: "詳細表示:  reasonix sessions <name>",
-    resumeHint: "再開:   reasonix chat --session <name>",
+      "保存されたセッションはまだありません — `magra chat` を実行してください（--no-session を付けない限り自動保存されます）。",
+    listHeader: "保存されたセッション (~/.magra/sessions/):",
+    inspectHint: "詳細表示:  magra sessions <name>",
+    resumeHint: "再開:   magra chat --session <name>",
     noSession: '"{name}" という名前のセッションはありません（または空です）。',
     lookedAt: "参照: {path}",
     noIdleSessions: "{days}日以上アイドルのセッションはありません。削除はありません。",
@@ -60,7 +60,7 @@ export const JA: TranslationSchema = {
     daysInvalid: "--days は正の整数である必要があります（{days} が指定されました）。",
   },
   ui: {
-    welcome: "Run `reasonix` any time to start chatting — your settings are remembered.",
+    welcome: "Run `magra` any time to start chatting — your settings are remembered.",
     taglineChat: "DeepSeekネイティブエージェント",
     taglineCode: "DeepSeekネイティブコーディングエージェント",
     taglineSub: "キャッシュファースト · フラッシュファースト",
@@ -138,7 +138,7 @@ export const JA: TranslationSchema = {
       footer: "/keys でキーボード+マウスの全リファレンスを表示",
     },
     keysReference: {
-      topic: "Reasonix キー + マウス リファレンス",
+      topic: "MAGRA キー + マウス リファレンス",
       sections: [
         {
           title: "キーボード",

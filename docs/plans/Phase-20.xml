@@ -1,0 +1,26 @@
+<Phase-20 NAME="ForkStateCleanup" STATUS="done">
+  <purpose>Remove remaining accidental Reasonix fork drift from MAGRA user-facing, release, desktop, and storage surfaces while preserving explicit upstream attribution and compatibility aliases.</purpose>
+  <modules>
+    <module-1>M-MAGRA-BRANDING-CLEANUP</module-1>
+    <module-2>M-MAGRA-GITHUB-SURFACE-CLEANUP</module-2>
+    <module-3>M-MAGRA-DESKTOP-IDENTITY</module-3>
+    <module-4>M-MAGRA-COMPATIBILITY-PATH-MIGRATION</module-4>
+    <module-5>M-MAGRA-PACKAGE-ALIAS-RECONCILIATION</module-5>
+  </modules>
+  <steps>
+    <step-1 STATUS="done">Define cleanup boundaries: old naming allowed only in attribution, source-analysis, and explicit compatibility surfaces.</step-1>
+    <step-2 STATUS="done">Rewrite high-visibility CLI, dashboard, and feedback text so MAGRA is primary user-facing identity.</step-2>
+    <step-3 STATUS="done">Clean GitHub issue templates, workflow labels, and release-facing URLs to MAGRA-first values.</step-3>
+    <step-4 STATUS="done">Refresh desktop user-visible identity while deferring risky bundle-id migration until a dedicated follow-up wave.</step-4>
+    <step-5 STATUS="done">Migrate canonical project/config memory paths from REASONIX to MAGRA naming with safe transition reads.</step-5>
+    <step-6 STATUS="done">Reconcile update/package alias surfaces so MAGRA is canonical and legacy aliases remain explicit compatibility shims.</step-6>
+    <step-7 STATUS="done">Run MyGRACE lint, focused release/feedback tests, build, typecheck, and full verification.</step-7>
+  </steps>
+  <verification-refs>
+    <verification-1>V-M-MAGRA-BRANDING-CLEANUP</verification-1>
+    <verification-2>V-M-MAGRA-GITHUB-SURFACE-CLEANUP</verification-2>
+    <verification-3>V-M-MAGRA-DESKTOP-IDENTITY</verification-3>
+    <verification-4>V-M-MAGRA-COMPATIBILITY-PATH-MIGRATION</verification-4>
+    <verification-5>V-M-MAGRA-PACKAGE-ALIAS-RECONCILIATION</verification-5>
+  </verification-refs>
+</Phase-20>

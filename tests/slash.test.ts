@@ -1365,7 +1365,7 @@ describe("handleSlash", () => {
 
   describe("/memory", () => {
     let root: string;
-    const originalEnv = process.env.REASONIX_MEMORY;
+    const originalEnv = process.env.MAGRA_MEMORY;
     const originalHome = process.env.HOME;
     const originalUserProfile = process.env.USERPROFILE;
 
@@ -1374,15 +1374,15 @@ describe("handleSlash", () => {
       process.env.HOME = root;
       process.env.USERPROFILE = root;
       // biome-ignore lint/performance/noDelete: avoid "undefined" in env
-      delete process.env.REASONIX_MEMORY;
+      delete process.env.MAGRA_MEMORY;
     });
     afterEach(() => {
       rmSync(root, { recursive: true, force: true });
       if (originalEnv === undefined) {
         // biome-ignore lint/performance/noDelete: same reason
-        delete process.env.REASONIX_MEMORY;
+        delete process.env.MAGRA_MEMORY;
       } else {
-        process.env.REASONIX_MEMORY = originalEnv;
+        process.env.MAGRA_MEMORY = originalEnv;
       }
       if (originalHome === undefined) {
         // biome-ignore lint/performance/noDelete: env restoration needs absence, not "undefined"
@@ -1398,27 +1398,27 @@ describe("handleSlash", () => {
       }
     });
 
-    it("prints a how-to when no memory (REASONIX.md or ~/.reasonix/memory) exists", () => {
+    it("prints a how-to when no memory (MAGRA.md or ~/.reasonix/memory) exists", () => {
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
       expect(r.info).toMatch(/no memory pinned/);
-      expect(r.info).toMatch(/REASONIX\.md/);
+      expect(r.info).toMatch(/MAGRA\.md/);
     });
 
-    it("prints the REASONIX.md contents + path when present", () => {
+    it("prints the MAGRA.md contents + path when present", () => {
       writeFileSync(
-        join(root, "REASONIX.md"),
+        join(root, "MAGRA.md"),
         "# House rules\nSnake case only in this repo.\n",
         "utf8",
       );
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
-      expect(r.info).toMatch(/▸ REASONIX\.md:/);
+      expect(r.info).toMatch(/▸ MAGRA\.md:/);
       expect(r.info).toContain("Snake case only");
       expect(r.info).toMatch(/chars/);
     });
 
-    it("says memory is disabled when REASONIX_MEMORY=off, even with a file present", () => {
-      writeFileSync(join(root, "REASONIX.md"), "content", "utf8");
-      process.env.REASONIX_MEMORY = "off";
+    it("says memory is disabled when MAGRA_MEMORY=off, even with a file present", () => {
+      writeFileSync(join(root, "MAGRA.md"), "content", "utf8");
+      process.env.MAGRA_MEMORY = "off";
       const r = handleSlash("memory", [], makeLoop(), { memoryRoot: root });
       expect(r.info).toMatch(/memory is disabled/);
     });

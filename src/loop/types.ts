@@ -1,5 +1,6 @@
 import type { RepairReport } from "../repair/index.js";
 import type { TurnStats } from "../telemetry/stats.js";
+import type { AttachmentMetadata } from "../types.js";
 
 export type EventRole =
   | "assistant_delta"
@@ -26,6 +27,7 @@ export interface LoopEvent {
   turn: number;
   role: EventRole;
   content: string;
+  attachments?: AttachmentMetadata[];
   severity?: EventSeverity;
   reasoningDelta?: string;
   toolName?: string;

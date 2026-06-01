@@ -1,3 +1,26 @@
+// === MODULE_CONTRACT ===
+// FILE: dashboard/src/ui/composer.tsx
+// VERSION: 1.0.0
+// PURPOSE: Render MAGRA dashboard composer with slash, mention, and attachment workflows.
+// SCOPE: Draft editing, slash suggestions, @-mention picker, file/image attachments, drag-drop attachment support, and send controls.
+// DEPENDS: M-REASONIX-BASE,M-WEB-COMPOSER-ATTACHMENTS
+// LINKS: docs/modules/M-WEB-COMPOSER-ATTACHMENTS.xml
+// ROLE: UI
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: ModeSwitch, buildAttachment, Composer
+// Locals: slashIcon, parentOfAtQuery, atIcon, guessMimeType, getFileExtension, readTextAttachmentPreview, Popup, ModelEffortMenu
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added Wave-A attachment chips, image previews, and picker-created attachment objects.
+// Added bounded text preview extraction and shared attachment builder for picker and drag-drop flows.
+// === END_CHANGE_SUMMARY ===
+
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -11,6 +34,8 @@ import type React from "react";
 import { open as openFileDialog } from "@tauri-apps/plugin-dialog";
 import { t, type TKey } from "../i18n";
 import { I } from "../icons";
+import type { AttachmentItem } from "../protocol";
+import { invoke, isWebRuntime } from "../lib/tauri-bridge";
 import { fmtElapsed } from "./live";
 import { Shortcut } from "./shortcut";
 
@@ -68,6 +93,30 @@ export type MentionItem = {
   desc?: string;
 };
 
+export type ComposerAttachment = AttachmentItem;
+
+const TEXT_ATTACHMENT_PREVIEW_LIMIT = 4000;
+const TEXT_ATTACHMENT_EXTENSIONS = new Set([
+  ".md",
+  ".txt",
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".json",
+  ".css",
+  ".html",
+  ".xml",
+  ".yml",
+  ".yaml",
+  ".toml",
+  ".sh",
+  ".py",
+  ".rs",
+  ".go",
+  ".java",
+]);
+
 export type Chip =
   | { kind: "at"; label: string }
   | { kind: "slash"; label: string };
@@ -112,6 +161,122 @@ function atIcon(k: MentionItem["kind"]) {
   return <I.at size={12} />;
 }
 
+function guessMimeType(path: string, kind: "file" | "image"): string | undefined {
+  const lower = path.toLowerCase();
+  if (kind === "image") {
+    if (lower.endsWith(".png")) return "image/png";
+    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+    if (lower.endsWith(".gif")) return "image/gif";
+    if (lower.endsWith(".webp")) return "image/webp";
+    if (lower.endsWith(".svg")) return "image/svg+xml";
+  }
+  if (lower.endsWith(".md")) return "text/markdown";
+  if (lower.endsWith(".ts") || lower.endsWith(".tsx")) return "text/typescript";
+  if (lower.endsWith(".js") || lower.endsWith(".jsx")) return "text/javascript";
+  if (lower.endsWith(".json")) return "application/json";
+  if (lower.endsWith(".css")) return "text/css";
+  if (lower.endsWith(".html")) return "text/html";
+  if (lower.endsWith(".xml")) return "application/xml";
+  return undefined;
+}
+
+function getFileExtension(path: string): string {
+  const slash = path.lastIndexOf("/");
+  const dot = path.lastIndexOf(".");
+  if (dot <= slash) return "";
+  return path.slice(dot).toLowerCase();
+}
+
+async function readTextAttachmentPreview(path: string): Promise<{ excerpt?: string; size: number }> {
+  try {
+    const content = (await invoke("read_text_file", { path })) as string;
+    const excerpt =
+      content.length > TEXT_ATTACHMENT_PREVIEW_LIMIT
+        ? `${content.slice(0, TEXT_ATTACHMENT_PREVIEW_LIMIT)}\n… (truncated ${
+            content.length - TEXT_ATTACHMENT_PREVIEW_LIMIT
+          } chars)`
+        : content;
+    return { excerpt, size: content.length };
+  } catch {
+    return { size: 0 };
+  }
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(reader.error ?? new Error("file read failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
+export async function buildAttachment(
+  picked: string,
+  workspaceDir: string | undefined,
+  kind: "file" | "image",
+  file?: File,
+): Promise<ComposerAttachment> {
+  const normalizedWorkspace = workspaceDir?.replace(/\\/g, "/").replace(/\/+$/, "");
+  const normalizedPath = picked.replace(/\\/g, "/");
+  const relative =
+    normalizedWorkspace &&
+    (normalizedPath === normalizedWorkspace || normalizedPath.startsWith(`${normalizedWorkspace}/`))
+      ? normalizedPath.slice(normalizedWorkspace.length).replace(/^\/+/, "") || "."
+      : null;
+  let excerpt: string | undefined;
+  let preview: string | undefined;
+  let size = 0;
+  if (kind === "file") {
+    const ext = getFileExtension(normalizedPath);
+    if (file) {
+      size = file.size;
+      const mimeType = file.type || guessMimeType(normalizedPath, kind);
+      if ((mimeType ?? "").startsWith("text/") || TEXT_ATTACHMENT_EXTENSIONS.has(ext)) {
+        try {
+          const content = await file.text();
+          excerpt =
+            content.length > TEXT_ATTACHMENT_PREVIEW_LIMIT
+              ? `${content.slice(0, TEXT_ATTACHMENT_PREVIEW_LIMIT)}\n… (truncated ${
+                  content.length - TEXT_ATTACHMENT_PREVIEW_LIMIT
+                } chars)`
+              : content;
+        } catch {
+          excerpt = `Attached file: ${relative ?? normalizedPath}`;
+        }
+      } else {
+        excerpt = `Attached file: ${relative ?? normalizedPath}`;
+      }
+    } else if (TEXT_ATTACHMENT_EXTENSIONS.has(ext)) {
+      const previewData = await readTextAttachmentPreview(picked);
+      excerpt = previewData.excerpt;
+      size = previewData.size;
+    } else {
+      excerpt = `Attached file: ${relative ?? normalizedPath}`;
+    }
+  }
+  if (kind === "image") {
+    if (file) {
+      size = file.size;
+      preview = await fileToDataUrl(file);
+    } else {
+      preview = `file://${picked}`;
+    }
+  }
+  return {
+    id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    kind,
+    name: relative ?? normalizedPath.split("/").pop() ?? normalizedPath,
+    path: relative ?? normalizedPath,
+    size,
+    mimeType: file?.type || guessMimeType(normalizedPath, kind),
+    preview,
+    excerpt,
+    dataUrl: kind === "image" ? preview : undefined,
+    relativeToWorkspace: relative !== null,
+  };
+}
+
 export function Composer({
   draft,
   setDraft,
@@ -122,6 +287,7 @@ export function Composer({
   busyLabel,
   busyElapsedMs,
   modelLabel,
+  modelSupportsImageInput = true,
   reasoningEffort,
   onModelChange,
   onEffortChange,
@@ -134,6 +300,8 @@ export function Composer({
   onMentionPicked,
   mentionResults,
   workspaceDir,
+  attachments = [],
+  onAttachmentsChange = () => {},
   queuedSends,
   onQueueWhileBusy,
   onDequeueSend,
@@ -148,6 +316,7 @@ export function Composer({
   busyLabel?: string;
   busyElapsedMs?: number;
   modelLabel: string;
+  modelSupportsImageInput?: boolean;
   reasoningEffort: ReasoningEffort;
   onModelChange: (model: string) => void;
   onEffortChange: (effort: ReasoningEffort) => void;
@@ -160,6 +329,8 @@ export function Composer({
   onMentionPicked?: (path: string) => void;
   mentionResults?: { nonce: number; query: string; results: string[] } | null;
   workspaceDir?: string;
+  attachments?: ComposerAttachment[];
+  onAttachmentsChange?: (attachments: ComposerAttachment[]) => void;
   /** Messages typed while busy=true; rendered as removable chips above the textarea and auto-drained FIFO on turn-complete. */
   queuedSends?: string[];
   /** Called when the user presses Enter while busy with a non-empty draft. Owns clearing the draft. */
@@ -217,16 +388,36 @@ export function Composer({
             : undefined,
       });
       if (typeof picked !== "string" || !picked) return;
-      const rel =
-        workspaceDir && picked.startsWith(workspaceDir)
-          ? picked.slice(workspaceDir.length).replace(/^[\\/]+/, "")
-          : picked;
-      setDraft(draft ? `${draft.replace(/\s+$/, "")} @${rel} ` : `@${rel} `);
-      setChips((c) => [...c, { kind: "at", label: rel }]);
-      onMentionPicked?.(rel);
+      const next = await buildAttachment(picked, workspaceDir, filter === "image" ? "image" : "file");
+      onAttachmentsChange([...attachments, next]);
       textareaRef.current?.focus();
     } catch (err) {
       console.error("attach failed", err);
+    }
+  };
+
+  const browserFileInputRef = useRef<HTMLInputElement>(null);
+  const browserImageInputRef = useRef<HTMLInputElement>(null);
+
+  const attachBrowserFile = (kind: "file" | "image") => {
+    const input = kind === "image" ? browserImageInputRef.current : browserFileInputRef.current;
+    input?.click();
+  };
+
+  const handleBrowserFilePicked = async (
+    e: ChangeEvent<HTMLInputElement>,
+    kind: "file" | "image",
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const next = await buildAttachment(file.name, workspaceDir, kind, file);
+      onAttachmentsChange([...attachments, next]);
+      textareaRef.current?.focus();
+    } catch (err) {
+      console.error("browser attach failed", err);
+    } finally {
+      e.target.value = "";
     }
   };
 
@@ -387,7 +578,7 @@ export function Composer({
           onQueueWhileBusy(text);
           setChips([]);
         }
-      } else if (!disabled && draft.trim()) {
+      } else if (!disabled && (draft.trim() || attachments.length > 0)) {
         onSend();
         setChips([]);
       }
@@ -452,6 +643,39 @@ export function Composer({
         </div>
 
         <div className="composer">
+          {attachments.length > 0 ? (
+            <div className="composer-tags composer-attachments">
+              {attachments.map((attachment) => (
+                <span key={attachment.id} className={`chip attachment ${attachment.kind}`}>
+                  {attachment.kind === "image" ? <I.image size={11} /> : <I.paperclip size={11} />}
+                  {attachment.preview ? (
+                    <span className="attachment-preview" aria-hidden="true">
+                      <img src={attachment.preview} alt="" />
+                    </span>
+                  ) : null}
+                  <span>{attachment.name}</span>
+                  <span
+                    className="x"
+                    onClick={() =>
+                      onAttachmentsChange(attachments.filter((item) => item.id !== attachment.id))
+                    }
+                  >
+                    <I.x size={10} />
+                  </span>
+                </span>
+              ))}
+              {attachments.some((attachment) => attachment.kind === "image") && !modelSupportsImageInput ? (
+                <span
+                  className="chip attachment warning"
+                  title="Current model route does not advertise image input; send will degrade to text-only."
+                >
+                  <I.warn size={11} />
+                  <span>text-only send</span>
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+
           {chips.length > 0 ? (
             <div className="composer-tags">
               {chips.map((c, i) => (
@@ -475,6 +699,20 @@ export function Composer({
             </div>
           ) : null}
 
+          <input
+            ref={browserFileInputRef}
+            type="file"
+            style={{ display: "none" }}
+            onChange={(e) => void handleBrowserFilePicked(e, "file")}
+          />
+          <input
+            ref={browserImageInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml"
+            style={{ display: "none" }}
+            onChange={(e) => void handleBrowserFilePicked(e, "image")}
+          />
+
           <textarea
             ref={textareaRef}
             value={draft}
@@ -497,7 +735,9 @@ export function Composer({
               type="button"
               className="cf-btn"
               title={t("composer.insertFile")}
-              onClick={() => void attachFile()}
+              onClick={() =>
+                isWebRuntime ? attachBrowserFile("file") : void attachFile()
+              }
             >
               <span className="ico">
                 <I.paperclip size={14} />
@@ -507,7 +747,9 @@ export function Composer({
               type="button"
               className="cf-btn"
               title={t("composer.insertImage")}
-              onClick={() => void attachFile("image")}
+              onClick={() =>
+                isWebRuntime ? attachBrowserFile("image") : void attachFile("image")
+              }
             >
               <span className="ico">
                 <I.image size={14} />
@@ -580,13 +822,14 @@ export function Composer({
               <button
                 type="button"
                 className="send-btn"
-                disabled={disabled || !draft.trim()}
-                onClick={() => {
-                  if (!disabled && draft.trim()) {
-                    onSend();
-                    setChips([]);
-                  }
-                }}
+                 disabled={disabled || (!draft.trim() && attachments.length === 0)}
+                 onClick={() => {
+                   if (!disabled && (draft.trim() || attachments.length > 0)) {
+                     onSend();
+                     setChips([]);
+                   }
+                 }}
+
               >
                 <I.send size={14} />
               </button>

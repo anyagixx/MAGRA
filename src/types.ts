@@ -1,3 +1,24 @@
+// === MODULE_CONTRACT ===
+// FILE: src/types.ts
+// VERSION: 1.0.0
+// PURPOSE: Define shared MAGRA chat, tool, and attachment transport types.
+// SCOPE: Tool specs, chat messages, attachment metadata, and request options used across runtime, dashboard, and provider clients.
+// DEPENDS: M-REASONIX-BASE
+// LINKS: docs/modules/M-CHAT-ATTACHMENT-MODEL.xml
+// ROLE: DATA
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: JSONSchema, ToolFunctionSpec, ToolSpec, ToolCall, Role, AttachmentMetadata, ChatMessage, RawUsage, ChatRequestOptions
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added shared attachment metadata types for dashboard transport, session replay, and image-send gating.
+// === END_CHANGE_SUMMARY ===
+
 export interface JSONSchema {
   type?: string;
   properties?: Record<string, JSONSchema>;
@@ -30,9 +51,23 @@ export interface ToolCall {
 
 export type Role = "system" | "user" | "assistant" | "tool";
 
+export interface AttachmentMetadata {
+  id: string;
+  kind: "file" | "image";
+  name: string;
+  path: string;
+  size: number;
+  mimeType?: string;
+  preview?: string;
+  excerpt?: string;
+  dataUrl?: string;
+  relativeToWorkspace?: boolean;
+}
+
 export interface ChatMessage {
   role: Role;
   content?: string | null;
+  attachments?: AttachmentMetadata[];
   name?: string;
   tool_call_id?: string;
   tool_calls?: ToolCall[];

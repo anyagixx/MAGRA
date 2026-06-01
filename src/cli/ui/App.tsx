@@ -77,6 +77,7 @@ import { useQQChannel } from "../../qq/use-qq-channel.js";
 import type {
   ActiveModal,
   ChoiceResolution,
+  DashboardAttachment,
   DashboardContext,
   DashboardEvent,
   DashboardMessage,
@@ -847,7 +848,9 @@ function AppInner({
   // needs to call the LATEST closure on each firing (config could have
   // shifted mid-loop), so we mirror it through a ref. The mirror is
   // synced in a useEffect once handleSubmit is defined.
-  const handleSubmitRef = useRef<((raw: string) => Promise<void>) | null>(null);
+  const handleSubmitRef = useRef<
+    ((raw: string, attachments?: DashboardAttachment[]) => Promise<void>) | null
+  >(null);
   const busyRef = useRef<boolean>(false);
   const submittingRef = useRef<boolean>(false);
   // Embedded dashboard server handle. Set when /dashboard boots; null
@@ -1264,6 +1267,7 @@ function AppInner({
   // (balance) and the slash context (/models, /update).
   const { balance, models, latestVersion, refreshBalance, refreshModels, refreshLatestVersion } =
     useSessionInfo(loop);
+  const modelIds = useMemo(() => models?.map((model) => model.id) ?? null, [models]);
 
   // Keep the dashboard-server ref-mirrors in sync with their state.
   // These four are the load-bearing live reads for the attached
@@ -1280,7 +1284,7 @@ function AppInner({
   // balance. useSessionInfo refreshes balance every few minutes; we
   // forward to the dashboard without re-minting startDashboard.
   const balanceRef = useRef<typeof balance>(null);
-  const modelsRef = useRef<string[] | null>(null);
+  const modelsRef = useRef<typeof models>(null);
   useEffect(() => {
     modelsRef.current = models;
   }, [models]);
@@ -1503,7 +1507,7 @@ function AppInner({
     setInput,
     codeMode,
     rootDir: currentRootDir,
-    models,
+    models: modelIds,
     mcpServers: liveMcpServers,
     slashUsage,
     effortChoices,
@@ -2233,7 +2237,7 @@ function AppInner({
             eventSubscribersRef.current.delete(handler);
           };
         },
-        submitPrompt: (text: string): SubmitResult => {
+        submitPrompt: (text: string, attachments?: DashboardAttachment[]): SubmitResult => {
           if (busyRef.current) {
             if (isBusyPromptCommand(text)) {
               return {
@@ -2250,7 +2254,7 @@ function AppInner({
           // Fire-and-forget —handleSubmit drives the loop event stream
           // which the web sees via SSE. We don't await it here because
           // a turn can take minutes; the HTTP request would time out.
-          fn(text).catch(() => undefined);
+          fn(text, attachments).catch(() => undefined);
           return { accepted: true };
         },
         abortTurn: () => {
@@ -2712,7 +2716,7 @@ function AppInner({
   });
 
   const handleSubmit = useCallback(
-    async (raw: string) => {
+    async (raw: string, attachments?: DashboardAttachment[]) => {
       const incoming = qq.parseSubmit(raw);
       if (!incoming) return;
       let { text, fromQQ } = incoming;
@@ -3017,7 +3021,8 @@ function AppInner({
             : undefined,
           latestVersion,
           refreshLatestVersion,
-          models,
+          models: modelIds,
+
           refreshModels,
           generateSessionTitle: generateCurrentSessionTitle,
         });
@@ -3028,7 +3033,8 @@ function AppInner({
             codeMode: !!codeMode,
             sessions: listSessionsForWorkspace(currentRootDir),
             checkpoints: codeMode ? [...listCheckpoints(currentRootDir)].reverse() : [],
-            models,
+            models: modelIds,
+
             restoreCodeOnlyMessage: t("app.restoreCodeOnly"),
           })
         ) {
@@ -3506,7 +3512,7 @@ function AppInner({
       loop,
       latestVersion,
       mcpSpecs,
-      models,
+      modelIds,
       planMode,
       session,
       slashSelected,
@@ -4539,7 +4545,7 @@ function AppInner({
                 />
               ) : pendingModelPicker ? (
                 <ModelPicker
-                  models={models}
+                  models={modelIds}
                   current={loop.model}
                   currentEffort={loop.reasoningEffort}
                   effortChoices={effortChoices}

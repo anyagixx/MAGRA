@@ -19,7 +19,7 @@ export function formatLoopError(
   if (msg.includes("maximum context length")) {
     const reqMatch = msg.match(/requested\s+(\d+)\s+tokens/);
     const requested = reqMatch
-      ? `${Number(reqMatch[1]).toLocaleString()} tokens`
+      ? `${new Intl.NumberFormat("en-US").format(Number(reqMatch[1]))} tokens`
       : t("errors.contextOverflowTooMany");
     return t("errors.contextOverflow", { requested });
   }

@@ -12,7 +12,7 @@ function makeFetch(status: number, body: unknown) {
 }
 
 describe("DeepSeekClient.listModels", () => {
-  it("parses the OpenAI-style model list", async () => {
+  it("parses OpenAI-style model list", async () => {
     const client = new DeepSeekClient({
       apiKey: "sk-test",
       fetch: makeFetch(200, {
@@ -28,7 +28,7 @@ describe("DeepSeekClient.listModels", () => {
     expect(list!.data.map((m) => m.id)).toEqual(["deepseek-chat", "deepseek-reasoner"]);
   });
 
-  it("returns null on non-2xx (bad key / offline)", async () => {
+  it("returns null on non-2xx", async () => {
     const client = new DeepSeekClient({
       apiKey: "sk-bad",
       fetch: makeFetch(401, { error: "unauthorized" }),
@@ -44,7 +44,7 @@ describe("DeepSeekClient.listModels", () => {
     expect(await client.listModels()).toBeNull();
   });
 
-  it("returns null when fetch throws (network error)", async () => {
+  it("returns null when fetch throws", async () => {
     const client = new DeepSeekClient({
       apiKey: "sk-test",
       fetch: vi.fn(async () => {
@@ -54,7 +54,7 @@ describe("DeepSeekClient.listModels", () => {
     expect(await client.listModels()).toBeNull();
   });
 
-  it("sends the bearer token header", async () => {
+  it("sends bearer token header", async () => {
     const spy = vi.fn(
       async () =>
         new Response(JSON.stringify({ object: "list", data: [] }), {
@@ -72,10 +72,63 @@ describe("DeepSeekClient.listModels", () => {
     const headers = (init as RequestInit).headers as Record<string, string>;
     expect(headers.Authorization).toBe("Bearer sk-xyz");
   });
+  it("caches explicit image capability metadata from model list", async () => {
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      baseUrl: "https://api.deepseek.com",
+      fetch: makeFetch(200, {
+        object: "list",
+        data: [
+          {
+            id: "deepseek-chat",
+            object: "model",
+            owned_by: "deepseek",
+            capabilities: { input_modalities: ["text"] },
+          },
+          {
+            id: "vision-pro",
+            object: "model",
+            owned_by: "deepseek",
+            capabilities: { input_modalities: ["text", "image"] },
+          },
+        ],
+      }),
+    });
+
+    expect(client.supportsImageInput("deepseek-chat")).toBe(false);
+    expect(client.supportsImageInput("vision-pro")).toBe(true);
+
+    const list = await client.listModels();
+    expect(list).not.toBeNull();
+    expect(client.supportsImageInput("deepseek-chat")).toBe(false);
+    expect(client.supportsImageInput("vision-pro")).toBe(true);
+  });
+
+  it("honors explicit non-image capability metadata over heuristic-looking model ids", async () => {
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      baseUrl: "https://api.openai.com/v1",
+      fetch: makeFetch(200, {
+        object: "list",
+        data: [
+          {
+            id: "gpt-4o-mini",
+            object: "model",
+            owned_by: "openai",
+            capabilities: { input_modalities: ["text"] },
+          },
+        ],
+      }),
+    });
+
+    expect(client.supportsImageInput("gpt-4o-mini")).toBe(true);
+    await client.listModels();
+    expect(client.supportsImageInput("gpt-4o-mini")).toBe(false);
+  });
 });
 
 describe("DeepSeekClient rateLimit", () => {
-  it("waits between chat requests when rpm is configured", async () => {
+  it("waits between chat requests when rpm configured", async () => {
     vi.useFakeTimers();
     const spy = vi.fn(
       async () =>
@@ -161,6 +214,161 @@ describe("DeepSeekClient usage parsing", () => {
 });
 
 describe("DeepSeekClient request serialization", () => {
+  it("maps image attachments into OpenAI-style image_url parts for image-capable routes", async () => {
+    let sentBody = "";
+    const spy = vi.fn(async (_url: unknown, init: unknown) => {
+      sentBody = String((init as RequestInit).body ?? "");
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      baseUrl: "https://api.openai.com/v1",
+      fetch: spy as unknown as typeof fetch,
+    });
+
+    await client.chat({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "user",
+          content: "what is in this screenshot?",
+          attachments: [
+            {
+              id: "img-1",
+              kind: "image",
+              name: "shot.png",
+              path: "shot.png",
+              size: 12,
+              mimeType: "image/png",
+              dataUrl: "data:image/png;base64,AAAA",
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(JSON.parse(sentBody).messages[0].content).toEqual([
+      { type: "text", text: "what is in this screenshot?" },
+      { type: "image_url", image_url: { url: "data:image/png;base64,AAAA" } },
+    ]);
+  });
+
+  it("degrades image attachments to text-only content on non-image-capable routes", async () => {
+    let sentBody = "";
+    const spy = vi.fn(async (_url: unknown, init: unknown) => {
+      sentBody = String((init as RequestInit).body ?? "");
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: spy as unknown as typeof fetch,
+    });
+
+    await client.chat({
+      model: "deepseek-chat",
+      messages: [
+        {
+          role: "user",
+          content: "what is in this screenshot?",
+          attachments: [
+            {
+              id: "img-1",
+              kind: "image",
+              name: "shot.png",
+              path: "shot.png",
+              size: 12,
+              mimeType: "image/png",
+              dataUrl: "data:image/png;base64,AAAA",
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(JSON.parse(sentBody).messages[0].content).toBe("what is in this screenshot?");
+  });
+
+  it("keeps file attachment excerpts as plain text content", async () => {
+    let sentBody = "";
+    const spy = vi.fn(async (_url: unknown, init: unknown) => {
+      sentBody = String((init as RequestInit).body ?? "");
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: spy as unknown as typeof fetch,
+    });
+
+    await client.chat({
+      model: "deepseek-chat",
+      messages: [
+        {
+          role: "user",
+          content: "review attached file",
+          attachments: [
+            {
+              id: "file-1",
+              kind: "file",
+              name: "README.md",
+              path: "README.md",
+              size: 42,
+              excerpt: "# MAGRA",
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(JSON.parse(sentBody).messages[0].content).toContain("[Attached file: README.md]");
+    expect(JSON.parse(sentBody).messages[0].content).toContain("# MAGRA");
+  });
+
+  it("strips local attachment metadata before sending API payload", async () => {
+    let sentBody = "";
+    const spy = vi.fn(async (_url: unknown, init: unknown) => {
+      sentBody = String((init as RequestInit).body ?? "");
+      return new Response(JSON.stringify({ choices: [{ message: { content: "ok" } }] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    });
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: spy as unknown as typeof fetch,
+    });
+
+    await client.chat({
+      model: "deepseek-chat",
+      messages: [
+        {
+          role: "user",
+          content: "inspect attachment",
+          attachments: [
+            {
+              id: "att-1",
+              kind: "file",
+              name: "README.md",
+              path: "README.md",
+              size: 42,
+              excerpt: "# MAGRA",
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(JSON.parse(sentBody).messages[0].attachments).toBeUndefined();
+  });
+
   it("replaces lone UTF-16 surrogates before sending JSON", async () => {
     let sentBody = "";
     const spy = vi.fn(async (_url: unknown, init: unknown) => {

@@ -1,3 +1,25 @@
+// === MODULE_CONTRACT ===
+// FILE: src/client.ts
+// VERSION: 1.0.0
+// PURPOSE: Talk to chat-model providers, normalize usage, and serialize MAGRA request payloads.
+// SCOPE: Chat payload construction, streaming parse, model catalog reads, rate limiting, and image attachment capability gating.
+// DEPENDS: M-REASONIX-BASE,M-CHAT-ATTACHMENT-MODEL,M-IMAGE-ATTACHMENT-PIPELINE
+// LINKS: docs/modules/M-IMAGE-ATTACHMENT-PIPELINE.xml
+// ROLE: RUNTIME
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: Usage, DeepSeekClient, pickPrimaryBalance
+// Locals: normalizeModelId, hostLooksImageCapable, modelLooksImageCapable, extractImageCapability, replaceLoneSurrogates, sanitizeJsonTransportValue, stringifyJsonTransport
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added image attachment payload mapping, capability caching from /models, and conservative multimodal send gating.
+// === END_CHANGE_SUMMARY ===
+
 import { type EventSourceMessage, createParser } from "eventsource-parser";
 import { loadRateLimit, resolveBaseUrlEnv } from "./config.js";
 import { type RetryOptions, fetchWithRetry } from "./retry.js";
@@ -91,6 +113,10 @@ export interface ModelInfo {
   id: string;
   object: "model";
   owned_by: string;
+  capabilities?: {
+    input_modalities?: string[];
+    output_modalities?: string[];
+  };
 }
 
 export interface ModelList {
@@ -106,6 +132,52 @@ export interface DeepSeekClientOptions {
   rateLimit?: { rpm?: number };
   /** Retry configuration. Pass `{ maxAttempts: 1 }` to disable retries. */
   retry?: RetryOptions;
+}
+
+function normalizeModelId(model: string): string {
+  return model.trim().toLowerCase();
+}
+
+function hostLooksImageCapable(host: string): boolean {
+  return (
+    host === "api.deepseek.com" ||
+    host.endsWith(".deepseek.com") ||
+    host === "openrouter.ai" ||
+    host.endsWith(".openrouter.ai") ||
+    host === "api.openai.com" ||
+    host.endsWith(".openai.com") ||
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host.endsWith(".localhost")
+  );
+}
+
+function modelLooksImageCapable(model: string): boolean {
+  const id = normalizeModelId(model);
+  return (
+    id.includes("vision") ||
+    id.includes("vl") ||
+    id.includes("gpt-4o") ||
+    id.includes("gpt-4.1") ||
+    id.includes("gemini") ||
+    id.includes("claude-3") ||
+    id.includes("claude-sonnet-4") ||
+    id.includes("claude-opus-4") ||
+    id.includes("qwen-vl") ||
+    id.includes("llava") ||
+    id.includes("pixtral") ||
+    id.includes("minicpm-v")
+  );
+}
+
+function extractImageCapability(model: ModelInfo): boolean | null {
+  const modalities = model.capabilities?.input_modalities;
+  if (!Array.isArray(modalities)) return null;
+  const normalized = modalities
+    .filter((item): item is string => typeof item === "string")
+    .map((item) => item.toLowerCase());
+  if (normalized.length === 0) return null;
+  return normalized.includes("image");
 }
 
 // DeepSeek's strict JSON parser rejects lone UTF-16 surrogate escapes
@@ -158,6 +230,7 @@ export class DeepSeekClient {
   readonly retry: RetryOptions;
   private readonly _fetch: typeof fetch;
   private readonly minChatIntervalMs: number;
+  private readonly imageCapableModels = new Map<string, boolean>();
   private nextChatRequestAt = 0;
 
   constructor(opts: DeepSeekClientOptions = {}) {
@@ -209,9 +282,55 @@ export class DeepSeekClient {
   }
 
   private buildPayload(opts: ChatRequestOptions, stream: boolean) {
+    const imageSendEnabled = this._supportsImageContent(opts.model);
+    const messages = opts.messages.map((message) => {
+      const { attachments: rawAttachments, ...rest } = message as ChatMessage & {
+        attachments?: Array<{
+          kind: "file" | "image";
+          name: string;
+          excerpt?: string;
+          dataUrl?: string;
+        }>;
+      };
+      if (!rawAttachments || rawAttachments.length === 0 || rest.role !== "user") return rest;
+
+      const fileAttachments = rawAttachments.filter((attachment) => attachment.kind === "file");
+      const imageAttachments = rawAttachments.filter(
+        (attachment) => attachment.kind === "image" && typeof attachment.dataUrl === "string",
+      );
+
+      const textParts: string[] = [];
+      if (typeof rest.content === "string" && rest.content.length > 0) textParts.push(rest.content);
+      for (const attachment of fileAttachments) {
+        const excerpt = attachment.excerpt?.trim();
+        if (!excerpt) continue;
+        textParts.push(`[Attached file: ${attachment.name}]\n${excerpt}`);
+      }
+
+      if (imageAttachments.length === 0 || !imageSendEnabled) {
+        return {
+          ...rest,
+          content: textParts.join("\n\n"),
+        };
+      }
+
+      const content: Array<Record<string, unknown>> = [];
+      const combinedText = textParts.join("\n\n");
+      if (combinedText) content.push({ type: "text", text: combinedText });
+      for (const attachment of imageAttachments) {
+        content.push({
+          type: "image_url",
+          image_url: { url: attachment.dataUrl },
+        });
+      }
+      return {
+        ...rest,
+        content,
+      };
+    });
     const payload: Record<string, unknown> = {
       model: opts.model,
-      messages: opts.messages,
+      messages,
       stream,
     };
     if (stream) payload.stream_options = { include_usage: true };
@@ -246,6 +365,25 @@ export class DeepSeekClient {
     }
   }
 
+  /** Conservative gate for live image send. Uses explicit model capability metadata when available, otherwise falls back to endpoint/model heuristics. */
+  supportsImageInput(model: string): boolean {
+    const normalized = normalizeModelId(model);
+    const cached = this.imageCapableModels.get(normalized);
+    if (cached !== undefined) return cached;
+    try {
+      const host = new URL(this.baseUrl).hostname.toLowerCase();
+      return hostLooksImageCapable(host) && modelLooksImageCapable(model);
+    } catch {
+      return modelLooksImageCapable(model);
+    }
+  }
+
+  /** Conservative gate: only send multimodal image parts when endpoint/model pair looks image-capable.
+   *  Otherwise degrade to text-only turn so file/text attachment flow keeps working on plain chat endpoints. */
+  private _supportsImageContent(model: string): boolean {
+    return this.supportsImageInput(model);
+  }
+
   /** Returns null on failure so callers can degrade — session must keep working without balance UI. */
   async getBalance(opts: { signal?: AbortSignal } = {}): Promise<UserBalance | null> {
     try {
@@ -274,6 +412,11 @@ export class DeepSeekClient {
       if (!resp.ok) return null;
       const data = (await resp.json()) as ModelList;
       if (!data || !Array.isArray(data.data)) return null;
+      for (const model of data.data) {
+        const capability = extractImageCapability(model);
+        if (capability === null) continue;
+        this.imageCapableModels.set(normalizeModelId(model.id), capability);
+      }
       return data;
     } catch {
       return null;

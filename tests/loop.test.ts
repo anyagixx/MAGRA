@@ -602,7 +602,7 @@ describe("CacheFirstLoop (non-streaming)", () => {
     // auto-compact attempt before forcing summary.
     const warn = events.find((e) => e.role === "warning");
     expect(warn).toBeDefined();
-    expect(warn!.content).toMatch(/context [\d,]+\/[\d,]+/);
+    expect(warn!.content).toMatch(/context [\d,\u00A0]+\/[\d,\u00A0]+/);
 
     // The final assistant_final must be tagged forcedSummary and carry the context-guard prefix.
     const finals = events.filter((e) => e.role === "assistant_final");

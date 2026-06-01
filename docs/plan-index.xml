@@ -19,4 +19,6 @@
   <Phase-17 NAME="MyGraceSkillAssetHotfix" STATUS="done" STEPS="4" />
   <Phase-18 NAME="MyGraceWebDispatchHotfix" STATUS="done" STEPS="4" />
   <Phase-19 NAME="MagraReleaseSurfaceHardening" STATUS="done" STEPS="6" />
+  <Phase-20 NAME="ForkStateCleanup" STATUS="done" STEPS="7" />
+  <Phase-21 NAME="WebChatAttachments" STATUS="done" STEPS="7" />
 </PlanIndex>

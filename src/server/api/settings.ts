@@ -93,6 +93,7 @@ export async function handleSettings(
         editMode: ctx.getEditMode?.() ?? cfg.editMode ?? "review",
         session: cfg.session ?? null,
         model: live?.model ?? loadModel(ctx.configPath),
+        modelSupportsImageInput: live ? live.client.supportsImageInput(live.model) : false,
         budgetUsd: live?.budgetUsd ?? null,
         sessionSpendUsd: ctx.getStats?.()?.totalCostUsd ?? null,
         skillPaths: normalizeSkillPaths(

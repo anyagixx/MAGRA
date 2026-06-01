@@ -1,5 +1,5 @@
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
-import { homedir, tmpdir } from "node:os";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DeepSeekClient } from "../src/client.js";
@@ -24,10 +24,7 @@ describe("loop persists user message at step entry (issue #943)", () => {
     if (existsSync(tmp)) rmSync(tmp, { recursive: true, force: true });
   });
 
-  it("writes the user message to the session log before the first API call settles, so a mid-stream abort doesn't drop it", async () => {
-    // Fake fetch that never resolves on its own — only the abort signal
-    // terminates it. Simulates the desktop user clicking a different
-    // session while the AI is still streaming.
+  it("writes user message to session log before first API call settles, so mid-stream abort doesn't drop it", async () => {
     const client = new DeepSeekClient({
       apiKey: "sk-test",
       fetch: vi.fn(async (_url: unknown, init: { signal?: AbortSignal } | undefined) => {
@@ -55,22 +52,17 @@ describe("loop persists user message at step entry (issue #943)", () => {
       }
     })();
 
-    // Yield a tick so step() reaches the awaited fetch, then abort to
-    // simulate the session-switch tear-down.
     await new Promise((r) => setTimeout(r, 10));
     loop.abort();
     await consumed;
 
-    // The session JSONL must exist on disk and contain the user prompt.
-    // Pre-fix this file would be missing entirely, making the session
-    // invisible to the sidebar's `listSessions()` glob.
     const persisted = loadSessionMessages(sessionName);
     const firstUser = persisted.find((m) => m.role === "user");
     expect(firstUser).toBeDefined();
     expect(firstUser?.content).toBe("hello — switching away soon");
   });
 
-  it("writes the user message immediately even when the API call succeeds normally", async () => {
+  it("writes user message immediately even when API call succeeds normally", async () => {
     const client = new DeepSeekClient({
       apiKey: "sk-test",
       fetch: vi.fn(async () => {
@@ -103,16 +95,14 @@ describe("loop persists user message at step entry (issue #943)", () => {
     }
 
     const persisted = loadSessionMessages(sessionName);
-    // First entry is the user message; followed by assistant.
     expect(persisted[0]).toEqual({ role: "user", content: "happy path" });
     expect(persisted.length).toBeGreaterThanOrEqual(2);
     expect(persisted.some((m) => m.role === "assistant")).toBe(true);
-    // No duplicate user copies.
     const userMsgs = persisted.filter((m) => m.role === "user");
     expect(userMsgs).toHaveLength(1);
   });
 
-  it("persists send-time healing of dangling tool_calls so the session does not stay poisoned", async () => {
+  it("persists send-time healing of dangling tool_calls so session does not stay poisoned", async () => {
     const requestMessages: ChatMessage[][] = [];
     const client = new DeepSeekClient({
       apiKey: "sk-test",
@@ -164,7 +154,7 @@ describe("loop persists user message at step entry (issue #943)", () => {
     ).toBe(false);
   });
 
-  it("can discard an explicitly aborted prompt before the next request (#1593)", async () => {
+  it("can discard explicitly aborted prompt before next request (#1593)", async () => {
     const requestMessages: ChatMessage[][] = [];
     let callCount = 0;
     const client = new DeepSeekClient({
@@ -223,5 +213,103 @@ describe("loop persists user message at step entry (issue #943)", () => {
       .map((m) => m.content);
     expect(secondRequestUsers).toEqual(["请按这次要求完整重写，不要局部微调"]);
     expect(loadSessionMessages(sessionName).filter((m) => m.role === "user")).toHaveLength(1);
+  });
+
+  it("emits visible warning when image attachments downgrade to text-only route", async () => {
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: vi.fn(async () => {
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                index: 0,
+                message: { role: "assistant", content: "ok" },
+                finish_reason: "stop",
+              },
+            ],
+            usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }) as unknown as typeof fetch,
+    });
+
+    const loop = new CacheFirstLoop({
+      client,
+      prefix: new ImmutablePrefix({ system: "s" }),
+      model: "deepseek-chat",
+      stream: false,
+      session: "waveb-image-warning",
+    });
+
+    const events = [] as Array<{ role: string; content: string }>;
+    for await (const ev of loop.step("inspect image", [
+      {
+        id: "img-1",
+        kind: "image",
+        name: "shot.png",
+        path: "shot.png",
+        size: 12,
+        dataUrl: "data:image/png;base64,AAAA",
+      },
+    ])) {
+      events.push({ role: ev.role, content: ev.content });
+      if (ev.role === "done") break;
+    }
+
+    expect(
+      events.some((ev) => ev.role === "warning" && ev.content.includes("IMAGE_SEND_GATING")),
+    ).toBe(true);
+  });
+
+  it("persists image attachments without embedding transient data urls in session JSONL", async () => {
+    const client = new DeepSeekClient({
+      apiKey: "sk-test",
+      fetch: vi.fn(async () => {
+        return new Response(
+          JSON.stringify({
+            choices: [
+              {
+                index: 0,
+                message: { role: "assistant", content: "ok" },
+                finish_reason: "stop",
+              },
+            ],
+            usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }) as unknown as typeof fetch,
+    });
+
+    const sessionName = "waveb-image-persist";
+    const loop = new CacheFirstLoop({
+      client,
+      prefix: new ImmutablePrefix({ system: "s" }),
+      stream: false,
+      session: sessionName,
+    });
+
+    for await (const ev of loop.step("inspect image", [
+      {
+        id: "img-1",
+        kind: "image",
+        name: "shot.png",
+        path: "shot.png",
+        size: 12,
+        dataUrl: "data:image/png;base64,AAAA",
+        preview: "data:image/png;base64,AAAA",
+      },
+    ])) {
+      if (ev.role === "done") break;
+    }
+
+    const persisted = loadSessionMessages(sessionName);
+    const firstUser = persisted.find((m) => m.role === "user");
+    expect(firstUser?.attachments?.[0]?.kind).toBe("image");
+    expect(firstUser?.attachments?.[0]?.path).toBe("shot.png");
+    expect(firstUser?.attachments?.[0]?.dataUrl).toBeUndefined();
+    expect(firstUser?.attachments?.[0]?.preview).toBeUndefined();
   });
 });

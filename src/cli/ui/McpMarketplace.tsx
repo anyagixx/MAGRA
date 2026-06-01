@@ -66,7 +66,10 @@ export function buildMarketplacePickerSnapshot(args: {
             : e.source === "smithery"
               ? "smithery"
               : "local",
-        meta: e.popularity !== undefined ? `\u2605 ${e.popularity.toLocaleString()}` : undefined,
+        meta:
+          e.popularity !== undefined
+            ? `★ ${new Intl.NumberFormat("en-US").format(e.popularity)}`
+            : undefined,
       };
     }),
     actions: ["install", "uninstall", "refine", "load-more", "cancel"] as const,
@@ -386,7 +389,10 @@ export function McpMarketplace({ onClose, postInfo, reloadMcp, pickerPorts }: Mc
               e.source === "official" ? "[off]" : e.source === "smithery" ? "[smt]" : "[loc]";
             const installedSpec = isInstalled(state.installedSpecs, e);
             const installedBadge = installedSpec ? " ✓" : "";
-            const pop = e.popularity !== undefined ? ` · ${e.popularity.toLocaleString()}` : "";
+            const pop =
+              e.popularity !== undefined
+                ? ` · ${new Intl.NumberFormat("en-US").format(e.popularity)}`
+                : "";
             return (
               <Box key={e.name}>
                 <Text color={active ? COLOR.brand : undefined}>{active ? "▸ " : "  "}</Text>

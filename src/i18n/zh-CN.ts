@@ -30,25 +30,24 @@ export const zhCN: TranslationSchema = {
     replay: "交互式 Ink TUI，用于浏览转录稿。",
     diff: "在分栏 Ink TUI 中比较两个转录稿。",
     mcp: "模型上下文协议 (MCP) 助手 — 发现服务器，测试您的设置。",
-    version: "打印 Reasonix 版本。",
-    update: "检查较新版本的 Reasonix 并安装。",
+    version: "打印 MAGRA 版本。",
+    update: "检查较新版本的 MAGRA 并安装。",
     index: "构建（或增量刷新）本地语义搜索索引。",
   },
   stats: {
     usageHint: "运行 `magra chat`、`magra code` 或 `magra run <task>` — 每次对话都会记录",
-    usageDetail: "每次对话在日志中追加一行，`reasonix stats` 会将其汇总统计。",
+    usageDetail: "每次对话在日志中追加一行，`magra stats` 会将其汇总统计。",
   },
   run: {
     missingApiKey:
       "未设置 DEEPSEEK_API_KEY 且标准输入不是 TTY（无法交互式输入）。\n" +
-      "请设置环境变量，或先运行 `reasonix chat` 交互一次以保存密钥。\n",
+      "请设置环境变量，或先运行 `magra chat` 交互一次以保存密钥。\n",
   },
   sessions: {
-    emptyHint:
-      "暂无已保存的会话 — 运行 `reasonix chat`（会话会自动保存，除非使用了 --no-session）。",
-    listHeader: "保存的会话 (~/.reasonix/sessions/)：",
-    inspectHint: "查看：reasonix sessions <name>",
-    resumeHint: "恢复：reasonix chat --session <name>",
+    emptyHint: "暂无已保存的会话 — 运行 `magra chat`（会话会自动保存，除非使用了 --no-session）。",
+    listHeader: "保存的会话 (~/.magra/sessions/)：",
+    inspectHint: "查看：magra sessions <name>",
+    resumeHint: "恢复：magra chat --session <name>",
     noSession: '找不到会话 "{name}"（或为空）。',
     lookedAt: "位置：{path}",
     noIdleSessions: "没有闲置 ≥{days} 天的会话。无需清理。",
@@ -58,7 +57,7 @@ export const zhCN: TranslationSchema = {
     daysInvalid: "--days 必须是正整数（传入了 {days}）。",
   },
   ui: {
-    welcome: "随时运行 `reasonix` 开始聊天 — 您的设置将被记住。",
+    welcome: "随时运行 `magra` 开始聊天 — 您的设置将被记住。",
     taglineChat: "DeepSeek 原生智能体",
     taglineCode: "DeepSeek 原生代码智能体",
     taglineSub: "缓存优先 · Flash 优先",
@@ -124,7 +123,7 @@ export const zhCN: TranslationSchema = {
       footer: "运行 /keys 查看完整键盘 + 鼠标参考",
     },
     keysReference: {
-      topic: "Reasonix 键盘 + 鼠标参考",
+      topic: "MAGRA 键盘 + 鼠标参考",
       sections: [
         {
           title: "键盘",
@@ -415,7 +414,7 @@ export const zhCN: TranslationSchema = {
   wizard: {
     languageTitle: "选择语言",
     languageSubtitle: "已根据系统语言自动选中。之后可用 /language 切换。",
-    welcomeTitle: "欢迎使用 Reasonix。",
+    welcomeTitle: "欢迎使用 MAGRA。",
     apiKeyPrompt: "粘贴你的 DeepSeek API key 开始使用。",
     apiKeyGetOne: "在此获取：https://platform.deepseek.com/api_keys",
     apiKeySavedLocally: "保存在本地：{path}",
@@ -437,7 +436,7 @@ export const zhCN: TranslationSchema = {
       "high-contrast": "高对比度（无障碍）",
     },
     reviewLabelTheme: "主题",
-    mcpTitle: "Reasonix 要为你接入哪些 MCP 服务器？",
+    mcpTitle: "MAGRA 要为你接入哪些 MCP 服务器？",
     mcpUserArgsHint: "（需要你提供 {arg}）",
     mcpFooterMulti: "[↑↓] 移动  ·  [空格] 选择  ·  [Enter] 确认  ·  [Esc] 取消  ·  全不选 = 跳过",
     mcpArgsTitle: "配置 {name}",
@@ -471,7 +470,7 @@ export const zhCN: TranslationSchema = {
     footer: "↑↓ 选择 · ⏎ 确认 · Esc 取消",
     currentPref: "当前偏好",
     activeNow: "当前生效",
-    autoDesc: "使用 REASONIX_THEME 或默认主题",
+    autoDesc: "使用 MAGRA_THEME 或默认主题",
   },
   planFlow: {
     approveCardTitle: "确认计划",
@@ -764,7 +763,7 @@ export const zhCN: TranslationSchema = {
       loopStarted:
         '▸ 循环已启动 — 每 {duration} 重新提交 "{prompt}"。输入任何内容（或 /loop stop）取消。',
       keysNeedsTui: "/keys 需要 TUI 上下文（postKeys 已连接）。",
-      aboutHeader: "Reasonix v{version} — 缓存优先的 DeepSeek 编码代理",
+      aboutHeader: "MAGRA v{version} — 集成 MyGRACE、RTK 与 SNARC 的缓存优先编码代理",
       aboutWebsiteLabel: "官网",
       aboutRepoLabel: "仓库",
       aboutLicenseLabel: "协议",

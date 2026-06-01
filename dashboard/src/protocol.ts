@@ -237,6 +237,19 @@ export type JobInfo = {
   spawnError?: string;
 };
 
+export type AttachmentItem = {
+  id: string;
+  kind: "file" | "image";
+  name: string;
+  path: string;
+  size: number;
+  mimeType?: string;
+  preview?: string;
+  excerpt?: string;
+  dataUrl?: string;
+  relativeToWorkspace?: boolean;
+};
+
 export type JobsEvent = {
   type: "$jobs";
   items: JobInfo[];
@@ -255,7 +268,7 @@ export type LoadedSegment =
     };
 
 export type LoadedMessage =
-  | { kind: "user"; text: string }
+  | { kind: "user"; text: string; attachments?: AttachmentItem[] }
   | {
       kind: "assistant";
       turn: number;
@@ -311,6 +324,7 @@ export type SettingsEvent = {
   workspaceDir: string;
   recentWorkspaces: string[];
   model: string;
+  modelSupportsImageInput?: boolean;
   editor?: string;
   webSearchEngine?: WebSearchEngineName;
   webSearchApiKeys?: {
@@ -368,6 +382,7 @@ export type UserMessageEvent = {
   ts: string;
   turn: number;
   text: string;
+  attachments?: AttachmentItem[];
 };
 
 export type ModelTurnStartedEvent = {
@@ -509,7 +524,7 @@ export type IncomingEvent = { tabId?: string } & (
 );
 
 export type OutgoingCommand = { tabId?: string } & (
-  | { cmd: "user_input"; text: string }
+  | { cmd: "user_input"; text: string; attachments?: AttachmentItem[] }
   | { cmd: "abort" }
   | { cmd: "confirm_response"; id: number; response: ConfirmationChoice; kind: "shell" | "path" }
   | { cmd: "choice_response"; id: number; response: ChoiceVerdict }

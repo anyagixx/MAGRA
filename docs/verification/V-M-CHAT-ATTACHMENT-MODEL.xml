@@ -1,0 +1,14 @@
+<V-M-CHAT-ATTACHMENT-MODEL MODULE="M-CHAT-ATTACHMENT-MODEL" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/client-models.test.ts</file-1>
+    <file-2>tests/desktop-session-load.test.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/client-models.test.ts tests/desktop-session-load.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Attachment metadata round-trips through user-message surfaces needed by dashboard and replay loaders.</scenario-1>
+    <scenario-2 kind="success">Provider payload strips local attachment metadata after final mapping.</scenario-2>
+  </scenarios>
+</V-M-CHAT-ATTACHMENT-MODEL>

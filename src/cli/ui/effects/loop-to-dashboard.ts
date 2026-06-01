@@ -1,5 +1,5 @@
 import type { LoopEvent } from "../../../loop.js";
-import type { DashboardEvent } from "../../../server/context.js";
+import type { DashboardAttachment, DashboardEvent } from "../../../server/context.js";
 
 export function loopEventToDashboard(
   ev: LoopEvent,
@@ -41,8 +41,12 @@ export function loopEventToDashboard(
       return { kind: "error", id, text: ev.content };
     case "status":
       return { kind: "status", text: ev.content };
-    case "steer":
-      return { kind: "user", id, text: ev.content };
+    case "steer": {
+      const attachments = Array.isArray((ev as { attachments?: unknown }).attachments)
+        ? ((ev as { attachments?: DashboardAttachment[] }).attachments ?? [])
+        : undefined;
+      return { kind: "user", id, text: ev.content, attachments };
+    }
     default:
       return null;
   }

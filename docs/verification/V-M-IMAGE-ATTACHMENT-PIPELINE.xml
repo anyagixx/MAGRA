@@ -1,0 +1,16 @@
+<V-M-IMAGE-ATTACHMENT-PIPELINE MODULE="M-IMAGE-ATTACHMENT-PIPELINE" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/client-models.test.ts</file-1>
+    <file-2>tests/loop-user-persist.test.ts</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/client-models.test.ts tests/loop-user-persist.test.ts</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">User image attachments with `dataUrl` map into OpenAI-style `image_url` multimodal content parts on image-capable routes.</scenario-1>
+    <scenario-2 kind="success">Persisted sessions omit transient `dataUrl`, preserving future gating boundary between live send and replay state.</scenario-2>
+    <scenario-3 kind="success">Non-image-capable routes degrade image attachments to text-only turns instead of sending multimodal payload parts.</scenario-3>
+    <scenario-4 kind="success">Explicit `/models` capability metadata overrides heuristic route guessing and drives live image-send decisions.</scenario-4>
+  </scenarios>
+</V-M-IMAGE-ATTACHMENT-PIPELINE>

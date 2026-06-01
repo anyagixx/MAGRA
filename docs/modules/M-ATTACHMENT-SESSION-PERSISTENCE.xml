@@ -1,0 +1,17 @@
+<M-ATTACHMENT-SESSION-PERSISTENCE NAME="AttachmentSessionPersistence" TYPE="DATA_LAYER" STATUS="done">
+  <contract>
+    <purpose>Persist attachment metadata in session transcripts without embedding transient binary-heavy fields.</purpose>
+    <scope>Loop transcript writes, session transcript reads, desktop replay loading, and attachment persistence sanitization.</scope>
+    <source-path>src/loop.ts</source-path>
+    <test-path>tests/loop-user-persist.test.ts</test-path>
+    <verification-ref>V-M-ATTACHMENT-SESSION-PERSISTENCE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-CHAT-ATTACHMENT-MODEL</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <invariants>
+    <invariant-1>Session JSONL retains attachment identity and file metadata needed for replay and UI chips.</invariant-1>
+    <invariant-2>Transient `dataUrl` fields and data-URL previews are stripped before persistence.</invariant-2>
+  </invariants>
+</M-ATTACHMENT-SESSION-PERSISTENCE>

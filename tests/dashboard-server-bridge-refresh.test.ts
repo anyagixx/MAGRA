@@ -200,6 +200,47 @@ describe("dashboard server bridge refresh", () => {
     );
   });
 
+  it("forwards attachment payloads through submit RPC", async () => {
+    const { bridge, fetchMock } = await loadBridge();
+    await bridge.invoke("rpc_send", {
+      line: JSON.stringify({
+        cmd: "user_input",
+        text: "inspect attachment",
+        attachments: [
+          {
+            id: "att-1",
+            kind: "file",
+            name: "README.md",
+            path: "README.md",
+            size: 42,
+            excerpt: "# MAGRA",
+            relativeToWorkspace: true,
+          },
+        ],
+      }),
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/api/submit"),
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          prompt: "inspect attachment",
+          attachments: [
+            {
+              id: "att-1",
+              kind: "file",
+              name: "README.md",
+              path: "README.md",
+              size: 42,
+              excerpt: "# MAGRA",
+              relativeToWorkspace: true,
+            },
+          ],
+        }),
+      }),
+    );
+  });
+
   it("surfaces MyGRACE skill run API errors instead of swallowing them", async () => {
     const { bridge, events, fetchMock } = await loadBridge();
     fetchMock.mockImplementation(async (url: string) => {

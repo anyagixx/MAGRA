@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { pickPrimaryBalance } from "../../client.js";
 import type { CacheFirstLoop } from "../../loop.js";
+import type { DashboardModelInfo } from "../../server/context.js";
 import { VERSION, compareVersions, getLatestVersion } from "../../version.js";
 
 export interface Balance {
@@ -10,7 +11,7 @@ export interface Balance {
 
 export interface UseSessionInfoResult {
   balance: Balance | null;
-  models: string[] | null;
+  models: DashboardModelInfo[] | null;
   latestVersion: string | null;
   /** Strictly-newer version string (for the header badge) — else `null`. */
   updateAvailable: string | null;
@@ -22,7 +23,7 @@ export interface UseSessionInfoResult {
 /** All values best-effort — `null` means "not loaded or endpoint failed"; StatsPanel hides those cells. */
 export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
   const [balance, setBalance] = useState<Balance | null>(null);
-  const [models, setModels] = useState<string[] | null>(null);
+  const [models, setModels] = useState<DashboardModelInfo[] | null>(null);
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
 
   // Fetch balance on mount. Non-blocking — the session works without
@@ -51,7 +52,12 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
     void (async () => {
       const list = await loop.client.listModels().catch(() => null);
       if (cancelled || !list) return;
-      setModels(list.data.map((m) => m.id));
+      setModels(
+        list.data.map((m) => ({
+          id: m.id,
+          supportsImageInput: loop.client.supportsImageInput(m.id),
+        })),
+      );
     })();
     return () => {
       cancelled = true;
@@ -91,7 +97,14 @@ export function useSessionInfo(loop: CacheFirstLoop): UseSessionInfoResult {
   const refreshModels = useCallback(() => {
     void (async () => {
       const list = await loop.client.listModels().catch(() => null);
-      if (list) setModels(list.data.map((m) => m.id));
+      if (list) {
+        setModels(
+          list.data.map((m) => ({
+            id: m.id,
+            supportsImageInput: loop.client.supportsImageInput(m.id),
+          })),
+        );
+      }
     })();
   }, [loop]);
 

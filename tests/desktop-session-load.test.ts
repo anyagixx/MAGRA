@@ -1,9 +1,15 @@
+// === CHANGE_SUMMARY ===
+// Added replay coverage for persisted user attachments in loaded desktop sessions.
+// Fixed transient image data URL replay assertion to match persistence contract.
+// === END_CHANGE_SUMMARY ===
+
 import { describe, expect, it } from "vitest";
 import * as desktopCommand from "../src/cli/commands/desktop.js";
 import type { ChatMessage } from "../src/types.js";
 
 type BuildLoadedMessages = (records: ChatMessage[]) => Array<{
   kind: "assistant" | "user";
+  attachments?: Array<{ name: string; kind: "file" | "image"; dataUrl?: string }>;
   segments?: Array<{ kind: string; text?: string; args?: string; result?: string }>;
 }>;
 
@@ -45,5 +51,62 @@ describe("desktop session loading", () => {
     expect(text?.text?.length).toBeLessThan(huge.length / 10);
     expect(tool?.args?.length).toBeLessThan(huge.length / 10);
     expect(tool?.result?.length).toBeLessThan(huge.length / 10);
+  });
+
+  it("preserves user attachments in loaded session messages", () => {
+    const buildLoadedMessages = (desktopCommand as { buildLoadedMessages?: BuildLoadedMessages })
+      .buildLoadedMessages;
+    expect(typeof buildLoadedMessages).toBe("function");
+
+    const loaded = buildLoadedMessages!([
+      {
+        role: "user",
+        content: "inspect attachment",
+        attachments: [
+          {
+            id: "att-1",
+            kind: "file",
+            name: "README.md",
+            path: "README.md",
+            size: 42,
+          },
+        ],
+      },
+    ]);
+
+    expect(loaded[0]).toMatchObject({
+      kind: "user",
+      text: "inspect attachment",
+      attachments: [{ name: "README.md", kind: "file" }],
+    });
+  });
+
+  it("omits transient image data urls from loaded session messages", () => {
+    const buildLoadedMessages = (desktopCommand as { buildLoadedMessages?: BuildLoadedMessages })
+      .buildLoadedMessages;
+    expect(typeof buildLoadedMessages).toBe("function");
+
+    const loaded = buildLoadedMessages!([
+      {
+        role: "user",
+        content: "inspect image",
+        attachments: [
+          {
+            id: "img-1",
+            kind: "image",
+            name: "shot.png",
+            path: "shot.png",
+            size: 12,
+          },
+        ],
+      },
+    ]);
+
+    expect(loaded[0]).toMatchObject({
+      kind: "user",
+      text: "inspect image",
+      attachments: [{ name: "shot.png", kind: "image" }],
+    });
+    expect(loaded[0].attachments?.[0]?.dataUrl).toBeUndefined();
   });
 });

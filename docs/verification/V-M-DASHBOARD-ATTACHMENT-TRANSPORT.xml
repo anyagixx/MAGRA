@@ -1,0 +1,16 @@
+<V-M-DASHBOARD-ATTACHMENT-TRANSPORT MODULE="M-DASHBOARD-ATTACHMENT-TRANSPORT" PRIORITY="high" STATUS="done">
+  <test-files>
+    <file-1>tests/server-dashboard.test.ts</file-1>
+    <file-2>tests/dashboard-attachments.test.tsx</file-2>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/server-dashboard.test.ts tests/dashboard-attachments.test.tsx</check-1>
+    <check-2>rtk npm run typecheck</check-2>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Dashboard submit sends prompt plus structured attachment refs through HTTP transport.</scenario-1>
+    <scenario-2 kind="success">Server rejects malformed attachment payloads and accepts valid structured arrays.</scenario-2>
+    <scenario-3 kind="success">Settings/bootstrap surfaces expose current model image-input support for composer prewarn decisions.</scenario-3>
+    <scenario-4 kind="success">`/api/models` returns per-model image-input capability flags alongside current-route capability state.</scenario-4>
+  </scenarios>
+</V-M-DASHBOARD-ATTACHMENT-TRANSPORT>

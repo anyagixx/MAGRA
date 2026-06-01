@@ -20,7 +20,7 @@ describe("formatLoopError", () => {
     const out = formatLoopError(raw);
     expect(out).toMatch(/Context overflow/);
     expect(out).toMatch(/\/sessions/);
-    expect(out).toMatch(/929,452 tokens/); // pretty-printed from the raw JSON
+    expect(out).toMatch(/929[,\u00A0]452 tokens/); // pretty-printed from the raw JSON
   });
 
   it("401 → authentication hint with setup/env var fix", () => {

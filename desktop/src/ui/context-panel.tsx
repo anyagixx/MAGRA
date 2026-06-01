@@ -11,6 +11,7 @@ import { PanelErrorBoundary } from "./error-boundary";
 type Tab = "files" | "tools" | "memory" | "rules";
 
 const CONTEXT_MAX_TOKENS = 1_000_000;
+const EN_NUMBER = new Intl.NumberFormat("en-US");
 
 export function ContextPanel({
   settings,
@@ -66,8 +67,7 @@ export function ContextPanel({
           <div className="h">
             <span>{t("contextPanel.contextTokens")}</span>
             <span className="right">
-              {(reserved + used + cached).toLocaleString()} /{" "}
-              {CONTEXT_MAX_TOKENS.toLocaleString()}
+              {EN_NUMBER.format(reserved + used + cached)} / {EN_NUMBER.format(CONTEXT_MAX_TOKENS)}
             </span>
           </div>
           <div className="meter">
@@ -78,18 +78,18 @@ export function ContextPanel({
           <div className="legend">
             <span className="l">
               <span className="sw r" />
-              {t("contextPanel.reservedKey")} <span className="v">{reserved.toLocaleString()}</span>
+              {t("contextPanel.reservedKey")} <span className="v">{EN_NUMBER.format(reserved)}</span>
             </span>
             <span className="l">
               <span className="sw c" />
-              {t("contextPanel.cacheKey")} <span className="v">{cached.toLocaleString()}</span>
+              {t("contextPanel.cacheKey")} <span className="v">{EN_NUMBER.format(cached)}</span>
             </span>
             <span className="l">
               <span className="sw u" />
-              {t("contextPanel.usedKey")} <span className="v">{used.toLocaleString()}</span>
+              {t("contextPanel.usedKey")} <span className="v">{EN_NUMBER.format(used)}</span>
             </span>
             <span className="l">
-              {t("contextPanel.freeKey")} <span className="v">{free.toLocaleString()}</span>
+              {t("contextPanel.freeKey")} <span className="v">{EN_NUMBER.format(free)}</span>
             </span>
           </div>
         </div>

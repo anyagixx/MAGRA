@@ -4,6 +4,7 @@ import { memo, useState, type ReactNode } from "react";
 import { Copy } from "lucide-react";
 import { I } from "../icons";
 import { t, useLang } from "../i18n";
+import type { AttachmentItem } from "../protocol";
 import type { AssistantSegment, ActivePlan, PendingPlan, PendingCheckpoint, PendingRevision, PendingConfirm, PendingChoice, SkillOrigin } from "../App";
 import { AssistantText, CompactionCard, PlanCardView, ReasoningCard, ShellCard, ToolCard, type PlanItem } from "./cards";
 import { ApprovalCard, TaskCard, type TaskStepView } from "./extra-cards";
@@ -21,10 +22,12 @@ export const UserMsg = memo(function UserMsg({
   text,
   time,
   skill,
+  attachments,
 }: {
   text: string;
   time?: string;
   skill?: SkillOrigin;
+  attachments?: AttachmentItem[];
 }) {
   useLang();
   const [copied, setCopied] = useState(false);
@@ -52,6 +55,21 @@ export const UserMsg = memo(function UserMsg({
           {time ? <span className="time">{time}</span> : null}
         </div>
         <div className="msg-text">{text}</div>
+        {attachments && attachments.length > 0 ? (
+          <div className="composer-tags composer-attachments" style={{ marginTop: 8 }}>
+            {attachments.map((attachment) => (
+              <span key={attachment.id} className={`chip attachment ${attachment.kind}`}>
+                {attachment.kind === "image" ? <I.image size={11} /> : <I.paperclip size={11} />}
+                {attachment.preview ? (
+                  <span className="attachment-preview" aria-hidden="true">
+                    <img src={attachment.preview} alt="" />
+                  </span>
+                ) : null}
+                <span>{attachment.name}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
         <div className="msg-actions">
           <button
             type="button"

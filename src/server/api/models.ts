@@ -13,8 +13,12 @@ export async function handleModels(
   return {
     status: 200,
     body: {
-      models,
+      models: models?.map((model) => model.id) ?? null,
+      entries: models,
       current: ctx.loop?.model ?? null,
+      currentSupportsImageInput: ctx.loop
+        ? ctx.loop.client.supportsImageInput(ctx.loop.model)
+        : false,
       /** USD per 1M tokens — same table the cost gauge uses. */
       pricing: DEEPSEEK_PRICING,
     },

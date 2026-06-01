@@ -42,7 +42,7 @@ import type {
 } from "./protocol";
 import { readSessionFromUrl, writeSessionToUrl } from "./lib/session-url";
 import { type QQDesktopSettingsState } from "./qq-settings";
-import { Composer, type SlashCmd } from "./ui/composer";
+import { buildAttachment, Composer, type ComposerAttachment, type SlashCmd } from "./ui/composer";
 import { ContextPanel } from "./ui/context-panel";
 import { JobsPop } from "./ui/jobs-pop";
 import { useElapsed } from "./ui/live";
@@ -97,7 +97,14 @@ export type SkillOrigin = {
 };
 
 export type ChatMessage =
-  | { kind: "user"; text: string; clientId: string; turn: number; skill?: SkillOrigin }
+  | {
+      kind: "user";
+      text: string;
+      clientId: string;
+      turn: number;
+      skill?: SkillOrigin;
+      attachments?: ComposerAttachment[];
+    }
   | {
       kind: "assistant";
       turn: number;
@@ -198,6 +205,7 @@ export type Settings = {
   workspaceDir: string;
   recentWorkspaces: string[];
   model: string;
+  modelSupportsImageInput?: boolean;
   editor?: string;
   webSearchEngine?:
     | "bing"
@@ -239,6 +247,7 @@ type State = {
   model?: string;
   currentSession?: string;
   messages: ChatMessage[];
+  composerAttachments: ComposerAttachment[];
   pendingConfirms: PendingConfirm[];
   pendingPathAccess: PendingPathAccess[];
   pendingChoices: PendingChoice[];
@@ -283,7 +292,7 @@ type DeltaBatchItem = {
 };
 
 type Action =
-  | { t: "send_user"; text: string; clientId: string }
+  | { t: "send_user"; text: string; clientId: string; attachments?: ComposerAttachment[] }
   | { t: "start_skill"; skill: SkillOrigin; args?: string; clientId: string }
   | { t: "incoming"; event: IncomingEvent }
   | { t: "batch_delta"; items: DeltaBatchItem[] }
@@ -298,6 +307,7 @@ type Action =
   | { t: "dismiss_plan" }
   | { t: "mention_results"; results: MentionResults }
   | { t: "mention_preview"; preview: MentionPreviewState }
+  | { t: "set_composer_attachments"; attachments: ComposerAttachment[] }
   | { t: "enqueue_send"; text: string }
   | { t: "dequeue_send"; index: number }
   | { t: "shift_queued_send" };
@@ -336,8 +346,9 @@ function reduceRaw(state: State, action: Action): State {
         busy: true,
         messages: [
           ...state.messages,
-          { kind: "user", text: action.text, clientId: action.clientId, turn: nextMessageTurn(state.messages) },
+          { kind: "user", text: action.text, clientId: action.clientId, turn: nextMessageTurn(state.messages), attachments: action.attachments },
         ],
+        composerAttachments: [],
       };
     }
     case "start_skill": {
@@ -406,6 +417,7 @@ function reduceRaw(state: State, action: Action): State {
         busy: false,
         currentSession: undefined,
         messages: [],
+        composerAttachments: [],
         pendingConfirms: [],
         pendingPathAccess: [],
         pendingChoices: [],
@@ -481,6 +493,8 @@ function reduceRaw(state: State, action: Action): State {
       return { ...state, mentionResults: action.results };
     case "mention_preview":
       return { ...state, mentionPreview: action.preview };
+    case "set_composer_attachments":
+      return { ...state, composerAttachments: action.attachments };
     case "enqueue_send":
       return { ...state, queuedSends: [...state.queuedSends, action.text] };
     case "dequeue_send":
@@ -596,6 +610,7 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
             text: ev.text,
             clientId: `remote-${ev.id}`,
             turn: ev.turn > 0 ? ev.turn : nextMessageTurn(state.messages),
+            attachments: ev.attachments,
           },
         ],
       };
@@ -737,6 +752,7 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
         activePlan: currentChanged ? null : state.activePlan,
         usage: currentChanged ? zeroUsage() : state.usage,
         sessionFiles: currentChanged ? [] : state.sessionFiles,
+        composerAttachments: currentChanged ? [] : state.composerAttachments,
         queuedSends: currentChanged ? [] : state.queuedSends,
       };
     }
@@ -824,6 +840,7 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
         activePlan: wsChanged ? null : state.activePlan,
         usage: wsChanged ? zeroUsage() : state.usage,
         sessionFiles: wsChanged ? [] : state.sessionFiles,
+        composerAttachments: wsChanged ? [] : state.composerAttachments,
         retryNonce: wsChanged ? 0 : state.retryNonce,
         settings: {
           reasoningEffort: ev.reasoningEffort,
@@ -847,7 +864,13 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
       const sessionName = ev.name;
       const loaded: ChatMessage[] = ev.messages.map((m, i) => {
         if (m.kind === "user") {
-          return { kind: "user", text: m.text, clientId: `c-loaded-${i}`, turn: i + 1 };
+          return {
+            kind: "user",
+            text: m.text,
+            clientId: `c-loaded-${i}`,
+            turn: i + 1,
+            attachments: m.attachments,
+          };
         }
         const segments: AssistantSegment[] = m.segments.map((s) => {
           if (s.kind === "tool") {
@@ -896,6 +919,7 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
           cacheMissTokens: ev.carryover.cacheMissTokens,
         },
         sessionFiles,
+        composerAttachments: [],
         activeSkill: null,
         queuedSends: [],
         retryNonce: 0,
@@ -1189,6 +1213,7 @@ function TabRuntime({
     needsSetup: false,
     busy: false,
     messages: [],
+    composerAttachments: [],
     pendingConfirms: [],
     pendingPathAccess: [],
     pendingChoices: [],
@@ -1334,8 +1359,8 @@ function TabRuntime({
     [],
   );
 
-  // Drag-and-drop: dropping files/folders onto the window inserts them
-  // as @-mentions in the draft (relative to workspaceDir when inside it).
+  // Drag-and-drop: dropping files/folders onto the window creates
+  // attachment chips instead of rewriting the draft into @-mentions.
   // activeRef gates the handler — without it, a single drop hits every
   // mounted tab's draft (issue #1027, exposed once #1063 restored tabs).
   const dropActiveRef = useRef(active);
@@ -1368,22 +1393,19 @@ function TabRuntime({
           delete document.body.dataset.dragOver;
           const paths = event.payload.paths ?? [];
           if (paths.length === 0) return;
-          const mentions = paths.map((p: string) => {
-            const norm = p.replace(/\\/g, "/");
-            if (ws) {
-              const wsNorm = ws.replace(/\\/g, "/").replace(/\/+$/, "");
-              if (norm === wsNorm || norm.startsWith(`${wsNorm}/`)) {
-                return norm.slice(wsNorm.length).replace(/^\/+/, "") || ".";
-              }
-            }
-            return norm;
-          });
-          setDraft((d) => {
-            const prefix = d.trim() ? `${d.replace(/\s+$/, "")} ` : "";
-            return `${prefix}${mentions.map((m: string) => `@${m}`).join(" ")} `;
-          });
-          for (const m of mentions) markMentionPicked(m as string);
-          composerRef.current?.focus();
+          void Promise.all(
+            paths.map((p: string) => buildAttachment(p, ws, /\.(png|jpe?g|gif|webp|svg)$/i.test(p) ? "image" : "file")),
+          )
+            .then((items) => {
+              dispatch({
+                t: "set_composer_attachments",
+                attachments: [...state.composerAttachments, ...items],
+              });
+              composerRef.current?.focus();
+            })
+            .catch((err) => {
+              console.error("drag-drop attachment build failed", err);
+            });
         });
         if (cancelled) handle();
         else unlisten = handle;
@@ -1396,12 +1418,13 @@ function TabRuntime({
       unlisten?.();
       delete document.body.dataset.dragOver;
     };
-  }, [state.settings?.workspaceDir, markMentionPicked]);
+  }, [state.settings?.workspaceDir, state.composerAttachments]);
 
   const send = useCallback(
     (override?: string) => {
       const text = (override ?? draft).trim();
-      if (!text || !state.ready || state.busy) return;
+      const attachments = override ? [] : state.composerAttachments;
+      if ((!text && attachments.length === 0) || !state.ready || state.busy) return;
 
       const myGraceResult = submitMyGraceSlash(text, {
         startSkill: (skill, args, clientId) =>
@@ -1438,11 +1461,13 @@ function TabRuntime({
         }
       }
       const clientId = `c-${Date.now()}`;
-      dispatch({ t: "send_user", text, clientId });
-      sendRpc({ cmd: "user_input", text });
-      if (!override) setDraft("");
+      dispatch({ t: "send_user", text, clientId, attachments });
+      sendRpc({ cmd: "user_input", text, attachments });
+      if (!override) {
+        setDraft("");
+      }
     },
-    [draft, state.ready, state.busy, state.skills, sendRpc],
+    [draft, state.composerAttachments, state.ready, state.busy, state.skills, sendRpc],
   );
 
   const abort = useCallback(() => sendRpc({ cmd: "abort" }), [sendRpc]);
@@ -1771,11 +1796,12 @@ function TabRuntime({
     {
       cmd: "/feedback",
       desc: t("app.cmd.feedback"),
-      run: () => {
-        void openUrl("https://github.com/esengine/DeepSeek-Reasonix/issues/new/choose").catch(
-          () => undefined,
-        );
-      },
+        run: () => {
+          void openUrl("https://github.com/anyagixx/MAGRA/issues/new/choose").catch(
+            () => undefined,
+          );
+        },
+
     },
     {
       cmd: "/compact",
@@ -2014,7 +2040,7 @@ function TabRuntime({
                       return (
                         <div key={`u-${i}`}>
                           {needsDivider ? <TurnDivider label={dividerLabel} /> : null}
-                          <UserMsg text={m.text} skill={m.skill} />
+                          <UserMsg text={m.text} skill={m.skill} attachments={m.attachments} />
                         </div>
                       );
                     }
@@ -2170,6 +2196,7 @@ function TabRuntime({
                 busyElapsedMs={elapsed}
                 textareaRef={composerRef}
                 modelLabel={state.settings?.model ?? "deepseek-v4-flash"}
+                modelSupportsImageInput={state.settings?.modelSupportsImageInput ?? false}
                 reasoningEffort={state.settings?.reasoningEffort ?? "high"}
                 onModelChange={(model) => {
                   saveSettings({ model });
@@ -2194,6 +2221,10 @@ function TabRuntime({
                 onMentionPreview={previewMention}
                 onMentionPicked={markMentionPicked}
                 mentionResults={state.mentionResults}
+                attachments={state.composerAttachments}
+                onAttachmentsChange={(attachments) =>
+                  dispatch({ t: "set_composer_attachments", attachments })
+                }
                 queuedSends={state.queuedSends}
                 onQueueWhileBusy={(text) => {
                   dispatch({ t: "enqueue_send", text });

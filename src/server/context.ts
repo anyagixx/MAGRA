@@ -6,6 +6,24 @@ import type { CacheFirstLoop } from "../loop.js";
 import type { ToolRegistry } from "../tools.js";
 import type { JobRegistry } from "../tools/jobs.js";
 
+export interface DashboardAttachment {
+  id: string;
+  kind: "file" | "image";
+  name: string;
+  path: string;
+  size: number;
+  mimeType?: string;
+  preview?: string;
+  excerpt?: string;
+  dataUrl?: string;
+  relativeToWorkspace?: boolean;
+}
+
+export interface DashboardModelInfo {
+  id: string;
+  supportsImageInput: boolean;
+}
+
 export interface DashboardContext {
   /** Caller resolves via `defaultConfigPath()`; module deliberately avoids `homedir()` so tests can redirect. */
   configPath: string;
@@ -40,7 +58,7 @@ export interface DashboardContext {
   /** Same model swap path /model <id> takes — live + persisted. */
   applyModelLive?: (model: string) => void;
   /** Cached model catalog. Null = in flight / failed; `[]` = API answered empty. */
-  getModels?: () => string[] | null;
+  getModels?: () => DashboardModelInfo[] | null;
   /** Session USD cap; null disables. Re-arms the 80% warning latch. */
   setBudgetUsdLive?: (usd: number | null) => void;
   /** Auto-resubmit timer status — same shape `useLoopMode` exposes to slash handlers. */
@@ -61,7 +79,7 @@ export interface DashboardContext {
   /** Events are JSON-serializable subsets — raw `LoopEvent` carries React-only state. */
   subscribeEvents?: (handler: (event: DashboardEvent) => void) => () => void;
   /** Routes through the TUI's `handleSubmit` so slashes, `!cmd`, `@path`, plan-mode gating all match. */
-  submitPrompt?: (text: string) => SubmitResult;
+  submitPrompt?: (text: string, attachments?: DashboardAttachment[]) => SubmitResult;
   abortTurn?: () => void;
   isBusy?: () => boolean;
   getStats?: () => DashboardStats | null;
@@ -270,7 +288,7 @@ export type DashboardEvent =
   | { kind: "warning"; id: string; text: string; severity?: "low" | "high" }
   | { kind: "error"; id: string; text: string }
   | { kind: "info"; id: string; text: string }
-  | { kind: "user"; id: string; text: string }
+  | { kind: "user"; id: string; text: string; attachments?: DashboardAttachment[] }
   | { kind: "busy-change"; busy: boolean }
   | { kind: "status"; text: string }
   | { kind: "modal-up"; modal: ActiveModal }

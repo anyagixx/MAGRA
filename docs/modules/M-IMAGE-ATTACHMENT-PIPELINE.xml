@@ -1,0 +1,20 @@
+<M-IMAGE-ATTACHMENT-PIPELINE NAME="ImageAttachmentPipeline" TYPE="INTEGRATION" STATUS="done">
+  <contract>
+    <purpose>Map user image attachments into provider-compatible multimodal chat payload parts while keeping file attachments text-backed.</purpose>
+    <scope>Client payload assembly for image `dataUrl` attachments, mixed text-plus-image user turns, and attachment replay expectations.</scope>
+    <source-path>src/client.ts</source-path>
+    <test-path>tests/client-models.test.ts</test-path>
+    <verification-ref>V-M-IMAGE-ATTACHMENT-PIPELINE</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-CHAT-ATTACHMENT-MODEL</dependency-1>
+    <dependency-2>M-ATTACHMENT-SESSION-PERSISTENCE</dependency-2>
+    <dependency-3>M-REASONIX-BASE</dependency-3>
+  </dependencies>
+  <invariants>
+    <invariant-1>File attachments contribute bounded text context via excerpts; image attachments become `image_url` content parts only when `dataUrl` exists.</invariant-1>
+    <invariant-2>Provider payload receives multimodal `content` parts but never raw local `attachments` metadata.</invariant-2>
+    <invariant-3>Image-send path is gated conservatively by endpoint/model heuristics; unsupported routes degrade to text-only turns instead of sending risky multimodal payloads.</invariant-3>
+    <invariant-4>Explicit model capability metadata from `/models` overrides heuristics when available.</invariant-4>
+  </invariants>
+</M-IMAGE-ATTACHMENT-PIPELINE>

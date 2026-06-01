@@ -146,6 +146,17 @@ export interface LoopAbortOptions {
 interface TurnTransientModelContext {
   rawUserInput: string;
   context: string;
+  attachments?: ChatMessage["attachments"];
+}
+
+function sanitizeAttachmentsForPersistence(
+  attachments: ChatMessage["attachments"],
+): ChatMessage["attachments"] {
+  if (!attachments || attachments.length === 0) return attachments;
+  return attachments.map(({ dataUrl: _dataUrl, preview, ...attachment }) => ({
+    ...attachment,
+    preview: typeof preview === "string" && preview.startsWith("data:") ? undefined : preview,
+  }));
 }
 
 function shrinkMessageForRetention(message: ChatMessage): ChatMessage {
@@ -602,7 +613,10 @@ export class CacheFirstLoop {
       const out = [...messages];
       out[i] = {
         ...message,
-        content: `${transient.rawUserInput}\n\n${transient.context}`,
+        content: transient.context
+          ? `${transient.rawUserInput}\n\n${transient.context}`
+          : transient.rawUserInput,
+        attachments: transient.attachments ?? message.attachments,
       };
       return out;
     }
@@ -709,7 +723,10 @@ export class CacheFirstLoop {
     return userText;
   }
 
-  async *step(userInput: string): AsyncGenerator<LoopEvent> {
+  async *step(
+    userInput: string,
+    attachments?: ChatMessage["attachments"],
+  ): AsyncGenerator<LoopEvent> {
     // Reset per-turn flags.
     this._steerConsumed = false;
     this._turnTransientModelContext = null;
@@ -752,6 +769,17 @@ export class CacheFirstLoop {
         };
       }
     }
+    const hasImageAttachments =
+      attachments?.some((attachment) => attachment.kind === "image") ?? false;
+    if (hasImageAttachments && !this.client.supportsImageInput(this.model)) {
+      yield {
+        turn: this._turn,
+        role: "warning",
+        severity: "high",
+        content:
+          "[CacheFirstLoop][step][IMAGE_SEND_GATING] image attachments kept local for replay, but current model route does not advertise image input; sending text-only turn without multimodal image payload.",
+      };
+    }
     const snarcContext = await this.snarc?.onUserPromptSubmit({
       rootDir: this.hookCwd,
       sessionId: this.sessionName ?? undefined,
@@ -759,9 +787,14 @@ export class CacheFirstLoop {
       turn: this._turn + 1,
       prompt: userInput,
     });
-    this._turnTransientModelContext = snarcContext?.context
-      ? { rawUserInput: userInput, context: snarcContext.context }
-      : null;
+    this._turnTransientModelContext =
+      snarcContext?.context || attachments?.length
+        ? {
+            rawUserInput: userInput,
+            context: snarcContext?.context ?? "",
+            attachments,
+          }
+        : null;
     this._turn++;
     this.scratch.reset();
     // A fresh user turn is a new intent — don't let StormBreaker's
@@ -795,7 +828,11 @@ export class CacheFirstLoop {
     // first round-trip still leaves the message in the log; the user can
     // /retry without re-typing.
     const turnStartLogIndex = this.log.length;
-    this.appendAndPersist({ role: "user", content: userInput });
+    this.appendAndPersist({
+      role: "user",
+      content: userInput,
+      attachments: sanitizeAttachmentsForPersistence(attachments),
+    });
     const toolSpecs = this.prefix.tools();
     const rateLimitState = { shown: false };
 
@@ -824,8 +861,8 @@ export class CacheFirstLoop {
             turn: this._turn,
             role: "warning",
             content: t("loop.turnStartFolded", {
-              estimate: turnStart.estimateTokens.toLocaleString(),
-              ctxMax: turnStart.ctxMax.toLocaleString(),
+              estimate: new Intl.NumberFormat("en-US").format(turnStart.estimateTokens),
+              ctxMax: new Intl.NumberFormat("en-US").format(turnStart.ctxMax),
               pct: Math.round(turnStart.ratio * 100),
               beforeMessages: result.beforeMessages,
               afterMessages: result.afterMessages,
@@ -911,6 +948,7 @@ export class CacheFirstLoop {
           turn: this._turn,
           role: "steer",
           content: steer,
+          attachments,
         };
       }
 

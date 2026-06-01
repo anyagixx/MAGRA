@@ -218,6 +218,50 @@ describe("dashboard server: endpoints", () => {
     expect(r.body.byModel).toEqual([]);
   });
 
+  it("POST /api/submit accepts structured attachments", async () => {
+    const base = await boot({
+      submitPrompt: (_text, attachments) => ({
+        accepted: Array.isArray(attachments) && attachments.length === 1,
+      }),
+    });
+    const r = await call(`${base}api/submit`, {
+      method: "POST",
+      token: TOKEN,
+      tokenInHeader: true,
+      body: {
+        prompt: "review this file",
+        attachments: [
+          {
+            id: "att-1",
+            kind: "file",
+            name: "README.md",
+            path: "README.md",
+            size: 42,
+            excerpt: "# MAGRA",
+            relativeToWorkspace: true,
+          },
+        ],
+      },
+    });
+    expect(r.status).toBe(202);
+    expect(r.body.accepted).toBe(true);
+  });
+
+  it("POST /api/submit rejects malformed attachments", async () => {
+    const base = await boot({ submitPrompt: () => ({ accepted: true }) });
+    const r = await call(`${base}api/submit`, {
+      method: "POST",
+      token: TOKEN,
+      tokenInHeader: true,
+      body: {
+        prompt: "review this file",
+        attachments: [{ kind: "file", name: "README.md" }],
+      },
+    });
+    expect(r.status).toBe(400);
+    expect(r.body.error).toMatch(/attachments/i);
+  });
+
   it("GET /api/tools returns 503 in standalone mode", async () => {
     handle = await startDashboardServer(
       { mode: "standalone", configPath: cfgPath, usageLogPath: usagePath },
@@ -1280,11 +1324,26 @@ describe("dashboard server: D-1 settings + auto-loop surface", () => {
     expect(stopped).toBe(1);
   });
 
-  it("GET /api/models returns the cached catalog + pricing + current model", async () => {
-    const base = await boot({ getModels: () => ["deepseek-v4-flash", "deepseek-v4-pro"] });
+  it("GET /api/models returns cached catalog, capability entries, pricing, and current model", async () => {
+    const base = await boot({
+      getModels: () => [
+        { id: "deepseek-v4-flash", supportsImageInput: false },
+        { id: "gpt-4o-mini", supportsImageInput: true },
+      ],
+      loop: {
+        model: "gpt-4o-mini",
+        client: { supportsImageInput: (model: string) => model === "gpt-4o-mini" },
+      } as unknown as DashboardContext["loop"],
+    });
     const r = await call(`${base}api/models`, { token: TOKEN });
     expect(r.status).toBe(200);
-    expect(r.body.models).toEqual(["deepseek-v4-flash", "deepseek-v4-pro"]);
+    expect(r.body.models).toEqual(["deepseek-v4-flash", "gpt-4o-mini"]);
+    expect(r.body.entries).toEqual([
+      { id: "deepseek-v4-flash", supportsImageInput: false },
+      { id: "gpt-4o-mini", supportsImageInput: true },
+    ]);
+    expect(r.body.current).toBe("gpt-4o-mini");
+    expect(r.body.currentSupportsImageInput).toBe(true);
     expect(r.body.pricing["deepseek-v4-flash"]).toBeDefined();
     expect(r.body.pricing["deepseek-v4-flash"].output).toBeGreaterThan(0);
   });
@@ -1294,6 +1353,8 @@ describe("dashboard server: D-1 settings + auto-loop surface", () => {
     const r = await call(`${base}api/models`, { token: TOKEN });
     expect(r.status).toBe(200);
     expect(r.body.models).toBeNull();
+    expect(r.body.entries).toBeNull();
+    expect(r.body.currentSupportsImageInput).toBe(false);
     expect(r.body.pricing).toBeDefined();
   });
 

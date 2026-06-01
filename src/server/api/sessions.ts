@@ -18,6 +18,17 @@ interface SessionToolCall {
 interface SessionMessage {
   role: string;
   content?: string;
+  attachments?: Array<{
+    id: string;
+    kind: "file" | "image";
+    name: string;
+    path: string;
+    size: number;
+    mimeType?: string;
+    preview?: string;
+    excerpt?: string;
+    relativeToWorkspace?: boolean;
+  }>;
   /** Assistant `reasoning_content` (R1 / V4 thinking). */
   reasoning?: string;
   /** Assistant tool_calls — emitted alongside `content` for tool-call turns. */
@@ -48,7 +59,44 @@ function parseTranscript(path: string, maxBytes = 4 * 1024 * 1024): SessionMessa
       const msg: SessionMessage = { role };
       if (typeof rec.content === "string") msg.content = rec.content;
       else if (rec.content !== undefined) msg.content = JSON.stringify(rec.content);
+      if (Array.isArray(rec.attachments)) {
+        const attachments: NonNullable<SessionMessage["attachments"]> = rec.attachments
+          .map((item) => {
+            if (typeof item !== "object" || item === null) return null;
+            const candidate = item as Record<string, unknown>;
+            const kind =
+              candidate.kind === "file" ? "file" : candidate.kind === "image" ? "image" : null;
+
+            if (
+              kind === null ||
+              typeof candidate.id !== "string" ||
+              typeof candidate.name !== "string" ||
+              typeof candidate.path !== "string" ||
+              typeof candidate.size !== "number"
+            ) {
+              return null;
+            }
+            return {
+              id: candidate.id,
+              kind: kind as "file" | "image",
+              name: candidate.name,
+              path: candidate.path,
+              size: candidate.size,
+              mimeType: typeof candidate.mimeType === "string" ? candidate.mimeType : undefined,
+              preview: typeof candidate.preview === "string" ? candidate.preview : undefined,
+              excerpt: typeof candidate.excerpt === "string" ? candidate.excerpt : undefined,
+              dataUrl: typeof candidate.dataUrl === "string" ? candidate.dataUrl : undefined,
+              relativeToWorkspace:
+                typeof candidate.relativeToWorkspace === "boolean"
+                  ? candidate.relativeToWorkspace
+                  : undefined,
+            };
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== null);
+        if (attachments.length > 0) msg.attachments = attachments;
+      }
       if (typeof rec.reasoning_content === "string") msg.reasoning = rec.reasoning_content;
+
       if (Array.isArray(rec.tool_calls)) {
         const calls: SessionToolCall[] = [];
         for (const c of rec.tool_calls as Array<Record<string, unknown>>) {

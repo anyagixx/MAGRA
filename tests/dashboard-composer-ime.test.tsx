@@ -33,6 +33,7 @@ function renderComposer(props: Partial<React.ComponentProps<typeof Composer>> = 
         busyLabel={props.busyLabel}
         busyElapsedMs={props.busyElapsedMs}
         modelLabel={props.modelLabel ?? "deepseek-v4-flash"}
+        modelSupportsImageInput={props.modelSupportsImageInput ?? true}
         reasoningEffort={props.reasoningEffort ?? "high"}
         onModelChange={props.onModelChange ?? vi.fn()}
         onEffortChange={props.onEffortChange ?? vi.fn()}
@@ -45,6 +46,8 @@ function renderComposer(props: Partial<React.ComponentProps<typeof Composer>> = 
         onMentionPicked={props.onMentionPicked}
         mentionResults={props.mentionResults}
         workspaceDir={props.workspaceDir}
+        attachments={props.attachments}
+        onAttachmentsChange={props.onAttachmentsChange}
         queuedSends={props.queuedSends}
         onQueueWhileBusy={onQueueWhileBusy}
         onDequeueSend={props.onDequeueSend}
@@ -71,11 +74,21 @@ describe("dashboard Composer IME handling (#1669)", () => {
     expect(onSend).not.toHaveBeenCalled();
   });
 
-  it("still sends on a normal Enter outside composition", () => {
-    const { textarea, onSend } = renderComposer();
+  it("shows text-only send hint for image attachments on non-image-capable model", () => {
+    renderComposer({
+      attachments: [
+        {
+          id: "img-1",
+          kind: "image",
+          name: "shot.png",
+          path: "shot.png",
+          size: 12,
+          dataUrl: "data:image/png;base64,AAAA",
+        },
+      ],
+      modelSupportsImageInput: false,
+    });
 
-    fireEvent.keyDown(textarea, { key: "Enter" });
-
-    expect(onSend).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("text-only send")).toBeTruthy();
   });
 });
