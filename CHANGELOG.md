@@ -29,6 +29,12 @@ Added MAGRA v0.1.3 release-surface hardening entry.
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-06-01
+
+**Attachment pipeline release.** Web chat attachments now cover transport, session persistence, replay safety, image-send capability gating, and richer model capability surfaces for dashboard warnings.
+
+**Release readiness hardening.** Finalized Phase-20 fork-state cleanup, synchronized MyGRACE module/verification indexes, and tightened release verification for package/install surfaces.
+
 ## [0.1.3] - 2026-05-29
 
 **Release surface hardening.** Localized Chinese/Japanese READMEs, npm package README preview checks, docs-site entry/install surfaces, and MyGRACE verification hygiene now stay MAGRA-first.

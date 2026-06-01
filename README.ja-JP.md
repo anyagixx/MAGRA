@@ -17,7 +17,7 @@ Sections: Overview, Install, Commands, Web workflow, Storage, Upstream attributi
 
 <!-- === CHANGE_SUMMARY ===
 v1.0.0 - Replaced upstream Reasonix README with MAGRA-first localized release documentation.
-v1.0.1 - Updated pinned install guidance for the MAGRA v0.1.3 release.
+v1.0.1 - Updated pinned install guidance for the MAGRA v0.1.4 release.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA
@@ -37,7 +37,7 @@ curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install
 固定バージョンを使う場合：
 
 ```bash
-MAGRA_REF=v0.1.3 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+MAGRA_REF=v0.1.4 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
 ```
 
 インストーラーは `~/.magra/repo` に clone/update し、ビルドした上で `~/.local/bin` に `magra` shim を作成します。`sudo` は使いません。
