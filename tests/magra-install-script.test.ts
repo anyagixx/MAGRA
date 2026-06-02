@@ -17,6 +17,7 @@
 // Initial MAGRA install script verification.
 // Updated pinned dry-run reference for the hotfix release.
 // Updated pinned dry-run reference for the release-surface hardening release.
+// Updated pinned dry-run reference for the image attachment submit hotfix.
 // === END_CHANGE_SUMMARY ===
 
 import { execFileSync } from "node:child_process";
@@ -86,13 +87,13 @@ describe("MAGRA GitHub installer", () => {
           ...process.env,
           MAGRA_INSTALL_DIR: join(tempRoot, "repo"),
           MAGRA_BIN_DIR: join(tempRoot, "bin"),
-          MAGRA_REF: "v0.1.5",
+          MAGRA_REF: "v0.1.6",
         },
       });
 
       expect(output).toContain("[MagraInstallScript][main] BLOCK_VALIDATE_TOOLS");
       expect(output).toContain("git clone");
-      expect(output).toContain("v0.1.5");
+      expect(output).toContain("v0.1.6");
       expect(output).toContain("npm ci");
       expect(output).toContain("npm run build");
       expect(output).toContain("write shim");

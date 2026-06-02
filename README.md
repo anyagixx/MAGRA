@@ -23,6 +23,7 @@ Added Phase-14 GitHub one-command installer and v0.1.0 release metadata.
 Updated pinned install guidance for the v0.1.1 MyGRACE skill asset hotfix.
 Updated pinned install guidance for the v0.1.2 MyGRACE web dispatch hotfix.
 Updated pinned install guidance for the v0.1.5 oversized image-preview hotfix release.
+Updated pinned install guidance for the v0.1.6 image attachment submit hotfix release.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA
@@ -63,7 +64,7 @@ curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install
 Install a pinned release:
 
 ```bash
-MAGRA_REF=v0.1.5 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
+MAGRA_REF=v0.1.6 curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash
 ```
 
 The installer clones or updates MAGRA in `~/.magra/repo`, builds it, and creates a local `magra` shim in `~/.local/bin`. It does not use `sudo`.

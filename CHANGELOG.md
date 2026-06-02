@@ -22,12 +22,19 @@ Added MAGRA v0.1.0 GitHub installer and release publication entry.
 Added MAGRA v0.1.1 MyGRACE skill asset hotfix entry.
 Added MAGRA v0.1.2 MyGRACE web dispatch hotfix entry.
 Added MAGRA v0.1.3 release-surface hardening entry.
+Added MAGRA v0.1.6 image attachment submit hotfix entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.6] - 2026-06-02
+
+**Image attachment submit hotfix.** Web chat image sends now pass through the dashboard HTTP server body limit instead of failing with `413 body exceeds ...` after base64 encoding.
+
+**Error visibility.** Submit failures from the server bridge now surface the API `error` body instead of falling back to the generic `提交失败，请重试` retry message.
 
 ## [0.1.5] - 2026-06-02
 

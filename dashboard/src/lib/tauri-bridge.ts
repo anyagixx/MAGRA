@@ -1,3 +1,25 @@
+// === MODULE_CONTRACT ===
+// FILE: dashboard/src/lib/tauri-bridge.ts
+// VERSION: 1.0.0
+// PURPOSE: Bridge dashboard RPC events to either the CLI HTTP server or local mock runtime.
+// SCOPE: Server-mode REST/SSE transport, mock-mode events, submit RPC mapping, and dashboard state refresh.
+// DEPENDS: M-DASHBOARD-ATTACHMENT-TRANSPORT,M-REASONIX-BASE
+// LINKS: docs/modules/M-DASHBOARD-ATTACHMENT-TRANSPORT.xml
+// ROLE: INTEGRATION
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: isWebRuntime, listen, invoke, open
+// Locals: apiFetch, emitRpcFailure, serverRpc, connectSSE
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added MyGRACE contract metadata and surfaced submit API error bodies for attachment failures.
+// === END_CHANGE_SUMMARY ===
+
 // Tauri API 兼容别名桥接器 (Tauri Bridge for Web/Mobile)
 // 双模式：Mock 模式（Vite 开发） + Server 模式（真实 CLI 后端）
 
@@ -578,11 +600,13 @@ async function serverRpc(payload: Record<string, any>): Promise<void> {
       });
       // 提交失败时通知前端保留草稿
       if (!result?.accepted) {
+        // === START_BLOCK_SUBMIT_ERROR_SURFACE ===
         emitEvent({
           type: "$error",
           tabId: "tab-1",
-          message: result?.reason ?? "提交失败，请重试",
+          message: result?.error ?? result?.reason ?? "提交失败，请重试",
         });
+        // === END_BLOCK_SUBMIT_ERROR_SURFACE ===
       }
       break;
     }

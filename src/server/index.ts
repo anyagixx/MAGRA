@@ -1,3 +1,25 @@
+// === MODULE_CONTRACT ===
+// FILE: src/server/index.ts
+// VERSION: 1.0.0
+// PURPOSE: Host the MAGRA dashboard HTTP surface, including token-gated static assets, API routing, and mutation body handling.
+// SCOPE: Loopback dashboard server lifecycle, CSRF/token checks, request body limits, API dispatch, and asset serving.
+// DEPENDS: M-DASHBOARD-ATTACHMENT-TRANSPORT,M-REASONIX-BASE
+// LINKS: docs/modules/M-DASHBOARD-ATTACHMENT-TRANSPORT.xml
+// ROLE: API
+// MAP_MODE: EXPORTS
+// START_MODULE_CONTRACT
+// END_MODULE_CONTRACT
+// === END_MODULE_CONTRACT ===
+//
+// === MODULE_MAP ===
+// Exports: StartDashboardOptions, DashboardServerHandle, constantTimeEquals, readBody, dispatch, startDashboardServer
+// Locals: mintToken, checkAuth
+// === END_MODULE_MAP ===
+//
+// === CHANGE_SUMMARY ===
+// Added MyGRACE contract metadata and raised dashboard mutation body limit for base64 image attachments.
+// === END_CHANGE_SUMMARY ===
+
 /** Dashboard HTTP server — defaults to 127.0.0.1 with an ephemeral per-boot token; mutations require the token in the header (CSRF). Host + token can be pinned for LAN / mobile access (#968). */
 
 import { randomBytes } from "node:crypto";
@@ -87,8 +109,16 @@ export function checkAuth(
   };
 }
 
-const MAX_BODY_BYTES = 256 * 1024;
+// === START_BLOCK_BODY_LIMIT ===
+const MAX_BODY_BYTES = 32 * 1024 * 1024;
+// === END_BLOCK_BODY_LIMIT ===
 
+// === START_CONTRACT: readBody ===
+// PURPOSE: Read a dashboard mutation request body while bounding memory use for local image attachment payloads.
+// INPUTS: req: IncomingMessage — HTTP request stream.
+// OUTPUTS: Promise<string>
+// SIDE_EFFECTS: Destroys the request when body size exceeds MAX_BODY_BYTES.
+// === END_CONTRACT: readBody ===
 export async function readBody(req: IncomingMessage): Promise<string> {
   let total = 0;
   const chunks: Buffer[] = [];

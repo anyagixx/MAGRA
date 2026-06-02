@@ -241,6 +241,49 @@ describe("dashboard server bridge refresh", () => {
     );
   });
 
+  it("surfaces submit API error bodies instead of generic retry text", async () => {
+    const { bridge, events, fetchMock } = await loadBridge();
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url.includes("/api/settings")) return jsonResponse(settingsResponse);
+      if (url.includes("/api/sessions")) return jsonResponse({ currentSession: "", sessions: [] });
+      if (url.includes("/api/overview")) return jsonResponse({ cwd: "E:/proj", stats: {} });
+      if (url.includes("/api/submit")) {
+        return {
+          status: 413,
+          text: async () => JSON.stringify({ error: "body exceeds 33554432 bytes" }),
+        } as Response;
+      }
+      return jsonResponse({});
+    });
+    events.length = 0;
+
+    await bridge.invoke("rpc_send", {
+      line: JSON.stringify({
+        cmd: "user_input",
+        text: "inspect screenshot",
+        attachments: [
+          {
+            id: "att-image-1",
+            kind: "image",
+            name: "screenshot.png",
+            path: "screenshot.png",
+            size: 40_000_000,
+            dataUrl: "data:image/png;base64,AAAA",
+          },
+        ],
+      }),
+    });
+
+    await vi.waitFor(() =>
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          type: "$error",
+          message: "body exceeds 33554432 bytes",
+        }),
+      ),
+    );
+  });
+
   it("surfaces MyGRACE skill run API errors instead of swallowing them", async () => {
     const { bridge, events, fetchMock } = await loadBridge();
     fetchMock.mockImplementation(async (url: string) => {

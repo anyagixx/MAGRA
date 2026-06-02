@@ -247,6 +247,47 @@ describe("dashboard server: endpoints", () => {
     expect(r.body.accepted).toBe(true);
   });
 
+  it("POST /api/submit accepts image data URLs above the legacy small body limit", async () => {
+    const dataUrl = `data:image/png;base64,${"A".repeat(300 * 1024)}`;
+    let capturedAttachments: unknown;
+    const base = await boot({
+      submitPrompt: (_text, attachments) => {
+        capturedAttachments = attachments;
+        return { accepted: true };
+      },
+    });
+    const r = await call(`${base}api/submit`, {
+      method: "POST",
+      token: TOKEN,
+      tokenInHeader: true,
+      body: {
+        prompt: "inspect this screenshot",
+        attachments: [
+          {
+            id: "att-image-1",
+            kind: "image",
+            name: "screenshot.png",
+            path: "screenshot.png",
+            size: 230_400,
+            mimeType: "image/png",
+            preview: dataUrl,
+            dataUrl,
+            relativeToWorkspace: true,
+          },
+        ],
+      },
+    });
+    expect(r.status).toBe(202);
+    expect(r.body.accepted).toBe(true);
+    expect(capturedAttachments).toEqual([
+      expect.objectContaining({
+        kind: "image",
+        dataUrl,
+        preview: dataUrl,
+      }),
+    ]);
+  });
+
   it("POST /api/submit rejects malformed attachments", async () => {
     const base = await boot({ submitPrompt: () => ({ accepted: true }) });
     const r = await call(`${base}api/submit`, {

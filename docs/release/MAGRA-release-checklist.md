@@ -21,6 +21,7 @@ Added Phase-10 governance metadata for release checklist linting.
 Updated Phase-11 MAGRA-first package metadata and release surface checks.
 Added Phase-14 GitHub installer checks for v0.1.0.
 Updated current release checks for the v0.1.1 MyGRACE skill asset hotfix.
+Updated current release checks for the v0.1.6 image attachment submit hotfix.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Release Checklist

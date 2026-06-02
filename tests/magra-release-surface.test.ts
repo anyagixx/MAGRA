@@ -18,6 +18,7 @@
 // Updated expected release version for the MyGRACE skill asset hotfix.
 // Added localized README, package README set, and docs-site entry surface gates.
 // Updated expected release version for the release-surface hardening release.
+// Updated expected release version for the image attachment submit hotfix.
 // === END_CHANGE_SUMMARY ===
 
 import { spawnSync } from "node:child_process";
@@ -85,7 +86,7 @@ describe("MAGRA release surface", () => {
     expect(readme).toContain(
       "curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA/main/scripts/install.sh | bash",
     );
-    expect(readme).toContain("MAGRA_REF=v0.1.5");
+    expect(readme).toContain("MAGRA_REF=v0.1.6");
     expect(readme).toContain("npm install -g magra");
     expect(readme).toContain("magra code my-project");
     expect(readme).toContain("npx magra@latest code");
@@ -100,7 +101,7 @@ describe("MAGRA release surface", () => {
     // === START_BLOCK_ASSERT_PACKAGE_METADATA ===
     const pkg = readPackage();
     expect(pkg.name).toBe("magra");
-    expect(pkg.version).toBe("0.1.5");
+    expect(pkg.version).toBe("0.1.6");
     expect(pkg.description).toMatch(/^MAGRA:/);
     expect(pkg.repository.url).toBe("git+https://github.com/anyagixx/MAGRA.git");
     expect(pkg.bugs.url).toBe("https://github.com/anyagixx/MAGRA/issues");
@@ -130,7 +131,7 @@ describe("MAGRA release surface", () => {
     for (const doc of LOCALIZED_README_DOCS) {
       assertMagraFirstReadme(doc.path, doc.content);
       expect(doc.content).toContain("curl -fsSL https://raw.githubusercontent.com/anyagixx/MAGRA");
-      expect(doc.content).toContain("MAGRA_REF=v0.1.5");
+      expect(doc.content).toContain("MAGRA_REF=v0.1.6");
       expect(doc.content).toContain("npm install -g magra");
       expect(doc.content).toContain("npx magra@latest code");
       expect(doc.content).toContain("/mygrace:status");
@@ -206,7 +207,7 @@ describe("MAGRA release surface", () => {
     expect(checklist).toContain("scripts/install.sh --dry-run");
     expect(operatorFlows).toContain(".magra/snarc/memory.sqlite");
     expect(notice).toContain("DeepSeek-Reasonix / Reasonix base runtime");
-    expect(changelog).toContain("## [0.1.5] - 2026-06-02");
+    expect(changelog).toContain("## [0.1.6] - 2026-06-02");
     // === END_BLOCK_ASSERT_RELEASE_DOCS ===
   });
 });

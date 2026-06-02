@@ -26,6 +26,7 @@ Added v0.1.2 MyGRACE web dispatch hotfix verification evidence.
 Added Phase-20 fork-state cleanup and Phase-21 web attachment foundation verification evidence.
 Added focused dashboard attachment transport and submit API checks.
 Added broader issue-template and localized copy cleanup verification evidence.
+Added v0.1.6 image attachment submit hotfix verification evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -46,6 +47,7 @@ rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity
 rtk npm test -- tests/magra-release-surface.test.ts tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts
 rtk npm test -- tests/magra-dogfooding-smoke.test.ts
 rtk mygrace lint --path .
+rtk npm run verify
 rtk npm run lint
 rtk npm run typecheck
 rtk npm run build
@@ -58,18 +60,19 @@ rtk npm pack --dry-run --json
 - `rtk npm test -- tests/magra-release-surface.test.ts tests/magra-runtime-identity.test.ts tests/installer-nsh-no-placeholders.test.ts`: passed.
 - `rtk npm test -- tests/magra-release-surface.test.ts tests/mygrace-governance-lint.test.ts tests/mygrace-docs.test.ts`: passed, 3 test files and 16 tests passed.
 - `rtk npm test -- tests/dashboard-mygrace-server.test.ts tests/dashboard-mygrace-commands.test.tsx tests/hash-memory.test.ts tests/server-dashboard.test.ts tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 6 test files and 116 tests passed.
-- `rtk npm test -- tests/server-dashboard.test.ts tests/dashboard-server-bridge-refresh.test.ts`: passed, 2 test files and 86 tests passed.
+- `rtk npm test -- tests/server-dashboard.test.ts tests/dashboard-server-bridge-refresh.test.ts`: passed, 2 test files and 88 tests passed.
 - `rtk npm test -- tests/server-dashboard.test.ts tests/dashboard-server-bridge-refresh.test.ts tests/client-models.test.ts tests/desktop-session-load.test.ts`: passed, 4 test files and 98 tests passed.
 - `rtk npm test -- tests/server-dashboard.test.ts tests/dashboard-server-bridge-refresh.test.ts tests/client-models.test.ts tests/desktop-session-load.test.ts tests/feedback.test.ts`: passed, 5 test files and 107 tests passed.
 - `rtk bash scripts/install.sh --dry-run`: passed.
-- `rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 2 test files and 9 tests passed.
+- `rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts`: passed, 2 test files and 12 tests passed.
 - `rtk npm test -- tests/magra-dogfooding-smoke.test.ts`: passed.
 - `rtk mygrace lint --path .`: passed with 0 errors and 0 warnings.
+- `rtk npm run verify`: passed.
 - `rtk npm run lint`: passed.
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
-- `rtk npm test`: passed, 320 test files, 3995 tests passed, 9 skipped.
-- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.5` / `magra-0.1.5.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
+- `rtk npm test`: passed, 320 test files, 3997 tests passed, 9 skipped.
+- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.6` / `magra-0.1.6.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
 
 
 ## Known Warning
