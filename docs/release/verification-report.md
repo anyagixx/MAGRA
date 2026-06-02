@@ -28,6 +28,7 @@ Added focused dashboard attachment transport and submit API checks.
 Added broader issue-template and localized copy cleanup verification evidence.
 Added v0.1.6 image attachment submit hotfix verification evidence.
 Added v0.1.7 image capability gate verification evidence.
+Added v0.1.8 RTK dashboard savings telemetry release verification evidence.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Verification Report
@@ -55,6 +56,7 @@ rtk npm run typecheck
 rtk npm run build
 rtk npm test
 rtk npm pack --dry-run --json
+rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts tests/rtk-shell-policy.test.ts tests/server-dashboard.test.ts
 ```
 
 ## Results
@@ -75,7 +77,8 @@ rtk npm pack --dry-run --json
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
 - `rtk npm test`: passed, 320 test files, 3998 tests passed, 9 skipped.
-- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.7` / `magra-0.1.7.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
+- `rtk npm test -- tests/magra-install-script.test.ts tests/magra-release-surface.test.ts tests/rtk-shell-policy.test.ts tests/server-dashboard.test.ts`: passed, 4 test files and 104 tests passed.
+- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.8` / `magra-0.1.8.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
 
 
 ## Known Warning

@@ -24,12 +24,19 @@ Added MAGRA v0.1.2 MyGRACE web dispatch hotfix entry.
 Added MAGRA v0.1.3 release-surface hardening entry.
 Added MAGRA v0.1.6 image attachment submit hotfix entry.
 Added MAGRA v0.1.7 image capability gate hotfix entry.
+Added MAGRA v0.1.8 RTK dashboard savings telemetry entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.8] - 2026-06-02
+
+**RTK dashboard telemetry.** The web status bar now shows how many tokens RTK saved since the current dashboard/server session started.
+
+**Read-only savings API.** Added `/api/rtk/savings` with session-delta snapshots, recovery from initially unavailable telemetry, and server-side filtering so raw `rtk gain` output never crosses into the dashboard.
 
 ## [0.1.7] - 2026-06-02
 

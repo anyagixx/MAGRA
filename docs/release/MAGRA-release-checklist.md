@@ -23,6 +23,7 @@ Added Phase-14 GitHub installer checks for v0.1.0.
 Updated current release checks for the v0.1.1 MyGRACE skill asset hotfix.
 Updated current release checks for the v0.1.6 image attachment submit hotfix.
 Updated current release checks for the v0.1.7 image capability gate hotfix.
+Updated current release checks for the v0.1.8 RTK dashboard savings telemetry release.
 === END_CHANGE_SUMMARY === -->
 
 # MAGRA Release Checklist
