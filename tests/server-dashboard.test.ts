@@ -288,6 +288,42 @@ describe("dashboard server: endpoints", () => {
     ]);
   });
 
+  it("POST /api/submit rejects image attachments on non-image-capable model routes", async () => {
+    let submitCalls = 0;
+    const base = await boot({
+      loop: {
+        model: "deepseek-chat",
+        client: { supportsImageInput: () => false },
+      } as unknown as DashboardContext["loop"],
+      submitPrompt: () => {
+        submitCalls++;
+        return { accepted: true };
+      },
+    });
+    const r = await call(`${base}api/submit`, {
+      method: "POST",
+      token: TOKEN,
+      tokenInHeader: true,
+      body: {
+        prompt: "what is on this image?",
+        attachments: [
+          {
+            id: "att-image-1",
+            kind: "image",
+            name: "screenshot.png",
+            path: "screenshot.png",
+            size: 12,
+            dataUrl: "data:image/png;base64,AAAA",
+          },
+        ],
+      },
+    });
+    expect(r.status).toBe(422);
+    expect(r.body.accepted).toBe(false);
+    expect(r.body.reason).toContain("does not support image input");
+    expect(submitCalls).toBe(0);
+  });
+
   it("POST /api/submit rejects malformed attachments", async () => {
     const base = await boot({ submitPrompt: () => ({ accepted: true }) });
     const r = await call(`${base}api/submit`, {

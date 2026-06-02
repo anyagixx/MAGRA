@@ -23,12 +23,19 @@ Added MAGRA v0.1.1 MyGRACE skill asset hotfix entry.
 Added MAGRA v0.1.2 MyGRACE web dispatch hotfix entry.
 Added MAGRA v0.1.3 release-surface hardening entry.
 Added MAGRA v0.1.6 image attachment submit hotfix entry.
+Added MAGRA v0.1.7 image capability gate hotfix entry.
 === END_CHANGE_SUMMARY === -->
 
 # Changelog
 
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.7] - 2026-06-02
+
+**Image capability gate hotfix.** Web chat now blocks image attachment sends on model routes that do not advertise image input instead of starting a blind text-only LLM turn.
+
+**Composer clarity.** The unsupported-image hint now calls out that a vision-capable model is required, so users know to switch models before asking about an attached image.
 
 ## [0.1.6] - 2026-06-02
 

@@ -14,5 +14,6 @@
     <scenario-4 kind="success">`/api/models` returns per-model image-input capability flags alongside current-route capability state.</scenario-4>
     <scenario-5 kind="success">Image `dataUrl` submit payloads above the legacy 256 KiB body limit reach `submitPrompt` instead of failing with HTTP 413.</scenario-5>
     <scenario-6 kind="success">Server bridge submit failures surface API `error` bodies instead of generic retry copy.</scenario-6>
+    <scenario-7 kind="failure">Image attachment submits on non-image-capable model routes return HTTP 422 before a blind text-only LLM turn starts.</scenario-7>
   </scenarios>
 </V-M-DASHBOARD-ATTACHMENT-TRANSPORT>

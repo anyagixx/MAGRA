@@ -74,7 +74,7 @@ describe("dashboard Composer IME handling (#1669)", () => {
     expect(onSend).not.toHaveBeenCalled();
   });
 
-  it("shows text-only send hint for image attachments on non-image-capable model", () => {
+  it("shows vision-model-required hint for image attachments on non-image-capable model", () => {
     renderComposer({
       attachments: [
         {
@@ -89,6 +89,6 @@ describe("dashboard Composer IME handling (#1669)", () => {
       modelSupportsImageInput: false,
     });
 
-    expect(screen.getByText("text-only send")).toBeTruthy();
+    expect(screen.getByText("vision model required")).toBeTruthy();
   });
 });

@@ -1425,6 +1425,20 @@ function TabRuntime({
       const text = (override ?? draft).trim();
       const attachments = override ? [] : state.composerAttachments;
       if ((!text && attachments.length === 0) || !state.ready || state.busy) return;
+      if (
+        attachments.some((attachment) => attachment.kind === "image") &&
+        state.settings?.modelSupportsImageInput !== true
+      ) {
+        dispatch({
+          t: "incoming",
+          event: {
+            type: "$error",
+            message:
+              "Current model route does not support image input. Switch to a vision-capable model before sending image attachments.",
+          },
+        });
+        return;
+      }
 
       const myGraceResult = submitMyGraceSlash(text, {
         startSkill: (skill, args, clientId) =>
@@ -1467,7 +1481,15 @@ function TabRuntime({
         setDraft("");
       }
     },
-    [draft, state.composerAttachments, state.ready, state.busy, state.skills, sendRpc],
+    [
+      draft,
+      state.composerAttachments,
+      state.ready,
+      state.busy,
+      state.skills,
+      state.settings?.modelSupportsImageInput,
+      sendRpc,
+    ],
   );
 
   const abort = useCallback(() => sendRpc({ cmd: "abort" }), [sendRpc]);

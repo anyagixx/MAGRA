@@ -3,7 +3,7 @@
     <purpose>Expose real file and image attachments in MAGRA web composer instead of inserting only @-mentions.</purpose>
     <scope>Attachment chips, image previews, remove actions, picker behavior, and drag-drop semantics in dashboard chat.</scope>
     <source-path>dashboard/src/ui/composer.tsx</source-path>
-    <test-path>tests/dashboard-attachments.test.tsx</test-path>
+    <test-path>tests/dashboard-composer-ime.test.tsx</test-path>
     <verification-ref>V-M-WEB-COMPOSER-ATTACHMENTS</verification-ref>
   </contract>
   <dependencies>
@@ -14,6 +14,6 @@
     <rule-1>Attachments are distinct from @-mentions and render as dedicated chips.</rule-1>
     <rule-2>Image attachments show preview metadata before provider payload mapping runs in client send path.</rule-2>
     <rule-3>Drag-drop attaches files by default instead of rewriting draft text into @-mentions.</rule-3>
-    <rule-4>When current model route does not advertise image input, composer shows inline text-only send hint for image attachments.</rule-4>
+    <rule-4>When current model route does not advertise image input, composer shows inline vision-model-required hint for image attachments.</rule-4>
   </ux-rules>
 </M-WEB-COMPOSER-ATTACHMENTS>

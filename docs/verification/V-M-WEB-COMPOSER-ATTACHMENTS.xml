@@ -1,10 +1,10 @@
 <V-M-WEB-COMPOSER-ATTACHMENTS MODULE="M-WEB-COMPOSER-ATTACHMENTS" PRIORITY="high" STATUS="done">
   <test-files>
-    <file-1>tests/dashboard-attachments.test.tsx</file-1>
+    <file-1>tests/dashboard-composer-ime.test.tsx</file-1>
     <file-2>tests/server-dashboard.test.ts</file-2>
   </test-files>
   <module-checks>
-    <check-1>rtk npm test -- tests/dashboard-attachments.test.tsx tests/server-dashboard.test.ts</check-1>
+    <check-1>rtk npm test -- tests/dashboard-composer-ime.test.tsx tests/server-dashboard.test.ts</check-1>
     <check-2>rtk npm run typecheck</check-2>
     <check-3>rtk npm run build:dashboard</check-3>
   </module-checks>
@@ -12,6 +12,6 @@
     <scenario-1 kind="success">Attach buttons create dedicated attachment chips instead of injecting @-mentions.</scenario-1>
     <scenario-2 kind="success">Drag-drop adds attachments while preserving existing @-mention picker flows.</scenario-2>
     <scenario-3 kind="success">Image attachments show preview metadata in composer before transport and provider payload mapping.</scenario-3>
-    <scenario-4 kind="success">Composer shows inline text-only send hint when image attachments are queued on a non-image-capable model route.</scenario-4>
+    <scenario-4 kind="success">Composer shows inline vision-model-required hint when image attachments are queued on a non-image-capable model route.</scenario-4>
   </scenarios>
 </V-M-WEB-COMPOSER-ATTACHMENTS>

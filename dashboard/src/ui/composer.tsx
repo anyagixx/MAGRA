@@ -19,6 +19,7 @@
 // === CHANGE_SUMMARY ===
 // Added Wave-A attachment chips, image previews, and picker-created attachment objects.
 // Added bounded text preview extraction and shared attachment builder for picker and drag-drop flows.
+// Clarified unsupported image attachment hint as a vision-model requirement.
 // === END_CHANGE_SUMMARY ===
 
 import {
@@ -667,10 +668,10 @@ export function Composer({
               {attachments.some((attachment) => attachment.kind === "image") && !modelSupportsImageInput ? (
                 <span
                   className="chip attachment warning"
-                  title="Current model route does not advertise image input; send will degrade to text-only."
+                  title="Current model route does not support image input; switch to a vision-capable model before sending images."
                 >
                   <I.warn size={11} />
-                  <span>text-only send</span>
+                  <span>vision model required</span>
                 </span>
               ) : null}
             </div>

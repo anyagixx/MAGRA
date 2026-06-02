@@ -13,11 +13,12 @@
 //
 // === MODULE_MAP ===
 // Exports: handleSubmit
-// Locals: parseBody, parseAttachments
+// Locals: parseBody, parseAttachments, imageAttachmentUnsupportedReason
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
 // Added structured dashboard attachment parsing and validation for submit API.
+// Blocked image attachment submits when the live model route does not support image input.
 // === END_CHANGE_SUMMARY ===
 
 import type { DashboardAttachment, DashboardContext } from "../context.js";
@@ -73,6 +74,18 @@ function parseAttachments(value: unknown): DashboardAttachment[] | null {
   return out;
 }
 
+function imageAttachmentUnsupportedReason(
+  attachments: DashboardAttachment[],
+  ctx: DashboardContext,
+): string | null {
+  // === START_BLOCK_IMAGE_CAPABILITY_GATE ===
+  if (!attachments.some((attachment) => attachment.kind === "image")) return null;
+  if (!ctx.loop) return null;
+  if (ctx.loop.client.supportsImageInput(ctx.loop.model)) return null;
+  return `Current model "${ctx.loop.model}" does not support image input. Switch to a vision-capable model before sending image attachments.`;
+  // === END_BLOCK_IMAGE_CAPABILITY_GATE ===
+}
+
 export async function handleSubmit(
   method: string,
   _rest: string[],
@@ -98,6 +111,13 @@ export async function handleSubmit(
   const attachments = parseAttachments(rawAttachments);
   if (attachments === null) {
     return { status: 400, body: { error: "attachments must be a valid attachment array" } };
+  }
+  const imageUnsupportedReason = imageAttachmentUnsupportedReason(attachments, ctx);
+  if (imageUnsupportedReason) {
+    return {
+      status: 422,
+      body: { accepted: false, reason: imageUnsupportedReason },
+    };
   }
   const result = ctx.submitPrompt(prompt, attachments);
   if (!result.accepted) {
