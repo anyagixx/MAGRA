@@ -1,0 +1,24 @@
+<M-WEB-CURRENCY-DISPLAY NAME="WebCurrencyDisplay" TYPE="UTILITY" STATUS="done">
+  <contract>
+    <purpose>Format MAGRA dashboard costs in operator-selected RUB, USD, or CNY display currency.</purpose>
+    <scope>Currency validation, RUB/USD/CNY cycle order, USD-denominated cost formatting, and online exchange-rate loading for dashboard UI.</scope>
+    <source-path>dashboard/src/currency.ts</source-path>
+    <test-path>tests/dashboard-currency.test.ts</test-path>
+    <verification-ref>V-M-WEB-CURRENCY-DISPLAY</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-REASONIX-BASE</dependency-1>
+  </dependencies>
+  <interfaces>
+    <interface-1>isDisplayCurrency(value): value is DisplayCurrency</interface-1>
+    <interface-2>nextDisplayCurrency(currency): DisplayCurrency</interface-2>
+    <interface-3>formatCurrencyAmount(amountUsd, currency, rates): string</interface-3>
+    <interface-4>fetchExchangeRates(options): Promise&lt;ExchangeRates&gt;</interface-4>
+  </interfaces>
+  <invariants>
+    <invariant-1>Display currencies are limited to RUB, USD, and CNY.</invariant-1>
+    <invariant-2>Costs remain stored as USD and are converted only at the UI boundary.</invariant-2>
+    <invariant-3>RUB display waits for an online exchange rate instead of using a silent hardcoded fallback.</invariant-3>
+  </invariants>
+  <CrossLink from="M-WEB-CURRENCY-DISPLAY" to="M-REASONIX-BASE" relation="formats-ui-costs" />
+</M-WEB-CURRENCY-DISPLAY>

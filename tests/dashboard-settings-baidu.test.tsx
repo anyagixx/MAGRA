@@ -48,6 +48,7 @@ function renderSettingsModal(
         reservedTokens: 0,
       }}
       currency="CNY"
+      exchangeRates={{ usdToCny: 7.2 }}
       theme="auto"
       themeStyle="default"
       onSetTheme={vi.fn()}

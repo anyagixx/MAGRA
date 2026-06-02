@@ -1,5 +1,10 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { type ReactNode, useEffect, useState } from "react";
+import {
+  type DisplayCurrency,
+  type ExchangeRates,
+  formatCurrencyAmount,
+} from "../currency";
 import type { Balance, Settings as SettingsType, UsageStats } from "../App";
 import { getLangLabel, getSupportedLangs, setLang, t, useLang } from "../i18n";
 import { I } from "../icons";
@@ -55,6 +60,7 @@ export function SettingsModal({
   balance,
   usage,
   currency,
+  exchangeRates,
   theme,
   themeStyle,
   onSetTheme,
@@ -86,7 +92,8 @@ export function SettingsModal({
   settings: SettingsType;
   balance: Balance | null;
   usage: UsageStats;
-  currency: "CNY" | "USD";
+  currency: DisplayCurrency;
+  exchangeRates: ExchangeRates;
   theme: Theme;
   themeStyle: ThemeStyle;
   onSetTheme: (theme: Theme) => void;
@@ -191,7 +198,12 @@ export function SettingsModal({
             )}
             {page === "rules" && <PageRules settings={settings} onSave={onSave} />}
             {page === "billing" && (
-              <PageBilling balance={balance} usage={usage} currency={currency} />
+              <PageBilling
+                balance={balance}
+                usage={usage}
+                currency={currency}
+                exchangeRates={exchangeRates}
+              />
             )}
             {page === "shortcuts" && <PageShortcuts />}
             {page === "general" ? (
@@ -1204,13 +1216,14 @@ function PageBilling({
   balance,
   usage,
   currency,
+  exchangeRates,
 }: {
   balance: Balance | null;
   usage: UsageStats;
-  currency: "CNY" | "USD";
+  currency: DisplayCurrency;
+  exchangeRates: ExchangeRates;
 }) {
-  const symbol = currency === "CNY" ? "¥" : "$";
-  const sessionCost = currency === "CNY" ? usage.totalCostUsd * 7.2 : usage.totalCostUsd;
+  const sessionCost = formatCurrencyAmount(usage.totalCostUsd, currency, exchangeRates);
   const totalTokens = usage.cacheHitTokens + usage.cacheMissTokens;
   const hitPct = totalTokens > 0 ? Math.round((usage.cacheHitTokens / totalTokens) * 100) : 0;
   return (
@@ -1231,9 +1244,7 @@ function PageBilling({
         </div>
         <div className="bill-card">
           <div className="l">{t("settings.sessionCost")}</div>
-          <div className="v">
-            {symbol} {sessionCost.toFixed(4)}
-          </div>
+          <div className="v">{sessionCost}</div>
           <div className="sub">prompt {usage.totalPromptTokens.toLocaleString()} t</div>
         </div>
         <div className="bill-card">

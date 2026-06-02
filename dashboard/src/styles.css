@@ -3442,6 +3442,15 @@ html:not([data-platform="macos"]) .cmdk-row .kb .shortcut kbd[data-key="mod"] {
 .statusbar .seg .v {
   color: var(--fg);
 }
+.statusbar .seg .currency-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  color: var(--success);
+  font-weight: 700;
+  line-height: 1;
+}
 .statusbar .seg .v.ok {
   color: var(--success);
 }

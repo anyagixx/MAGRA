@@ -1,0 +1,16 @@
+<V-M-WEB-CURRENCY-DISPLAY MODULE="M-WEB-CURRENCY-DISPLAY" PRIORITY="medium" STATUS="done">
+  <test-files>
+    <file-1>tests/dashboard-currency.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/dashboard-currency.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Dashboard display currency cycles RUB to USD to CNY and back to RUB.</scenario-1>
+    <scenario-2 kind="success">USD-denominated costs format as ₽, $, and ¥ using provided exchange rates.</scenario-2>
+    <scenario-3 kind="failure">RUB display without a loaded online rate renders a bounded pending value instead of a fake conversion.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[WebCurrencyDisplay][fetchExchangeRates][BLOCK_FETCH_EXCHANGE_RATES]</marker-1>
+  </required-log-markers>
+</V-M-WEB-CURRENCY-DISPLAY>

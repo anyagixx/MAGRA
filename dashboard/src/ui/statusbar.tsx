@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  type DisplayCurrency,
+  type ExchangeRates,
+  formatCurrencyAmount,
+  nextDisplayCurrency,
+  symbolForCurrency,
+  usdRateForCurrency,
+} from "../currency";
 import { I } from "../icons";
 import { t } from "../i18n";
 import type { Balance, RtkSavings, Settings, UsageStats } from "../App";
 import type { JobInfo } from "../protocol";
 import { THEME, THEME_STYLES, type Theme, type ThemeStyle, themeForStyle } from "../theme";
 import { localizeShortcutText } from "./shortcut";
-
-const USD_TO_CNY = 7.2;
-
-function formatMoney(amountUsd: number, currency: "CNY" | "USD"): string {
-  const symbol = currency === "CNY" ? "¥" : "$";
-  const amount = currency === "CNY" ? amountUsd * USD_TO_CNY : amountUsd;
-  return `${symbol} ${amount.toFixed(4)}`;
-}
 
 function tokenLabel(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
@@ -37,6 +37,7 @@ export function StatusBar({
   busy,
   ready,
   currency,
+  exchangeRates,
   theme,
   themeStyle,
   jobs,
@@ -53,7 +54,8 @@ export function StatusBar({
   usage: UsageStats;
   busy: boolean;
   ready: boolean;
-  currency: "CNY" | "USD";
+  currency: DisplayCurrency;
+  exchangeRates: ExchangeRates;
   theme: Theme;
   themeStyle: ThemeStyle;
   jobs: JobInfo[];
@@ -72,7 +74,25 @@ export function StatusBar({
       ? `${usage.cacheHitTokens.toLocaleString()} / ${totalTokens.toLocaleString()} tokens (${cacheHitPctDisplay}%)`
       : "";
   const runningJobs = jobs.filter((j) => j.running).length;
-  const spent = formatMoney(usage.totalCostUsd, currency);
+  const spent = formatCurrencyAmount(usage.totalCostUsd, currency, exchangeRates);
+  const nextCurrency = nextDisplayCurrency(currency);
+  const rate = usdRateForCurrency(currency, exchangeRates);
+  const rateTitle =
+    rate === undefined
+      ? (exchangeRates.error ?? t("statusbar.exchangeRatePending"))
+      : [
+          t("statusbar.exchangeRate", {
+            currency,
+            rate: rate.toFixed(currency === "USD" ? 4 : 2),
+          }),
+          exchangeRates.updatedAt
+            ? t("statusbar.exchangeRateUpdated", { time: exchangeRates.updatedAt })
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · ");
+  const currencyTitle = `${t("statusbar.switchCurrencyTo", { currency: nextCurrency })} · ${rateTitle}`;
+  const currencySymbol = symbolForCurrency(currency);
   const rtkSessionSaved = rtkSavings?.sessionTokensSaved ?? 0;
   const rtkLabel =
     !rtkSavings || rtkSavings.available === false
@@ -144,8 +164,10 @@ export function StatusBar({
         <span>{t("statusbar.rtk")}</span>
         <span className={rtkSessionSaved > 0 ? "v acc" : "v"}>{rtkLabel}</span>
       </span>
-      <span className="seg">
-        <I.coin size={11} />
+      <span className="seg" title={currencyTitle} onClick={onToggleCurrency}>
+        <span className="currency-symbol" aria-hidden="true">
+          {currencySymbol}
+        </span>
         <span>{t("statusbar.thisTurn")}</span>
         <span className="v ok">{spent}</span>
       </span>

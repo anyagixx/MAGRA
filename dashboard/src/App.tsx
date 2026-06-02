@@ -5,6 +5,14 @@ import { open as openDialog, save as saveDialog } from "@tauri-apps/plugin-dialo
 import { isWebRuntime } from "./lib/tauri-bridge";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { CommandPalette, Toast, buildCommands, useCommandPalette } from "./CommandPalette";
+import {
+  DEFAULT_USD_TO_CNY,
+  type DisplayCurrency,
+  type ExchangeRates,
+  fetchExchangeRates,
+  isDisplayCurrency,
+  nextDisplayCurrency,
+} from "./currency";
 import { WorkspaceProvider } from "./Markdown";
 import { getLang, getLangLabel, getSupportedLangs, setLang, t, useLang } from "./i18n";
 import { I } from "./icons";
@@ -1176,7 +1184,8 @@ type TabDispatcher = (action: TabAction) => void;
 interface TabRuntimeProps {
   tabId: string;
   active: boolean;
-  currency: "CNY" | "USD";
+  currency: DisplayCurrency;
+  exchangeRates: ExchangeRates;
   registerDispatch: (tabId: string, d: TabDispatcher | null) => void;
   onNewTab: () => void;
   onCloseTab: () => void;
@@ -1207,6 +1216,7 @@ function TabRuntime({
   tabId,
   active,
   currency,
+  exchangeRates,
   registerDispatch,
   onNewTab,
   onCloseTab,
@@ -2301,6 +2311,7 @@ function TabRuntime({
           busy={state.busy}
           ready={state.ready}
           currency={currency}
+          exchangeRates={exchangeRates}
           theme={theme}
           themeStyle={themeStyle}
           jobs={state.jobs}
@@ -2349,6 +2360,7 @@ function TabRuntime({
             balance={state.balance}
             usage={state.usage}
             currency={currency}
+            exchangeRates={exchangeRates}
             theme={theme}
             themeStyle={themeStyle}
             onSetTheme={onSetTheme}
@@ -2969,6 +2981,9 @@ function formatBytes(n: number): string {
 }
 
 type TabMeta = { id: string; workspaceDir?: string; busy?: boolean };
+const CURRENCY_STORAGE_KEY = "reasonix.currency";
+const CURRENCY_STORAGE_VERSION_KEY = "reasonix.currency.version";
+const CURRENCY_STORAGE_VERSION = "rub-usd-cny-v1";
 
 export function App() {
   const [tabs, setTabs] = useState<TabMeta[]>([]);
@@ -2982,9 +2997,18 @@ export function App() {
     tabsRef.current = tabs;
   }, [tabs]);
 
-  const [currency, setCurrency] = useState<"CNY" | "USD">(() => {
-    const v = localStorage.getItem("reasonix.currency");
-    return v === "USD" ? "USD" : "CNY";
+  const [currency, setCurrency] = useState<DisplayCurrency>(() => {
+    const version = localStorage.getItem(CURRENCY_STORAGE_VERSION_KEY);
+    if (version !== CURRENCY_STORAGE_VERSION) {
+      localStorage.setItem(CURRENCY_STORAGE_KEY, "RUB");
+      localStorage.setItem(CURRENCY_STORAGE_VERSION_KEY, CURRENCY_STORAGE_VERSION);
+      return "RUB";
+    }
+    const v = localStorage.getItem(CURRENCY_STORAGE_KEY);
+    return isDisplayCurrency(v) ? v : "RUB";
+  });
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRates>({
+    usdToCny: DEFAULT_USD_TO_CNY,
   });
   const [theme, setTheme] = useState<Theme>(() => {
     const v = localStorage.getItem("reasonix.theme");
@@ -3043,10 +3067,34 @@ export function App() {
   useEffect(() => {
     const onCur = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      if (detail === "CNY" || detail === "USD") setCurrency(detail);
+      if (isDisplayCurrency(detail)) setCurrency(detail);
     };
     window.addEventListener("reasonix:currency", onCur);
     return () => window.removeEventListener("reasonix:currency", onCur);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refresh = async () => {
+      try {
+        const rates = await fetchExchangeRates();
+        if (!cancelled) setExchangeRates(rates);
+      } catch (err) {
+        if (!cancelled) {
+          setExchangeRates((prev) => ({
+            ...prev,
+            error: err instanceof Error ? err.message : String(err),
+            fetchedAt: new Date().toISOString(),
+          }));
+        }
+      }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 60 * 60 * 1000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
   }, []);
 
   const deliverToTab = useCallback((tabId: string, action: TabAction) => {
@@ -3282,8 +3330,9 @@ export function App() {
 
   const onToggleCurrency = useCallback(() => {
     setCurrency((c) => {
-      const next = c === "CNY" ? "USD" : "CNY";
-      localStorage.setItem("reasonix.currency", next);
+      const next = nextDisplayCurrency(c);
+      localStorage.setItem(CURRENCY_STORAGE_KEY, next);
+      localStorage.setItem(CURRENCY_STORAGE_VERSION_KEY, CURRENCY_STORAGE_VERSION);
       window.dispatchEvent(new CustomEvent("reasonix:currency", { detail: next }));
       return next;
     });
@@ -3297,6 +3346,7 @@ export function App() {
           tabId={t.id}
           active={t.id === activeTabId}
           currency={currency}
+          exchangeRates={exchangeRates}
           registerDispatch={registerDispatch}
           onNewTab={openTab}
           onCloseTab={() => closeTab(t.id)}
