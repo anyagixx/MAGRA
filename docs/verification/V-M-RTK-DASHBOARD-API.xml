@@ -1,0 +1,16 @@
+<V-M-RTK-DASHBOARD-API MODULE="M-RTK-DASHBOARD-API" PRIORITY="medium" STATUS="done">
+  <test-files>
+    <file-1>tests/server-dashboard.test.ts</file-1>
+  </test-files>
+  <module-checks>
+    <check-1>rtk npm test -- tests/server-dashboard.test.ts</check-1>
+  </module-checks>
+  <scenarios>
+    <scenario-1 kind="success">Dashboard `/api/rtk/savings` reports session-delta RTK token savings.</scenario-1>
+    <scenario-2 kind="success">Dashboard `/api/rtk/savings` omits raw RTK telemetry output.</scenario-2>
+    <scenario-3 kind="failure">Unwired dashboard contexts return a bounded unavailable response.</scenario-3>
+  </scenarios>
+  <required-log-markers>
+    <marker-1>[RtkShellPolicy][readRtkSavings][BLOCK_READ_SAVINGS]</marker-1>
+  </required-log-markers>
+</V-M-RTK-DASHBOARD-API>

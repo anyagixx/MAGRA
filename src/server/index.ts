@@ -25,6 +25,7 @@
 import { randomBytes } from "node:crypto";
 import { type IncomingMessage, type ServerResponse, createServer } from "node:http";
 import type { AddressInfo } from "node:net";
+import { createRtkSessionSavingsTracker } from "../tools/rtk-shell-policy.js";
 import { handleEvents } from "./api/events.js";
 import { renderIndexHtml, serveAsset } from "./assets.js";
 import type { DashboardContext } from "./context.js";
@@ -233,8 +234,16 @@ export function startDashboardServer(
   const token = opts.token ?? mintToken();
   const host = opts.host ?? "127.0.0.1";
   const port = opts.port ?? 0;
+  const rtkTracker = createRtkSessionSavingsTracker(ctx.getCurrentCwd?.() ?? process.cwd());
+  const withRuntimeTelemetry = (next: DashboardContext): DashboardContext =>
+    next.getRtkSessionSavings
+      ? next
+      : {
+          ...next,
+          getRtkSessionSavings: () => rtkTracker.read(next.getCurrentCwd?.() ?? process.cwd()),
+        };
 
-  const ctxRef: { current: DashboardContext } = { current: ctx };
+  const ctxRef: { current: DashboardContext } = { current: withRuntimeTelemetry(ctx) };
   return new Promise((resolve, reject) => {
     const server = createServer((req, res) => {
       dispatch(req, res, ctxRef.current, token).catch((err) => {
@@ -266,7 +275,7 @@ export function startDashboardServer(
         });
 
       const updateContext = (next: DashboardContext) => {
-        ctxRef.current = next;
+        ctxRef.current = withRuntimeTelemetry(next);
       };
       resolve({ url, token, port: finalPort, close, updateContext });
     });

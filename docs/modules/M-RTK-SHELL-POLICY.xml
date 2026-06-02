@@ -1,7 +1,7 @@
 <M-RTK-SHELL-POLICY NAME="RtkShellPolicy" TYPE="INTEGRATION" STATUS="done">
   <contract>
     <purpose>Route appropriate shell, build, lint, and test commands through RTK while preserving Reasonix safety gates and command semantics.</purpose>
-    <scope>Detect RTK, rewrite eligible shell commands, allow raw bypass, preserve exit code, surface savings telemetry, and report health in doctor/dashboard.</scope>
+    <scope>Detect RTK, rewrite eligible shell commands, allow raw bypass, preserve exit code, surface global and session-delta savings telemetry, and report health in doctor/dashboard.</scope>
     <source-path>src/tools/rtk-shell-policy.ts</source-path>
     <test-path>tests/rtk-shell-policy.test.ts</test-path>
     <verification-ref>V-M-RTK-SHELL-POLICY</verification-ref>
@@ -14,11 +14,13 @@
     <interface-2>buildRtkCommand(decision): ShellCommand</interface-2>
     <interface-3>readRtkSavings(root): RtkSavingsSummary</interface-3>
     <interface-4>diagnoseRtk(): RtkHealth</interface-4>
+    <interface-5>createRtkSessionSavingsTracker(root): RtkSessionSavingsTracker</interface-5>
   </interfaces>
   <invariants>
     <invariant-1>Approval prompts display the effective command, including RTK rewrite.</invariant-1>
     <invariant-2>Exit codes and failure behavior must match raw command execution.</invariant-2>
     <invariant-3>Users can bypass filtering with an explicit raw mode.</invariant-3>
+    <invariant-4>Dashboard session savings are read-only deltas from a server-lifetime baseline and do not execute user commands.</invariant-4>
   </invariants>
   <CrossLink from="M-RTK-SHELL-POLICY" to="S-RTK" relation="sidecar" />
 </M-RTK-SHELL-POLICY>

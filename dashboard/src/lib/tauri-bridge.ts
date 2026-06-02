@@ -3,8 +3,8 @@
 // VERSION: 1.0.0
 // PURPOSE: Bridge dashboard RPC events to either the CLI HTTP server or local mock runtime.
 // SCOPE: Server-mode REST/SSE transport, mock-mode events, submit RPC mapping, and dashboard state refresh.
-// DEPENDS: M-DASHBOARD-ATTACHMENT-TRANSPORT,M-REASONIX-BASE
-// LINKS: docs/modules/M-DASHBOARD-ATTACHMENT-TRANSPORT.xml
+// DEPENDS: M-DASHBOARD-ATTACHMENT-TRANSPORT,M-RTK-DASHBOARD-API,M-REASONIX-BASE
+// LINKS: docs/modules/M-DASHBOARD-ATTACHMENT-TRANSPORT.xml,docs/modules/M-RTK-DASHBOARD-API.xml
 // ROLE: INTEGRATION
 // MAP_MODE: EXPORTS
 // START_MODULE_CONTRACT
@@ -13,11 +13,12 @@
 //
 // === MODULE_MAP ===
 // Exports: isWebRuntime, listen, invoke, open
-// Locals: apiFetch, emitRpcFailure, serverRpc, connectSSE
+// Locals: apiFetch, emitRpcFailure, emitServerSettings, loadAndEmitRtkSavings, serverRpc, connectSSE
 // === END_MODULE_MAP ===
 //
 // === CHANGE_SUMMARY ===
 // Added MyGRACE contract metadata and surfaced submit API error bodies for attachment failures.
+// Added server RTK savings refresh events for dashboard status telemetry.
 // === END_CHANGE_SUMMARY ===
 
 // Tauri API 兼容别名桥接器 (Tauri Bridge for Web/Mobile)
@@ -273,6 +274,9 @@ function connectSSE(): void {
       }
       const events = sseToIncoming(dashboardEvent);
       for (const evt of events) emitEvent(evt);
+      if (events.some((evt) => evt.type === "$turn_complete")) {
+        void loadAndEmitRtkSavings();
+      }
       // 成功收到事件，重置重连计数
       sseReconnectAttempts = 0;
       notifyCliStatus(true);
@@ -306,6 +310,7 @@ function connectSSE(): void {
 
 // 定期轮询 stats/balance/sessions
 let statsPollTimer: ReturnType<typeof setInterval> | null = null;
+let rtkSavingsPollTimer: ReturnType<typeof setInterval> | null = null;
 
 function startStatsPolling(): void {
   if (statsPollTimer) clearInterval(statsPollTimer);
@@ -317,6 +322,13 @@ function startStatsPolling(): void {
       // 静默失败，等待下次轮询
     }
   }, 5000);
+}
+
+function startRtkSavingsPolling(): void {
+  if (rtkSavingsPollTimer) clearInterval(rtkSavingsPollTimer);
+  rtkSavingsPollTimer = setInterval(() => {
+    void loadAndEmitRtkSavings();
+  }, 30000);
 }
 
 // REST API 辅助
@@ -369,6 +381,31 @@ function emitServerSettings(settings: any, overview?: any): void {
     version: overview?.version ?? "",
     baseUrl: settings?.baseUrl ?? "",
     apiKeyPrefix: settings?.apiKey ?? "",
+  });
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  if (value === null || value === undefined || value === "") return undefined;
+  const number = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(number) ? number : undefined;
+}
+
+function emitRtkSavingsSnapshot(snapshot: any): void {
+  emitEvent({
+    type: "$rtk_savings",
+    tabId: "tab-1",
+    available: snapshot?.available === true,
+    binary: typeof snapshot?.binary === "string" ? snapshot.binary : "rtk",
+    detail: typeof snapshot?.detail === "string" ? snapshot.detail : undefined,
+    startedAt: typeof snapshot?.startedAt === "string" ? snapshot.startedAt : undefined,
+    updatedAt: typeof snapshot?.updatedAt === "string" ? snapshot.updatedAt : undefined,
+    totalCommands: optionalNumber(snapshot?.totalCommands),
+    inputTokens: optionalNumber(snapshot?.inputTokens),
+    outputTokens: optionalNumber(snapshot?.outputTokens),
+    totalTokensSaved: optionalNumber(snapshot?.tokensSaved ?? snapshot?.totalTokensSaved),
+    sessionTokensSaved: optionalNumber(snapshot?.sessionTokensSaved),
+    sessionInputTokens: optionalNumber(snapshot?.sessionInputTokens),
+    sessionPercentSaved: optionalNumber(snapshot?.sessionPercentSaved),
   });
 }
 
@@ -550,6 +587,15 @@ async function loadAndEmitMemoryDetail(path: string): Promise<void> {
   }
 }
 
+async function loadAndEmitRtkSavings(): Promise<void> {
+  try {
+    const snapshot = await apiFetch("rtk/savings");
+    if (snapshot) emitRtkSavingsSnapshot(snapshot);
+  } catch (err) {
+    console.warn("[tauri-bridge] RTK savings fetch failed:", err);
+  }
+}
+
 async function serverInit(): Promise<void> {
   document.documentElement.dataset.web = "true";
 
@@ -571,7 +617,13 @@ async function serverInit(): Promise<void> {
 
   // Sidebar/right-rail panels — desktop pushes these on tab open; web has
   // to pull them or every panel renders empty forever (#1715).
-  void Promise.all([loadAndEmitMcp(), loadAndEmitSkills(), loadAndEmitMemory()]);
+  void Promise.all([
+    loadAndEmitMcp(),
+    loadAndEmitSkills(),
+    loadAndEmitMemory(),
+    loadAndEmitRtkSavings(),
+  ]);
+  startRtkSavingsPolling();
 
   emitEvent({ type: "$ready", tabId: "tab-1" });
   emitEvent({
@@ -1259,5 +1311,19 @@ function mockSetupAndReady() {
     });
   }, 150);
   setTimeout(() => emitEvent({ type: "$settings", tabId: "tab-1", ...mockSettings }), 200);
+  setTimeout(
+    () =>
+      emitEvent({
+        type: "$rtk_savings",
+        tabId: "tab-1",
+        available: true,
+        binary: "rtk",
+        sessionTokensSaved: 0,
+        sessionInputTokens: 0,
+        sessionPercentSaved: 0,
+        totalTokensSaved: 0,
+      }),
+    250,
+  );
   setTimeout(() => emitEvent({ type: "$sessions", tabId: "tab-1", items: mockSessions }), 350);
 }

@@ -130,6 +130,22 @@ export type SessionUsageEvent = {
   cacheMissTokens: number;
 };
 
+export type RtkSavingsEvent = {
+  type: "$rtk_savings";
+  available: boolean;
+  binary: string;
+  detail?: string;
+  startedAt?: string;
+  updatedAt?: string;
+  totalCommands?: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokensSaved?: number;
+  sessionTokensSaved?: number;
+  sessionInputTokens?: number;
+  sessionPercentSaved?: number;
+};
+
 export type MentionResultsEvent = {
   type: "$mention_results";
   nonce: number;
@@ -488,6 +504,7 @@ export type IncomingEvent = { tabId?: string } & (
   | PlanRequiredEvent
   | SessionsEvent
   | SessionUsageEvent
+  | RtkSavingsEvent
   | SessionLoadedEvent
   | SessionEmptyEvent
   | NeedsSetupEvent

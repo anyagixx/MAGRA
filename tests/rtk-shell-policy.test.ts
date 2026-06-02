@@ -15,6 +15,7 @@
 //
 // === CHANGE_SUMMARY ===
 // Initial verification for MAGRA RTK shell policy.
+// Added RTK session savings tracker verification.
 // === END_CHANGE_SUMMARY ===
 
 import { mkdtempSync, rmSync } from "node:fs";
@@ -26,6 +27,7 @@ import { ToolRegistry } from "../src/tools.js";
 import {
   type RtkCommandRunner,
   buildRtkCommand,
+  createRtkSessionSavingsTracker,
   diagnoseRtk,
   readRtkSavings,
   resolveRtkPolicy,
@@ -107,6 +109,79 @@ describe("RTK shell policy", () => {
       percentSaved: 67.8,
     });
     // === END_BLOCK_ASSERT_HEALTH_AND_SAVINGS ===
+  });
+
+  it("tracks session savings deltas from compact RTK gain output", () => {
+    // === START_BLOCK_ASSERT_SESSION_SAVINGS ===
+    let gainCalls = 0;
+    const runner: RtkCommandRunner = (_binary, args) => {
+      if (args[0] === "--version") {
+        return { status: 0, stdout: "rtk 0.35.0\n", stderr: "" };
+      }
+      gainCalls++;
+      const body =
+        gainCalls === 1
+          ? "Total commands:    10\nInput tokens:      1.0M\nOutput tokens:     800K\nTokens saved:      100.0K (10.0%)\n"
+          : "Total commands:    12\nInput tokens:      1.1M\nOutput tokens:     900K\nTokens saved:      112.5K (10.2%)\n";
+      return { status: 0, stdout: body, stderr: "" };
+    };
+
+    const tracker = createRtkSessionSavingsTracker(tmp, { runner });
+    expect(tracker.read()).toMatchObject({
+      available: true,
+      totalCommands: 10,
+      inputTokens: 1_000_000,
+      outputTokens: 800_000,
+      tokensSaved: 100_000,
+      sessionTokensSaved: 0,
+      sessionInputTokens: 0,
+      sessionPercentSaved: 0,
+    });
+    expect(tracker.read()).toMatchObject({
+      available: true,
+      totalCommands: 12,
+      inputTokens: 1_100_000,
+      outputTokens: 900_000,
+      tokensSaved: 112_500,
+      baselineTokensSaved: 100_000,
+      sessionTokensSaved: 12_500,
+      sessionInputTokens: 100_000,
+      sessionPercentSaved: 12.5,
+    });
+    // === END_BLOCK_ASSERT_SESSION_SAVINGS ===
+  });
+
+  it("starts the session baseline when RTK savings become available", () => {
+    // === START_BLOCK_ASSERT_SESSION_SAVINGS_RECOVERY ===
+    let gainCalls = 0;
+    const runner: RtkCommandRunner = (_binary, args) => {
+      if (args[0] === "--version") {
+        return { status: 0, stdout: "rtk 0.35.0\n", stderr: "" };
+      }
+      gainCalls++;
+      if (gainCalls === 1) return { status: 1, stdout: "", stderr: "not ready\n" };
+      const body =
+        gainCalls === 2
+          ? "Input tokens:      1.0M\nTokens saved:      100.0K (10.0%)\n"
+          : "Input tokens:      1.1M\nTokens saved:      112.5K (10.2%)\n";
+      return { status: 0, stdout: body, stderr: "" };
+    };
+
+    const tracker = createRtkSessionSavingsTracker(tmp, { runner });
+    expect(tracker.read()).toMatchObject({ available: false });
+    expect(tracker.read()).toMatchObject({
+      available: true,
+      sessionTokensSaved: 0,
+      sessionInputTokens: 0,
+      sessionPercentSaved: 0,
+    });
+    expect(tracker.read()).toMatchObject({
+      available: true,
+      sessionTokensSaved: 12_500,
+      sessionInputTokens: 100_000,
+      sessionPercentSaved: 12.5,
+    });
+    // === END_BLOCK_ASSERT_SESSION_SAVINGS_RECOVERY ===
   });
 
   it("shows the RTK effective command in approval prompts before execution", async () => {

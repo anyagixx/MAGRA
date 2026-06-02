@@ -10,6 +10,7 @@
     <scenario-1 kind="success">Eligible command rewrites to RTK after Reasonix approval gates.</scenario-1>
     <scenario-2 kind="success">Raw bypass keeps the original command and exit code.</scenario-2>
     <scenario-3 kind="failure">Missing RTK reports a doctor warning and falls back safely.</scenario-3>
+    <scenario-4 kind="success">Session savings tracker reports deltas from a stable RTK telemetry baseline.</scenario-4>
   </scenarios>
   <required-log-markers>
     <marker-1>[RtkShellPolicy][resolveRtkPolicy][BLOCK_CLASSIFY_COMMAND]</marker-1>

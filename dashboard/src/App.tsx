@@ -37,6 +37,7 @@ import type {
   OutgoingCommand,
   PlanVerdict,
   RevisionVerdict,
+  RtkSavingsEvent,
   SettingsPatch,
   SkillInfo,
 } from "./protocol";
@@ -232,6 +233,8 @@ export type Balance = {
   isAvailable: boolean;
 };
 
+export type RtkSavings = Omit<RtkSavingsEvent, "type" | "tabId">;
+
 type MentionResults = { nonce: number; query: string; results: string[] };
 type MentionPreviewState = {
   nonce: number;
@@ -258,6 +261,7 @@ type State = {
   usage: UsageStats;
   sessions: SessionInfo[];
   settings: Settings | null;
+  rtkSavings: RtkSavings | null;
   qq: QQDesktopSettingsState | null;
   balance: Balance | null;
   mentionResults: MentionResults | null;
@@ -851,6 +855,7 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
           workspaceDir: ev.workspaceDir,
           recentWorkspaces: ev.recentWorkspaces,
           model: ev.model,
+          modelSupportsImageInput: ev.modelSupportsImageInput,
           editor: ev.editor,
           webSearchEngine: ev.webSearchEngine,
           webSearchApiKeys: ev.webSearchApiKeys,
@@ -860,6 +865,24 @@ function applyIncomingRaw(state: State, ev: IncomingEvent): State {
         },
       };
     }
+    case "$rtk_savings":
+      return {
+        ...state,
+        rtkSavings: {
+          available: ev.available,
+          binary: ev.binary,
+          detail: ev.detail,
+          startedAt: ev.startedAt,
+          updatedAt: ev.updatedAt,
+          totalCommands: ev.totalCommands,
+          inputTokens: ev.inputTokens,
+          outputTokens: ev.outputTokens,
+          totalTokensSaved: ev.totalTokensSaved,
+          sessionTokensSaved: ev.sessionTokensSaved,
+          sessionInputTokens: ev.sessionInputTokens,
+          sessionPercentSaved: ev.sessionPercentSaved,
+        },
+      };
     case "$session_loaded": {
       const sessionName = ev.name;
       const loaded: ChatMessage[] = ev.messages.map((m, i) => {
@@ -1224,6 +1247,7 @@ function TabRuntime({
     usage: zeroUsage(),
     sessions: [],
     settings: null,
+    rtkSavings: null,
     qq: null,
     balance: null,
     mentionResults: null,
@@ -2271,6 +2295,7 @@ function TabRuntime({
 
         <StatusBar
           settings={state.settings}
+          rtkSavings={state.rtkSavings}
           balance={state.balance}
           usage={state.usage}
           busy={state.busy}

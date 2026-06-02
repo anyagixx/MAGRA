@@ -5,6 +5,7 @@ import type { EditMode } from "../config.js";
 import type { CacheFirstLoop } from "../loop.js";
 import type { ToolRegistry } from "../tools.js";
 import type { JobRegistry } from "../tools/jobs.js";
+import type { RtkSessionSavingsSnapshot } from "../tools/rtk-shell-policy.js";
 
 export interface DashboardAttachment {
   id: string;
@@ -72,6 +73,8 @@ export interface DashboardContext {
   startAutoLoop?: (intervalMs: number, prompt: string) => void;
   /** Clear the auto-resubmit timer. */
   stopAutoLoop?: () => void;
+  /** RTK savings delta for the lifetime of the attached dashboard/server session. */
+  getRtkSessionSavings?: () => RtkSessionSavingsSnapshot;
   /** Endpoints don't write the audit log themselves so tests can swap the implementation. */
   audit?: (entry: AuditEntry) => void;
 

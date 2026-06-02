@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { I } from "../icons";
 import { t } from "../i18n";
-import type { Balance, Settings, UsageStats } from "../App";
+import type { Balance, RtkSavings, Settings, UsageStats } from "../App";
 import type { JobInfo } from "../protocol";
 import { THEME, THEME_STYLES, type Theme, type ThemeStyle, themeForStyle } from "../theme";
 import { localizeShortcutText } from "./shortcut";
@@ -31,6 +31,7 @@ function formatPct(value: number): string {
 
 export function StatusBar({
   settings,
+  rtkSavings,
   balance,
   usage,
   busy,
@@ -47,6 +48,7 @@ export function StatusBar({
   onOpenWorkdir,
 }: {
   settings: Settings | null;
+  rtkSavings: RtkSavings | null;
   balance: Balance | null;
   usage: UsageStats;
   busy: boolean;
@@ -71,6 +73,33 @@ export function StatusBar({
       : "";
   const runningJobs = jobs.filter((j) => j.running).length;
   const spent = formatMoney(usage.totalCostUsd, currency);
+  const rtkSessionSaved = rtkSavings?.sessionTokensSaved ?? 0;
+  const rtkLabel =
+    !rtkSavings || rtkSavings.available === false
+      ? "—"
+      : rtkSessionSaved > 0
+        ? `+${tokenLabel(rtkSessionSaved)}`
+        : "0";
+  const rtkTitle =
+    rtkSavings?.available === false
+      ? (rtkSavings.detail ?? t("statusbar.rtkUnavailable"))
+      : rtkSavings
+        ? [
+            t("statusbar.rtkSessionSaved", {
+              tokens: rtkSessionSaved.toLocaleString(),
+            }),
+            typeof rtkSavings.sessionPercentSaved === "number"
+              ? `${formatPct(rtkSavings.sessionPercentSaved)}%`
+              : null,
+            typeof rtkSavings.totalTokensSaved === "number"
+              ? t("statusbar.rtkTotalSaved", {
+                  tokens: rtkSavings.totalTokensSaved.toLocaleString(),
+                })
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")
+        : t("statusbar.rtkPending");
   const balanceLabel = balance
     ? `${balance.currency === "USD" ? "$" : "¥"} ${balance.total.toFixed(2)}`
     : "—";
@@ -109,6 +138,11 @@ export function StatusBar({
         <I.cpu size={11} />
         <span>{t("statusbar.tokens")}</span>
         <span className="v">{tokenLabel(totalTokens)}</span>
+      </span>
+      <span className="seg" title={rtkTitle}>
+        <I.terminal size={11} />
+        <span>{t("statusbar.rtk")}</span>
+        <span className={rtkSessionSaved > 0 ? "v acc" : "v"}>{rtkLabel}</span>
       </span>
       <span className="seg">
         <I.coin size={11} />

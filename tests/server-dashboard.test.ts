@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { addProjectShellAllowed, loadProjectShellAllowed, readConfig } from "../src/config.js";
+import { handleRtk } from "../src/server/api/rtk.js";
 import type { DashboardContext } from "../src/server/context.js";
 import {
   type DashboardServerHandle,
@@ -216,6 +217,46 @@ describe("dashboard server: endpoints", () => {
     expect(r.body.recordCount).toBe(0);
     expect(r.body.buckets).toHaveLength(4);
     expect(r.body.byModel).toEqual([]);
+  });
+
+  it("GET /api/rtk/savings returns session savings without raw RTK output", async () => {
+    const base = await boot({
+      getRtkSessionSavings: () => ({
+        available: true,
+        binary: "rtk",
+        detail: "ok",
+        rawOutput: "raw telemetry should stay server-side",
+        startedAt: "2026-06-02T00:00:00.000Z",
+        updatedAt: "2026-06-02T00:00:05.000Z",
+        totalCommands: 12,
+        inputTokens: 1_100_000,
+        outputTokens: 900_000,
+        tokensSaved: 112_500,
+        baselineTokensSaved: 100_000,
+        sessionTokensSaved: 12_500,
+        sessionInputTokens: 100_000,
+        sessionPercentSaved: 12.5,
+      }),
+    });
+    const r = await call(`${base}api/rtk/savings`, { token: TOKEN });
+    expect(r.status).toBe(200);
+    expect(r.body.available).toBe(true);
+    expect(r.body.sessionTokensSaved).toBe(12_500);
+    expect(r.body.sessionPercentSaved).toBe(12.5);
+    expect(r.body.tokensSaved).toBe(112_500);
+    expect(r.body.rawOutput).toBeUndefined();
+  });
+
+  it("handleRtk returns a bounded unavailable response without session telemetry", async () => {
+    const r = await handleRtk("GET", ["savings"], "", {
+      mode: "standalone",
+      configPath: cfgPath,
+      usageLogPath: usagePath,
+    });
+    expect(r.status).toBe(200);
+    expect(r.body.available).toBe(false);
+    expect(r.body.binary).toBe("rtk");
+    expect(r.body.detail).toMatch(/not wired/i);
   });
 
   it("POST /api/submit accepts structured attachments", async () => {

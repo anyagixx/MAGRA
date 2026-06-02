@@ -1,0 +1,22 @@
+<M-RTK-DASHBOARD-API NAME="RtkDashboardApi" TYPE="INTEGRATION" STATUS="done">
+  <contract>
+    <purpose>Expose read-only RTK savings telemetry to the MAGRA web dashboard.</purpose>
+    <scope>Provide `/api/rtk/savings` session-delta snapshots, hide raw RTK output, and keep dashboard polling separate from chat/tool execution.</scope>
+    <source-path>src/server/api/rtk.ts</source-path>
+    <test-path>tests/server-dashboard.test.ts</test-path>
+    <verification-ref>V-M-RTK-DASHBOARD-API</verification-ref>
+  </contract>
+  <dependencies>
+    <dependency-1>M-RTK-SHELL-POLICY</dependency-1>
+    <dependency-2>M-REASONIX-BASE</dependency-2>
+  </dependencies>
+  <interfaces>
+    <interface-1>handleRtk(method, rest, body, ctx): Promise&lt;ApiResult&gt;</interface-1>
+  </interfaces>
+  <invariants>
+    <invariant-1>Dashboard RTK endpoints are read-only.</invariant-1>
+    <invariant-2>Raw `rtk gain` output never crosses the dashboard API boundary.</invariant-2>
+    <invariant-3>Session savings are deltas from a server-lifetime baseline.</invariant-3>
+  </invariants>
+  <CrossLink from="M-RTK-DASHBOARD-API" to="M-RTK-SHELL-POLICY" relation="reads" />
+</M-RTK-DASHBOARD-API>
