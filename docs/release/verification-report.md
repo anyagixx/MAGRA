@@ -30,7 +30,7 @@ Added broader issue-template and localized copy cleanup verification evidence.
 
 # MAGRA Verification Report
 
-Date: 2026-06-01
+Date: 2026-06-02
 
 ## Commands
 
@@ -69,7 +69,7 @@ rtk npm pack --dry-run --json
 - `rtk npm run typecheck`: passed.
 - `rtk npm run build`: passed.
 - `rtk npm test`: passed, 320 test files, 3995 tests passed, 9 skipped.
-- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.4` / `magra-0.1.4.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
+- `rtk npm pack --dry-run --json`: passed, package preview reports `magra@0.1.5` / `magra-0.1.5.tgz` and includes README.md, README.zh-CN.md, README.ja-JP.md, 14 `dist/cli/skill-bodies/*` files, 14 `dist/skill-bodies/*` files, and `scripts/install.sh`.
 
 
 ## Known Warning

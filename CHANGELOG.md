@@ -29,6 +29,12 @@ Added MAGRA v0.1.3 release-surface hardening entry.
 All notable changes to MAGRA. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-06-02
+
+**Web attachment preview hotfix.** Image attachment chips in the web chat composer and thread now keep a fixed thumbnail box instead of expanding to the full image size and taking over the panel.
+
+**Release follow-through.** Refreshed pinned install, package, and GitHub release metadata for the hotfix patch.
+
 ## [0.1.4] - 2026-06-01
 
 **Attachment pipeline release.** Web chat attachments now cover transport, session persistence, replay safety, image-send capability gating, and richer model capability surfaces for dashboard warnings.
